@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import dotenv
 
-folder = Path("/datagetters/results/")
+folder = Path("./datagetters/results/")
 
 prompt = """
 Parse this file in the following format. In the end, add ALL URL's written in provided file. No markdown.
@@ -29,6 +29,10 @@ client = genai.Client(api_key=key)
 statements = ""
 
 for path in folder.glob("*.json"):
+    json_text = None
+
+    print(str(path))
+    
     with open(path, "r", encoding="utf-8") as f:
         json_text = f.read()
 
