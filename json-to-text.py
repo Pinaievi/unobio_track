@@ -37,7 +37,7 @@ for path in folder.glob("*.json"):
         input=[
             {
                 "type": "text",
-                "text": "{prompt}\n\nJSON:\n{json_text}"
+                "text": f"{prompt}\n\nJSON:\n{json_text}"
             }
         ]
     )
