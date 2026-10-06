@@ -11,7 +11,7 @@ AACT (Aggregate Analysis of ClinicalTrials.gov) — PostgreSQL-база CTTI.
 """
 
 import os
-from pathlib import Path
+import dotenv
 
 import psycopg
 from psycopg.rows import dict_row
@@ -25,24 +25,12 @@ MAX_STUDIES = 200
 SYNONYMS = {"retatrutide": ["LY3437943"]}
 
 
-def _load_env_file() -> None:
-    """Мінімальний розбір .env без зовнішніх залежностей."""
-    for candidate in (Path.cwd() / ".env", Path(__file__).resolve().parents[1] / ".env"):
-        if not candidate.exists():
-            continue
-        for line in candidate.read_text(encoding="utf-8").splitlines():
-            line = line.strip()
-            if not line or line.startswith("#") or "=" not in line:
-                continue
-            key, _, value = line.partition("=")
-            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
-        return
+dotenv.load_dotenv()
 
 
 def _connect() -> psycopg.Connection:
-    _load_env_file()
-    user = os.environ.get("AACT_USER")
-    password = os.environ.get("AACT_PASSWORD")
+    user = os.environ("AACT_USER")
+    password = os.environ("AACT_PASSWORD")
     if not user or not password:
         raise RuntimeError(
             "Не задано AACT_USER / AACT_PASSWORD "
