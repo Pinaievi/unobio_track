@@ -3,14 +3,7 @@ import os
 from pathlib import Path
 import dotenv
 
-
-dotenv.load_dotenv()
-
-key = os.environ["API_KEY"]
-
-client = genai.Client(api_key=key)
-
-file = client.files.upload(file=r"D:\\evidence_raw.json")
+folder = Path("/datagetters/results/")
 
 prompt = """
 Parse this file in the following format. In the end, add ALL URL's written in provided file. No markdown.
@@ -28,20 +21,26 @@ Critical unknowns
 Sources supporting major claims
 """
 
-interaction = client.interactions.create(
-    model="gemini-3.1-flash-lite",
-    input=[
-        {
-            "type": "text",
-            "text": prompt,
-        },
-        {
-            "type": "document",
-            "uri": file.uri,
-            "mime_type": file.mime_type,
-        },
-    ],
-)
+dotenv.load_dotenv()
+key = os.environ["API_KEY"]
 
+client = genai.Client(api_key=key)
 
-print(interaction.output_text)
+statements = ""
+
+for path in folder.glob("*.json"):
+    with open(path, "r", encoding="utf-8") as f:
+        json_text = f.read()
+
+    interaction = client.interactions.create(
+        model="gemini-3.1-flash-lite",
+        input=[
+            {
+                "type": "text",
+                "text": "{prompt}\n\nJSON:\n{json_text}"
+            }
+        ]
+    )
+
+    print(interaction.output_text)
+    statements += interaction.output_text
