@@ -21,7 +21,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-DATAGETTER = ROOT / "datagetter"
+DATAGETTER = ROOT / "datagetters"
 
 FETCH_SCRIPT = DATAGETTER / "delegator.py"
 SPLIT_SCRIPT = DATAGETTER / "split_evidence.py"
