@@ -29,8 +29,8 @@ dotenv.load_dotenv()
 
 
 def _connect() -> psycopg.Connection:
-    user = os.environ("AACT_USER")
-    password = os.environ("AACT_PASSWORD")
+    user = os.environ["AACT_USER"]
+    password = os.environ["AACT_PASSWORD"]
     if not user or not password:
         raise RuntimeError(
             "Не задано AACT_USER / AACT_PASSWORD "

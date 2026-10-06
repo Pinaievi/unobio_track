@@ -1,0 +1,83 @@
+"""
+split_evidence.py — ріже evidence_raw.json на частини за записами.
+
+Запис (стаття / випробування) ніколи не розривається між файлами.
+Частини складаються в теку results/ як evidence_part_001.json, 002 і так далі.
+
+Запуск:
+  python split_evidence.py                       # ліміт 1000 рядків
+  python split_evidence.py 500                   # власний ліміт рядків
+"""
+
+import json
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+INPUT_PATH = HERE / "evidence_raw.json"
+RESULTS_DIR = HERE / "results"
+DEFAULT_LINE_LIMIT = 1000
+HEADER_OVERHEAD = 12   # приблизно рядків на службову шапку кожного файлу
+
+
+def count_lines(record: dict) -> int:
+    """Скільки рядків займе запис при записі з відступами."""
+    return len(json.dumps(record, ensure_ascii=False, indent=2).splitlines())
+
+
+def split_records(records: list[dict], line_limit: int) -> list[list[dict]]:
+    chunks, current, current_lines = [], [], HEADER_OVERHEAD
+    for rec in records:
+        lines = count_lines(rec)
+        # не влазить у поточну частину і вона не порожня -> починаємо нову
+        if current and current_lines + lines > line_limit:
+            chunks.append(current)
+            current, current_lines = [], HEADER_OVERHEAD
+        current.append(rec)
+        current_lines += lines
+    if current:
+        chunks.append(current)
+    return chunks
+
+
+def main() -> None:
+    line_limit = int(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_LINE_LIMIT
+
+    if not INPUT_PATH.exists():
+        print(f"Немає файлу {INPUT_PATH}. Спочатку запусти delegator.py")
+        sys.exit(1)
+
+    data = json.loads(INPUT_PATH.read_text(encoding="utf-8"))
+    records = data.get("evidence", [])
+    if not records:
+        print("У файлі немає записів evidence.")
+        sys.exit(1)
+
+    RESULTS_DIR.mkdir(exist_ok=True)
+    # видаляємо старі частини, щоб не змішалися з новими
+    for old in RESULTS_DIR.glob("evidence_part_*.json"):
+        old.unlink()
+
+    chunks = split_records(records, line_limit)
+
+    print(f"Записів: {len(records)}, ліміт: {line_limit} рядків, частин: {len(chunks)}\n")
+    print("Файл                        Записів   Рядків")
+    print("-" * 46)
+
+    for n, chunk in enumerate(chunks, 1):
+        payload = {
+            "input": data.get("input"),
+            "part": n,
+            "total_parts": len(chunks),
+            "evidence": chunk,
+        }
+        text = json.dumps(payload, ensure_ascii=False, indent=2)
+        path = RESULTS_DIR / f"evidence_part_{n:03d}.json"
+        path.write_text(text, encoding="utf-8")
+        print(f"{path.name:<28}{len(chunk):>7}   {len(text.splitlines()):>6}")
+
+    print(f"\nГотово. Частини лежать у {RESULTS_DIR}")
+
+
+if __name__ == "__main__":
+    main()

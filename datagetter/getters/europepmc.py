@@ -18,7 +18,6 @@ class EuropePMCGetter(DataGetter):
         base_q = " AND ".join(parts)
 
         records = self._search(base_q, limit=25)
-        # отдельный поиск противоречий — требование задания
         for rec in self._search(f"{base_q} AND {CONTRA_TERMS}", limit=15):
             rec["meta"]["found_by"] = "contradiction_search"
             records.append(rec)
