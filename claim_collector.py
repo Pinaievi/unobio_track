@@ -56,23 +56,36 @@ QUOTES AND NUMBERS:
    number.
 
 HOW MANY CLAIMS:
-9. Clinical trial records: one claim describing the trial (drug, population, comparator,
-   primary outcome, and phase, status and enrollment if stated), with the quote taken from
-   the title or summary text; plus one claim for the results or for the reason the trial
-   stopped, only if the record contains them.
-10. Scientific articles and preprints: up to 4 claims. Prefer reported effect sizes with
+9. Main clinical trial records (source_type "nct" or "nct_aact"): one claim describing the
+   trial (drug, population, comparator, primary outcome, and phase, status and enrollment if
+   stated), with the quote taken from the title or summary text; plus one claim for the
+   results or for the reason the trial stopped, only if the record contains them.
+10. Records with source_type "nct_aact_population": up to 3 claims: (a) who is enrolled
+    (population, age range, sex, and baseline values such as mean age, BMI or HbA1c if
+    stated), stage "unmet_need"; (b) the key inclusion thresholds (for example BMI or HbA1c
+    limits), stage "clinical"; (c) the key exclusions, stage "clinical". Direction "neutral".
+    Take the quote from the record's text field.
+11. Records with source_type "nct_aact_flow": one claim on how many participants started and
+    completed in each group, and one claim on the main reasons for not completing. Stage
+    "clinical" for the first. For the second use stage "safety_or_failure"; direction
+    "contradicts" if the main reason is adverse events, otherwise "neutral". Take the quote
+    from the record's text field.
+12. Records with source_type "nct_aact_pk": one claim per reported pharmacokinetic parameter
+    (Cmax, AUC, half-life, concentration) stating the value, unit and group. Stage
+    "translation", direction "neutral". Take the quote from the record's text field.
+13. Scientific articles and preprints: up to 4 claims. Prefer reported effect sizes with
     numbers, safety findings, and limitations stated by the authors. Skip records with no
     abstract text.
-11. Open Targets records: a separate claim for each mechanism of action, each target
+14. Open Targets records: a separate claim for each mechanism of action, each target
     function, and each target-disease association with its evidence types and scores.
-12. FDA label and FDA search records: extract what the record states (indications, boxed
+15. FDA label and FDA search records: extract what the record states (indications, boxed
     warnings, adverse reactions, or that no label was found). A drug appearing in a text-search
     list is NOT evidence that it is indicated for the condition; state only what the record
     says and do not call such a drug a competitor.
-13. Claims from preprints (source_type epmc_ppr) must have confidence "medium" or "low".
+16. Claims from preprints (source_type epmc_ppr) must have confidence "medium" or "low".
 
 CLASSIFICATION:
-14. stage, one of:
+17. stage, one of:
     - "unmet_need": disease burden, patient population, current standard of care
     - "mechanism": biology of the target or pathway, genetics, animal models
     - "translation": drug exposure, PK/PD, target engagement, biomarkers in humans
@@ -81,7 +94,7 @@ CLASSIFICATION:
     - "regulatory": FDA/EMA status, designations, expanded access, labels
     - "safety_or_failure": adverse events, safety signals, stopped or failed trials
     - "other": anything else
-15. direction, one of:
+18. direction, one of:
     - "supports": the record reports a positive result for the drug (efficacy, favourable
       safety, strong mechanism evidence)
     - "contradicts": the record reports a negative or cautionary result (failure, early
@@ -90,11 +103,11 @@ CLASSIFICATION:
       ongoing trial and background facts
     A trial being registered, recruiting or large is NOT evidence that the drug works.
     A safety problem or adverse event is "contradicts", not "supports".
-16. confidence: "high" if the fact is stated directly with numbers or a clear status,
+19. confidence: "high" if the fact is stated directly with numbers or a clear status,
     otherwise "medium" or "low".
 
 OUTPUT:
-17. Respond with JSON only, no markdown, matching the provided schema.
+20. Respond with JSON only, no markdown, matching the provided schema.
 
 """
 
