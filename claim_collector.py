@@ -24,8 +24,8 @@ class Claim(BaseModel):
 class ClaimsResponse(BaseModel):
     claims: list[Claim]
 
-
-folder = Path("./results/raw/")
+folder = Path("./results/evidence/")
+output_file = Path("./results/claims.json")
 
 prompt = """
 You are a fact-extraction assistant for biotech investment due diligence.
@@ -141,5 +141,5 @@ result = {
     "claims": all_claims
 }
 
-with open("./results/claims.json", "w", encoding="utf-8") as f:
+with open(output_file, "w", encoding="utf-8") as f:
     json.dump(result, f, ensure_ascii=False, indent=2)
