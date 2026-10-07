@@ -6,7 +6,7 @@ from collections import Counter
 from pathlib import Path
 
 claims_path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("results/output0.json")
-parts_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("datagetters/results")
+parts_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("results/evidence")
 
 TRIAL_KINDS = {"nct", "nct_aact"}
 

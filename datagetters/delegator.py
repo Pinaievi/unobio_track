@@ -6,7 +6,7 @@ delegator.py — запускає всі data getters паралельно й з
   python delegator.py tirzepatide                             # один аргумент = препарат
   python delegator.py "Alzheimer disease" "BACE1 inhibitor"   # хвороба + препарат
 
-Результат: evidence_raw.json поруч із цим файлом.
+Результат: unobio_track/results/evidence_raw.json
 """
 
 import json
@@ -18,7 +18,11 @@ from pathlib import Path
 from getters import DataGetter, Query, discover
 
 GETTER_TIMEOUT = 90  # секунд на одне джерело
-OUTPUT_PATH = Path(__file__).resolve().parent / "evidence_raw.json"
+
+# Корінь проєкту = папка, що лежить над папкою з getters (unobio_track).
+ROOT = Path(__file__).resolve().parent.parent
+RESULTS_DIR = ROOT / "results"
+OUTPUT_PATH = RESULTS_DIR / "evidence_raw.json"
 
 DEFAULT_INDICATION = ""
 DEFAULT_MECHANISM = "retatrutide"
@@ -149,6 +153,7 @@ def main() -> None:
         else:
             print(f"{t['getter']:<18} ПОМИЛКА  {t['error']}")
 
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)   # створюємо results/, якщо її ще немає
     OUTPUT_PATH.write_text(
         json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
