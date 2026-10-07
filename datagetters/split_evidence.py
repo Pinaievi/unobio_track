@@ -16,7 +16,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 INPUT_PATH = HERE / "evidence_raw.json"
 RESULTS_DIR = HERE / "results"
-DEFAULT_LINE_LIMIT = 1000
+DEFAULT_LINE_LIMIT = 100
 HEADER_OVERHEAD = 12   # приблизно рядків на службову шапку кожного файлу
 
 
