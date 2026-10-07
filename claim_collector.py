@@ -25,7 +25,7 @@ class ClaimsResponse(BaseModel):
     claims: list[Claim]
 
 
-folder = Path("./datagetters/results/")
+folder = Path("./results/raw/")
 
 prompt = """
 You are a fact-extraction assistant for biotech investment due diligence.
