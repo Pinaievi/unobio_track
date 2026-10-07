@@ -75,7 +75,14 @@ HOW MANY CLAIMS:
     "translation", direction "neutral". Take the quote from the record's text field.
 13. Scientific articles and preprints: up to 4 claims. Prefer reported effect sizes with
     numbers, safety findings, and limitations stated by the authors. Skip records with no
-    abstract text.
+    abstract text. Articles whose meta.found_by is "pk_search" or "tissue_search": extract pharmacokinetic
+    parameters (half-life, Cmax, AUC, exposure), exposure-response findings, tissue
+    distribution and target engagement results as separate claims with stage "translation".
+    Articles whose meta.found_by is "epidemiology_search": extract prevalence, incidence and
+    burden figures with the year and the population they refer to, stage "unmet_need".
+    Preclinical results (animals, cells) must have confidence "medium" or "low" and say in
+    the claim that they are not human data.
+
 14. Open Targets records: a separate claim for each mechanism of action, each target
     function, and each target-disease association with its evidence types and scores.
 15. FDA label and FDA search records: extract what the record states (indications, boxed
