@@ -45,54 +45,82 @@ GENERAL RULES:
 
 QUOTES AND NUMBERS:
 6. Every claim must include a quote: an exact, word-for-word copy of a fragment from that
-   record (max 200 characters). Do not paraphrase inside the quote. Do not fix typos. Copy
-   special symbols exactly as written (for example ², ≥, −, ·); never replace them with
+   record. A quote is never longer than 200 characters; if the supporting text is longer,
+   quote its most informative part. Do not paraphrase inside the quote. Do not fix typos.
+   Copy special symbols exactly as written (for example ², ≥, −, ·); never replace them with
    plain characters.
 7. The quote must be ONE continuous fragment copied exactly from the record. Never assemble
    a quote from several fields, never use "..." inside a quote, and prefer a full phrase or
    sentence over a bare field name and number like "enrollment": 300.
-8. Every number in a claim must appear in the record text. The quote must contain the main
-   fact of the claim (what was tested or what was found); it does not have to contain every
-   number.
+8. Records with source_type "nct_aact_population" list eligibility criteria as bullet items
+   starting with "*". A quote must be ONE single bullet item, never several items joined
+   together. If a claim summarizes several criteria, quote the most important single one.
+9. Records with source_type "nct_aact_flow" and "nct_aact_pk" list values group by group.
+   Quote the entry of ONE group only (for example "Group A 12 mg: Lost to Follow-up (4),
+   Adverse Event (2)").
+10. Every number and threshold in a claim (for example a BMI limit) must be written in the
+    record text. The quote must contain the main fact of the claim (what was tested or what
+    was found); it does not have to contain every number. If the record does not state a
+    threshold, do not state it, even if you know it from elsewhere.
+11. For human pharmacokinetic data from a small or uncontrolled study (for example a few
+    self-administering users, or a drug of unverified origin), state the sample size in the
+    claim and use confidence "low". Data on approved drugs of the same class is an analogue,
+    not data on the studied drug: say so in the claim.
 
-HOW MANY CLAIMS:
-9. Main clinical trial records (source_type "nct" or "nct_aact"): one claim describing the
-   trial (drug, population, comparator, primary outcome, and phase, status and enrollment if
-   stated), with the quote taken from the title or summary text; plus one claim for the
-   results or for the reason the trial stopped, only if the record contains them.
-10. Records with source_type "nct_aact_population": up to 3 claims: (a) who is enrolled
+HOW MANY CLAIMS (by record type):
+12. Main clinical trial records (source_type "nct" or "nct_aact"): one claim describing the
+    trial (drug, population, comparator, primary outcome, and phase, status and enrollment if
+    stated), with the quote taken from the title or summary text; plus one claim for the
+    results or for the reason the trial stopped, only if the record contains them.
+13. Competition from trial records: if a main trial record shows that the studied drug is
+    compared with another drug (a comparator arm or a head-to-head design), extract one
+    claim naming the comparator, with stage "competition" and direction "neutral".
+14. Records with source_type "nct_aact_population": up to 3 claims: (a) who is enrolled
     (population, age range, sex, and baseline values such as mean age, BMI or HbA1c if
-    stated), stage "unmet_need"; (b) the key inclusion thresholds (for example BMI or HbA1c
-    limits), stage "clinical"; (c) the key exclusions, stage "clinical". Direction "neutral".
-    Take the quote from the record's text field.
-11. Records with source_type "nct_aact_flow": one claim on how many participants started and
-    completed in each group, and one claim on the main reasons for not completing. Stage
-    "clinical" for the first. For the second use stage "safety_or_failure"; direction
-    "contradicts" if the main reason is adverse events, otherwise "neutral". Take the quote
-    from the record's text field.
-12. Records with source_type "nct_aact_pk": one claim per reported pharmacokinetic parameter
+    stated), stage "unmet_need"; (b) the key inclusion threshold, stage "clinical"; (c) the
+    key exclusion, stage "clinical". Direction "neutral". Take the quote from the record's
+    text field.
+15. Records with source_type "nct_aact_flow": one claim on how many participants started and
+    completed in a group (stage "clinical"), and one claim on the main reasons for not
+    completing (stage "safety_or_failure"; direction "contradicts" if the main reason is
+    adverse events, otherwise "neutral"). Take the quote from the record's text field.
+16. Records with source_type "nct_aact_pk": one claim per reported pharmacokinetic parameter
     (Cmax, AUC, half-life, concentration) stating the value, unit and group. Stage
     "translation", direction "neutral". Take the quote from the record's text field.
-13. Scientific articles and preprints: up to 4 claims. Prefer reported effect sizes with
+17. Scientific articles and preprints: up to 4 claims. Prefer reported effect sizes with
     numbers, safety findings, and limitations stated by the authors. Skip records with no
-    abstract text. Articles whose meta.found_by is "pk_search" or "tissue_search": extract pharmacokinetic
-    parameters (half-life, Cmax, AUC, exposure), exposure-response findings, tissue
-    distribution and target engagement results as separate claims with stage "translation".
-    Articles whose meta.found_by is "epidemiology_search": extract prevalence, incidence and
-    burden figures with the year and the population they refer to, stage "unmet_need".
-    Preclinical results (animals, cells) must have confidence "medium" or "low" and say in
-    the claim that they are not human data.
-
-14. Open Targets records: a separate claim for each mechanism of action, each target
+    abstract text.
+18. Use how the article was found (meta.found_by_all):
+    - if it includes "pk_search" or "tissue_search": extract pharmacokinetic parameters
+      (half-life, Cmax, AUC, exposure), exposure-response findings, tissue distribution and
+      target engagement results as separate claims with stage "translation";
+    - if it includes "epidemiology_search": extract prevalence, incidence and burden figures
+      with the year and the population they refer to, stage "unmet_need", direction
+      "neutral";
+    - results from animals or cells must have confidence "medium" or "low", and the claim
+      must say that they are not human data.
+19. Case reports and safety signals are useful: if a record describes an adverse event or a
+    complication in a patient or user, extract one claim stating that it is a single case,
+    with stage "safety_or_failure", direction "contradicts" and confidence "low".
+20. Open Targets records: a separate claim for each mechanism of action, each target
     function, and each target-disease association with its evidence types and scores.
-15. FDA label and FDA search records: extract what the record states (indications, boxed
-    warnings, adverse reactions, or that no label was found). A drug appearing in a text-search
-    list is NOT evidence that it is indicated for the condition; state only what the record
-    says and do not call such a drug a competitor.
-16. Claims from preprints (source_type epmc_ppr) must have confidence "medium" or "low".
+    Association scores measure the strength of evidence, not the probability of clinical
+    success; never describe them as a chance of success. If a target record states that none
+    of the top associated diseases matched the indication, extract it as one claim with
+    stage "mechanism", direction "neutral", confidence "low", and say that it refers only to
+    the top of the list.
+21. FDA label and FDA search records: extract what the record states (indications, boxed
+    warnings, adverse reactions, or that no label was found). A drug appearing in a
+    text-search list is NOT evidence that it is indicated for the condition; state only what
+    the record says and do not call such a drug a competitor.
+22. FDA adverse event (FAERS) records: one claim on the number of reports and serious
+    reports, and one claim on the most frequent reactions. The claim must say that the
+    reports are spontaneous and do not prove that the drug caused the events. Stage
+    "safety_or_failure", direction "neutral".
+23. Claims from preprints (source_type epmc_ppr) must have confidence "medium" or "low".
 
 CLASSIFICATION:
-17. stage, one of:
+24. stage, one of:
     - "unmet_need": disease burden, patient population, current standard of care
     - "mechanism": biology of the target or pathway, genetics, animal models
     - "translation": drug exposure, PK/PD, target engagement, biomarkers in humans
@@ -101,7 +129,7 @@ CLASSIFICATION:
     - "regulatory": FDA/EMA status, designations, expanded access, labels
     - "safety_or_failure": adverse events, safety signals, stopped or failed trials
     - "other": anything else
-18. direction, one of:
+25. direction, one of:
     - "supports": the record reports a positive result for the drug (efficacy, favourable
       safety, strong mechanism evidence)
     - "contradicts": the record reports a negative or cautionary result (failure, early
@@ -110,11 +138,11 @@ CLASSIFICATION:
       ongoing trial and background facts
     A trial being registered, recruiting or large is NOT evidence that the drug works.
     A safety problem or adverse event is "contradicts", not "supports".
-19. confidence: "high" if the fact is stated directly with numbers or a clear status,
+26. confidence: "high" if the fact is stated directly with numbers or a clear status,
     otherwise "medium" or "low".
 
 OUTPUT:
-20. Respond with JSON only, no markdown, matching the provided schema.
+27. Respond with JSON only, no markdown, matching the provided schema.
 
 """
 
