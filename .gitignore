@@ -1,2 +1,6 @@
 .vscode
 .env
+.cache/
+datagetters/results/
+datagetters/evidence_raw.json
+datagetters/getters/__pycache__/
