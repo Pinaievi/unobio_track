@@ -110,6 +110,26 @@ def run(query: Query, getters: list[DataGetter] | None = None) -> dict:
 
     unique, removed = dedupe(evidence)
 
+    # друга фаза: getters, що вміють уточнювати результат за даними інших джерел
+    # (edgar бере спонсора з реєстру випробувань і замінює запис із ручної таблиці)
+    for g in getters:
+        refine = getattr(g, "refine", None)
+        if refine is None:
+            continue
+        try:
+            out = refine(query, unique)
+            if out is not None:
+                new_records, replace_types = out
+                unique = [r for r in unique if r["source_type"] not in replace_types]
+                for rec in new_records:
+                    rec["meta"]["getter"] = g.name
+                unique += new_records
+                trace.append({"getter": f"{g.name}:refine", "ok": True,
+                              "count": len(new_records), "seconds": 0})
+        except Exception as e:
+            trace.append({"getter": f"{g.name}:refine", "ok": False,
+                          "error": f"{type(e).__name__}: {e}"})
+
     return {
         "input": {"indication": query.indication, "mechanism": query.mechanism},
         "total_seconds": round(time.time() - started, 2),

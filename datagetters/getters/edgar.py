@@ -105,17 +105,23 @@ def _sec_get(url: str, params: dict | None = None) -> dict:
 
 
 def _pick(facts: dict, kind: str):
-    """Повертає (тег, одиниця, список фактів) для першого знайденого тегу з USD
-    (або іншою валютою, якщо USD немає)."""
+    """Повертає (тег, одиниця, список фактів). Компанії змінюють теги з роками
+    (наприклад R&D з/без придбаних проєктів), тому беремо тег з НАЙСВІЖІШИМИ даними,
+    а не перший знайдений."""
+    best = (None, None, [], "")
     for taxonomy, tag in TAGS[kind]:
         node = facts.get("facts", {}).get(taxonomy, {}).get(tag)
         if not node:
             continue
         units = node.get("units", {})
         unit = "USD" if "USD" in units else (next(iter(units), None))
-        if unit:
-            return tag, unit, units[unit]
-    return None, None, []
+        if not unit:
+            continue
+        rows = units[unit]
+        newest = max((r.get("end") or "" for r in rows), default="")
+        if newest > best[3]:
+            best = (tag, unit, rows, newest)
+    return best[0], best[1], best[2]
 
 
 def _latest_annual(rows: list):
@@ -151,6 +157,31 @@ def _d(s: str):
     return date(y, m, d)
 
 
+STOP = {"inc", "corp", "corporation", "co", "company", "plc", "ltd", "limited", "llc",
+        "the", "and", "ag", "sa", "nv", "holdings", "holding", "lp", "gmbh", "se"}
+
+
+def _norm_name(name: str) -> list:
+    """Назва компанії -> список значущих слів (без Inc, Corp, & тощо)."""
+    words = re.sub(r"[^a-z0-9]+", " ", (name or "").lower().replace("&", " ")).split()
+    return [w for w in words if w not in STOP]
+
+
+def match_sponsor(sponsor: str, tickers: dict):
+    """Шукає в списку SEC компанію з такою ж назвою, як лідер-спонсор у реєстрі.
+    Збіг: слова однакові, або слова SEC-назви — початок назви спонсора
+    (наприклад «Novartis Pharmaceuticals» -> «NOVARTIS AG»). Нічого не знайдено = None."""
+    sp = _norm_name(sponsor)
+    if not sp:
+        return None
+    for row in tickers.values():
+        tt = _norm_name(row.get("title", ""))
+        if tt and (tt == sp or (sp[:len(tt)] == tt and len(tt) >= 1 and
+                                 tt[0] == sp[0])):
+            return int(row["cik_str"]), row["title"], row["ticker"]
+    return None
+
+
 def _fmt(v, unit):
     return f"{unit} {v:,.0f}" if unit != "USD" else f"${v:,.0f}"
 
@@ -174,6 +205,32 @@ class EdgarGetter(DataGetter):
         print(f"[edgar] {company} ({ticker}): запис із фінансами створено"
               f"{'' if verified else ' (спонсор НЕ підтверджено)'}")
         return [rec]
+
+    def refine(self, query: Query, evidence: list):
+        """Друга фаза (її викликає delegator після всіх getters): спонсор беремо з реєстру
+        випробувань (поле lead_sponsor), а не з ручної таблиці. Повертає (записи,
+        типи записів, які треба замінити) або None, якщо нічого не змінюємо."""
+        from collections import Counter
+        drug = (query.mechanism or "").strip()
+        counts = Counter(
+            r["meta"].get("lead_sponsor") for r in evidence
+            if r.get("source_type") == "nct_aact" and r["meta"].get("lead_sponsor"))
+        if not counts:
+            return None
+        sponsor = counts.most_common(1)[0][0]
+        found = match_sponsor(sponsor, _sec_get(TICKERS_URL))
+        if not found:
+            print(f"[edgar] спонсор з реєстру «{sponsor}» не подає звіти до SEC "
+                  f"(або назву не знайдено): запис про фінанси не створюється")
+            return [], {"sec_filings"}
+        cik, company, ticker = found
+        facts = _sec_get(FACTS_URL.format(cik=cik))
+        rec = self._build_record(drug, cik, company, ticker, True, facts)
+        if rec is None:
+            return [], {"sec_filings"}
+        rec["meta"]["sponsor_source"] = f"registry lead sponsor: {sponsor}"
+        print(f"[edgar] спонсор з реєстру «{sponsor}» -> {company} ({ticker})")
+        return [rec], {"sec_filings"}
 
     # ------------------------------------------------------------ пошук компанії
     def _find_company(self, drug: str):

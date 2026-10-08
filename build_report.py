@@ -26,6 +26,7 @@ build_report.py — збирає Investment Underwriting Report із claims.
 
 import argparse
 import json
+from datetime import date, datetime
 import os
 import re
 import sys
@@ -356,6 +357,9 @@ RULES:
    claim into a firm statement about competitors (for example "worse than competitors"):
    a comparison with other drugs is allowed only if a cited claim is a direct head-to-head
    trial; otherwise write that the signal comes from indirect data and needs confirmation.
+2b. Lead the rationale with the strongest PEER-REVIEWED human result (for example a
+   randomised trial with its comparator) and the strongest safety result. Company-reported
+   or not-yet-peer-reviewed numbers may be used only as an inference with that caveat.
 3. critical_unknowns: facts that, if known, would change the recommendation. Concrete.
 4. diligence_questions: 5 to 10 questions a diligence team should ask the company or
    check in data. Each must be specific and answerable.
@@ -525,7 +529,9 @@ class Runner:
 # ---------------------------------------------------------------- claims
 
 TRUNC_RE = re.compile(r"(?:[;,(=<>±:]|\s[a-z])$")
-LOW_CERT_RE = re.compile(r"(?i)\b(?:very )?low[- ](?:certainty|quality)\b")
+LOW_CERT_RE = re.compile(
+    r"(?i)\b(?:very )?low[- ](?:certainty|quality)\b|not yet peer[- ]reviewed|"
+    r"company[- ]reported|press release|unpublished|\bpreliminary (?:data|results)")
 YEAR_RE = re.compile(r"^(?:19|20|21)\d\d$")
 
 
@@ -536,6 +542,8 @@ NOISE_UNMET_RE = re.compile(
     r"hazard ratio|odds ratio|risk of developing|"
     r"associated with (?:an? )?(?:increased|higher|lower|reduced|greater) (?:risk|odds))\b")
 # шум у будь-якому етапі: доглядальники, гормони щитоподібної залози, не пов'язані з препаратом
+# рух учасників у Phase 1 (lost to follow-up тощо) не є сигналом безпеки
+NOISE_FLOW_RE = re.compile(r"(?i)lost to follow-?up|withdrawal by subject")
 NOISE_ANY_RE = re.compile(r"(?i)\b(?:caregivers?|study partners?|informants?|thyroid)\b")
 MIN_QUOTE_LEN = 25
 # твердження про відсутність даних: у звіті це лише «у знайдених джерелах»
@@ -545,6 +553,24 @@ GAP_RE = re.compile(
     r"\b(?:lack|absence) of\b|\bnot (?:yet )?(?:been )?(?:published|reported)\b")
 SOURCES_RE = re.compile(r"(?i)(?:retrieved|provided|available|reviewed|these|the) sources|"
                         r"in the (?:claims|dossier|records)|not covered by")
+
+
+# Міжнародні назви ліків (суфікси INN): так відрізняємо «інший препарат» у тексті claim.
+INN_RE = re.compile(
+    r"(?i)\b[a-z]{3,}(?:mab|tug|cept|tinib|rasib|parib|ciclib|stat|tide|glutide|"
+    r"siran|gene|vir|tecan|degib|sertib|lisib|zomib)\b")
+OTHER_DRUG_STAGES = {"translation", "mechanism", "clinical", "safety_or_failure"}
+
+
+def other_drugs_in(text: str) -> list:
+    """Назви препаратів у тексті, яких немає серед імен цільового препарату."""
+    return sorted({m.group(0).lower() for m in INN_RE.finditer(text or "")}
+                  - {n.lower() for n in DRUG_NAMES})
+
+
+def clean_ids(text: str) -> str:
+    """Прибираємо номери claims із вільного тексту (вони мають бути лише в claim_ids)."""
+    return re.sub(r"(?i)\b(?:claims?\s+)?[CX]\d{3}\b", "a claim", text or "")
 
 
 def mentions_drug(c: dict) -> bool:
@@ -584,7 +610,8 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
             dropped.append({"reason": "цитата надто коротка", "claim": c})
             continue
         ctext = c.get("claim", "") + " " + c.get("quote", "")
-        if NOISE_ANY_RE.search(ctext) or (
+        if (c.get("direction") == "neutral" and NOISE_FLOW_RE.search(ctext)) or \
+                NOISE_ANY_RE.search(ctext) or (
                 c.get("stage") == "unmet_need" and NOISE_UNMET_RE.search(ctext)):
             dropped.append({"reason": "шум: вузька підгрупа/асоціація ризику/"
                                       "критерії доглядальника", "claim": c})
@@ -613,7 +640,7 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
         # якщо сама цитата каже «low certainty», впевненість не може бути вищою
         if LOW_CERT_RE.search(c.get("quote", "")) and c.get("confidence") != "low":
             c["confidence"] = "low"
-            c["confidence_adjusted"] = "цитата містить low certainty"
+            c["confidence_adjusted"] = "цитата: low certainty / не рецензовано / від компанії"
         # є в записі, але не в цитаті і не в meta
         backed = numbers(c.get("quote", "")) | numbers(
             json.dumps(rec.get("meta") or {}, ensure_ascii=False))
@@ -635,6 +662,14 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
             in_claim = any(nm in c.get("claim", "").lower() for nm in DRUG_NAMES)
             in_quote = any(nm in c.get("quote", "").lower() for nm in DRUG_NAMES)
             item["drug_not_in_quote"] = bool(in_claim and not in_quote)
+        # claim про ІНШИЙ названий препарат не є доказом за чи проти цільового
+        if DRUG_NAMES and item.get("stage") in OTHER_DRUG_STAGES \
+                and item.get("direction") in ("supports", "contradicts") \
+                and not any(nm in item.get("claim", "").lower() for nm in DRUG_NAMES):
+            others = other_drugs_in(item.get("claim", ""))
+            if others:
+                item["reclassified_other_drug"] = others
+                item["stage"], item["direction"] = "competition", "neutral"
         # роки у флаг не виносимо: це шум (діапазони років з контексту запису)
         item["numbers_outside_quote"] = [n for n in outside if not YEAR_RE.match(n)]
         item["id"] = f"{prefix}{n:03d}"
@@ -880,7 +915,8 @@ def trial_table(evidence: dict) -> dict:
             continue
         t = table.setdefault(m.group(0), {
             "nct": m.group(0), "evidence_ids": [], "title": None, "status": "",
-            "phase3": None, "enrollment": None, "has_results": None, "blob": ""})
+            "phase3": None, "enrollment": None, "has_results": None, "blob": "",
+            "start": None, "primary_completion": None, "sponsor": None})
         meta = r.get("meta") or {}
         t["evidence_ids"].append(r["id"])
         t["title"] = t["title"] or r.get("title")
@@ -895,6 +931,21 @@ def trial_table(evidence: dict) -> dict:
             t["enrollment"] = norm_int(find_key(meta, ["enrollment",
                                                        "enrollment_count",
                                                        "enrollmentInfo"]))
+        if t["start"] is None:
+            t["start"] = parse_date(find_key(
+                meta, ["start_date", "startDateStruct", "startDate",
+                       "start_date_struct"]))
+        if t["primary_completion"] is None:
+            t["primary_completion"] = parse_date(find_key(
+                meta, ["primary_completion", "primary_completion_date",
+                       "primaryCompletionDateStruct", "primaryCompletionDate",
+                       "primary_completion_date_struct", "completion",
+                       "completion_date", "completionDateStruct", "completionDate"]))
+        if not t["sponsor"]:
+            sp = find_key(meta, ["lead_sponsor", "leadSponsor"])
+            if isinstance(sp, dict):
+                sp = sp.get("name")
+            t["sponsor"] = str(sp) if sp else None
         hr = find_key(meta, ["has_results", "hasResults"])
         if t["has_results"] is None and hr is not None:
             t["has_results"] = str(hr).lower() in ("true", "1", "yes")
@@ -909,39 +960,46 @@ def funding_statements(evidence: dict, calc, issues: list) -> list:
     рахує код. Це загальні цифри компанії, не витрати на цей препарат."""
     recs = [r for r in evidence.values() if r.get("source_type") == "sec_filings"]
     if not recs:
-        return [{"text": "Sponsor funding: no SEC filer was found for this drug (the "
-                         "sponsor may be private or foreign), so cash and runway could "
-                         "not be compared with the estimated need.",
+        return [{"text": "Sponsor funding: the lead sponsor of the trials is not an SEC "
+                         "filer (it may be private or foreign), so cash and runway "
+                         "could not be compared with the estimated need.",
                  "kind": "inference", "claim_ids": [], "evidence_ids": [],
                  "unverified_numbers": []}]
     out = []
     for r in recs:
         m = r.get("meta") or {}
         who = f"{m.get('company')} ({m.get('ticker') or 'no ticker'})"
-        parts = []
-        if m.get("cash_value") is not None:
-            parts.append(f"cash and cash equivalents ${m['cash_value']:,.0f} as of "
-                         f"{m['cash_date']}" if m.get("cash_unit") == "USD" else
-                         f"cash {m['cash_unit']} {m['cash_value']:,.0f} as of "
-                         f"{m['cash_date']}")
-        if m.get("rd_value") is not None:
-            parts.append(f"R&D expense {m.get('rd_unit')} {m['rd_value']:,.0f} for the "
-                         f"fiscal year ended {m['rd_fy_end']}")
-        if m.get("opcf_value") is not None:
-            parts.append(f"net operating cash flow {m.get('opcf_unit')} "
-                         f"{m['opcf_value']:,.0f} for the fiscal year ended "
-                         f"{m['opcf_fy_end']}")
-        out.append({"text": f"Sponsor funding (SEC EDGAR, company-wide, not specific to "
-                            f"this drug) for {who}: " + "; ".join(parts) + ".",
-                    "kind": "evidence", "claim_ids": [], "evidence_ids": [r["id"]],
-                    "unverified_numbers": []})
         if not m.get("sponsor_verified"):
-            out.append({"text": f"Caution: {who} was found by a full-text search for the "
-                                f"drug name in SEC filings; it may be a competitor, not "
-                                f"the owner. Check the sponsor before using these "
-                                f"figures.",
+            # власник препарату не підтверджений: цифр не показуємо й не порівнюємо
+            out.append({"text": f"Sponsor funding: {who} was found only by a text search "
+                                f"for the drug name in SEC filings; it may be a "
+                                f"competitor or a royalty holder, so its figures are "
+                                f"NOT used. Identify the real sponsor first.",
                         "kind": "inference", "claim_ids": [], "evidence_ids": [r["id"]],
                         "unverified_numbers": []})
+            continue
+
+        def money(v, unit):
+            return f"${v:,.0f}" if unit == "USD" else f"{unit} {v:,.0f}"
+
+        parts = []
+        if m.get("cash_value") is not None:
+            parts.append(f"cash and cash equivalents "
+                         f"{money(m['cash_value'], m.get('cash_unit'))} as of "
+                         f"{m['cash_date']}")
+        if m.get("rd_value") is not None:
+            parts.append(f"R&D expense {money(m['rd_value'], m.get('rd_unit'))} for the "
+                         f"fiscal year ended {m['rd_fy_end']}")
+        if m.get("opcf_value") is not None:
+            parts.append(f"net operating cash flow "
+                         f"{money(m['opcf_value'], m.get('opcf_unit'))} for the fiscal "
+                         f"year ended {m['opcf_fy_end']}")
+        out.append({"text": f"Sponsor funding (SEC EDGAR, company-wide, not specific to "
+                            f"this drug) for {who}"
+                            + (f" [{m['sponsor_source']}]" if m.get("sponsor_source")
+                               else "") + ": " + "; ".join(parts) + ".",
+                    "kind": "evidence", "claim_ids": [], "evidence_ids": [r["id"]],
+                    "unverified_numbers": []})
         if m.get("cash_unit") != "USD" or m.get("opcf_unit") != "USD":
             issues.append(f"Capital: цифри {m.get('company')} не в USD — порівняння не "
                           f"робилось")
@@ -951,7 +1009,7 @@ def funding_statements(evidence: dict, calc, issues: list) -> list:
         if cash is not None and opcf is not None and opcf < 0:
             bits.append(f"at the last annual cash burn the cash lasts about "
                         f"{cash / -opcf * 12:,.0f} months")
-        if cash is not None and calc and calc.get("usd_high"):
+        if cash and calc and calc.get("usd_high"):
             lo, hi = calc["usd_low"], calc["usd_high"]
             bits.append(f"the assumed cost of the counted Phase 3 trials "
                         f"(${lo / 1e6:,.0f}M-${hi / 1e6:,.0f}M) is "
@@ -964,6 +1022,42 @@ def funding_statements(evidence: dict, calc, issues: list) -> list:
                         "kind": "inference", "claim_ids": [], "evidence_ids": [r["id"]],
                         "unverified_numbers": []})
     return out
+
+
+def parse_date(v):
+    """Дата з реєстру ('2025-05-01', '2025-05', {'date': ...}) -> date або None."""
+    if isinstance(v, dict):
+        v = v.get("date")
+    if not v:
+        return None
+    txt = str(v).strip()[:10]
+    for fmt, n in (("%Y-%m-%d", 10), ("%Y-%m", 7)):
+        try:
+            return datetime.strptime(txt[:n], fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
+# частка вартості, що лишається, не менша за цю (завершення, очищення даних, звіт)
+REMAINING_FLOOR = 0.10
+
+
+def remaining_fraction(t: dict, today):
+    """Яка частка вартості Phase 3 ще попереду. Припущення: витрати розподілені рівномірно
+    між стартом і первинним завершенням. Повертає (мін, макс, пояснення)."""
+    st, pc = t.get("start"), t.get("primary_completion")
+    if t["status"] == "NOT_YET_RECRUITING" or (st and st > today):
+        return 1.0, 1.0, "not started yet"
+    if st and pc and pc > st:
+        elapsed = min(max((today - st).days / (pc - st).days, 0.0), 1.0)
+        f = max(1.0 - elapsed, REMAINING_FLOOR)
+        return f, f, f"{elapsed * 100:.0f}% of planned time elapsed"
+    return REMAINING_FLOOR, 1.0, "dates missing: range 10%-100%"
+
+
+def months_between(a, b) -> float:
+    return (b - a).days / 30.4
 
 
 def capital_from_registry(evidence: dict, claims: list, claim_map: dict,
@@ -1025,23 +1119,27 @@ def capital_from_registry(evidence: dict, claims: list, claim_map: dict,
               "evidence_ids": sorted({e for t in done + counted for e in
                                       t["evidence_ids"]}),
               "unverified_numbers": []}]
-    for t in counted:
+    today = date.today()
+    active = counted + closed          # випробування, де ще є витрати
+    sponsors = sorted({t["sponsor"] for t in active + done if t.get("sponsor")})
+    if sponsors:
+        stmts.append({
+            "text": "Lead sponsor(s) of the Phase 3 trials according to the registry: "
+                    + "; ".join(sponsors) + ".",
+            "kind": "evidence", "claim_ids": [],
+            "evidence_ids": [e for t in active + done for e in t["evidence_ids"]],
+            "unverified_numbers": []})
+    for t in active:
+        state = ("still enrolling" if t in counted else "enrollment closed")
+        dates = (f", start {t['start']}" if t.get("start") else "") + \
+                (f", primary completion {t['primary_completion']}"
+                 if t.get("primary_completion") else "")
         stmts.append({
             "text": f"{t['nct']} ({short(t)}): Phase 3, registry status "
-                    f"{t['status']}, {t['enrollment']:,} participants planned. "
-                    f"Counted: still enrolling.",
+                    f"{t['status']} ({state}), "
+                    f"{(t['enrollment'] or 0):,} participants planned{dates}.",
             "kind": "evidence", "claim_ids": claim_ids_of(t),
             "evidence_ids": t["evidence_ids"], "unverified_numbers": []})
-    if closed:
-        stmts.append({
-            "text": "Phase 3 trials with enrollment closed (ACTIVE_NOT_RECRUITING), "
-                    "not counted because most of their cost is already incurred: "
-                    + "; ".join(f"{t['nct']}"
-                                + (f" ({t['enrollment']:,})" if t["enrollment"] else "")
-                                for t in closed) + ".",
-            "kind": "evidence", "claim_ids": [],
-            "evidence_ids": [e for t in closed for e in t["evidence_ids"]],
-            "unverified_numbers": []})
     if done:
         stmts.append({
             "text": "Phase 3 trials excluded because they are completed or have "
@@ -1057,72 +1155,82 @@ def capital_from_registry(evidence: dict, claims: list, claim_map: dict,
             "evidence_ids": [e for t in other for e in t["evidence_ids"]],
             "unverified_numbers": []})
 
-    total = sum(t["enrollment"] for t in counted)
+    # --- вартість: учасники x діапазон області x частка, що лишилась за часом
+    rows = []
+    for t in active:
+        if not t["enrollment"]:
+            issues.append(f"Capital: {t['nct']} без розміру вибірки — не пораховано")
+            continue
+        f_lo, f_hi, why = remaining_fraction(t, today)
+        tot_lo, tot_hi = t["enrollment"] * cost_lo, t["enrollment"] * cost_hi
+        rows.append({"nct": t["nct"], "participants": t["enrollment"],
+                     "status": t["status"], "start": str(t.get("start") or ""),
+                     "primary_completion": str(t.get("primary_completion") or ""),
+                     "remaining_fraction": [f_lo, f_hi], "why": why,
+                     "total_usd": [tot_lo, tot_hi],
+                     "remaining_usd": [tot_lo * f_lo, tot_hi * f_hi]})
     calc = None
-    if total > 0:
-        low, high = total * cost_lo, total * cost_hi
-        calc = {"participants_total": total, "cost_area": area,
-                "trials_counted": [t["nct"] for t in counted],
-                "trials_enrollment_closed": [t["nct"] for t in closed],
-                "trials_excluded_done": [t["nct"] for t in done],
+    if rows:
+        low = sum(r["remaining_usd"][0] for r in rows)
+        high = sum(r["remaining_usd"][1] for r in rows)
+        pcs = sorted(t["primary_completion"] for t in active
+                     if t.get("primary_completion"))
+        calc = {"participants_total": sum(r["participants"] for r in rows),
+                "cost_area": area,
                 "cost_per_participant_low": cost_lo,
                 "cost_per_participant_high": cost_hi,
-                "usd_low": low, "usd_high": high}
+                "trials": rows, "usd_low": low, "usd_high": high,
+                "trials_counted": [t["nct"] for t in counted],
+                "trials_enrollment_closed": [t["nct"] for t in closed],
+                "trials_excluded_done": [t["nct"] for t in done]}
+        lines = "; ".join(
+            f"{r['nct']}: ${r['remaining_usd'][0] / 1e6:,.0f}M-"
+            f"${r['remaining_usd'][1] / 1e6:,.0f}M ({r['why']})" for r in rows)
         stmts.append({
             "text": f"AI inference with an ASSUMPTION that is not from the sources "
-                    f"(cost range for the area '{area}'): "
-                    f"{total:,} participants x ${cost_lo:,}-"
-                    f"${cost_hi:,} per participant = about "
-                    f"${low / 1e6:,.0f}M-${high / 1e6:,.0f}M for the counted trials "
-                    f"only (excludes manufacturing, regulatory filing and launch).",
+                    f"(cost range for the area '{area}', spend spread evenly between "
+                    f"start and primary completion, at least "
+                    f"{REMAINING_FLOOR * 100:.0f}% always left): remaining spend per "
+                    f"trial: {lines}. Total about ${low / 1e6:,.0f}M-"
+                    f"${high / 1e6:,.0f}M (excludes manufacturing, regulatory "
+                    f"filing and launch).",
             "kind": "inference",
-            "claim_ids": sorted({i for t in counted for i in claim_ids_of(t)}),
-            "evidence_ids": [e for t in counted for e in t["evidence_ids"]],
+            "claim_ids": sorted({i for t in active for i in claim_ids_of(t)}),
+            "evidence_ids": [e for t in active for e in t["evidence_ids"]],
             "unverified_numbers": []})
+        if pcs:
+            first, last = pcs[0], pcs[-1]
+            m_first = months_between(today, first)
+            m_last = months_between(today, last)
+            def when(m, d):
+                return (f"{abs(m):.0f} months ago ({d})" if m < 0
+                        else f"in about {m:.0f} months ({d})")
+            text = (f"AI inference from registry dates: the earliest planned primary "
+                    f"completion of these Phase 3 trials is {when(m_first, first)}"
+                    + (f", the latest {when(m_last, last)}" if last != first else "")
+                    + ". Primary completion is not the same as results being "
+                      "published.")
+            stmts.append({"text": text, "kind": "inference", "claim_ids": [],
+                          "evidence_ids": [e for t in active for e in
+                                           t["evidence_ids"]],
+                          "unverified_numbers": []})
+            if m_last > 0 and high > 0:
+                calc["months_to_last_primary_completion"] = round(m_last, 1)
+                calc["monthly_burn_usd"] = [low / max(m_last, 1),
+                                            high / max(m_last, 1)]
     else:
-        stmts.append({"text": "No Phase 3 trial is still enrolling, so the new-enrollment "
-                              "cost is about zero; the remaining spend cannot be "
-                              "computed from the registry (it has no cost or "
-                              "progress data), see the upper bound below.",
+        stmts.append({"text": "No Phase 3 trial with a known size is in progress, so "
+                              "the remaining trial spend cannot be computed from the "
+                              "registry (it has no cost or progress data).",
                       "kind": "inference", "claim_ids": [], "evidence_ids": [],
-                      "unverified_numbers": []})
-    closed_total = sum(t["enrollment"] or 0 for t in closed)
-    if closed_total > 0:
-        outc = [t for t in closed if re.search(r"event-driven|major adverse",
-                                               t["blob"])]
-        rest = [t for t in closed if t not in outc]
-        outc_n = sum(t["enrollment"] or 0 for t in outc)
-        rest_n = closed_total - outc_n
-        lo, hi = (closed_total * cost_lo,
-                  closed_total * cost_hi)
-        r_lo, r_hi = (rest_n * cost_lo,
-                      rest_n * cost_hi)
-        if calc is None:
-            calc = {"participants_total": 0}
-        calc["cost_area"] = area
-        calc["closed_upper_bound_usd"] = [lo, hi]
-        calc["closed_without_outcomes_trials_usd"] = [r_lo, r_hi]
-        calc["outcomes_trials"] = [t["nct"] for t in outc]
-        text = (f"For reference only (AI inference with the same ASSUMPTION): the "
-                f"full cost of the {len(closed)} Phase 3 trials with closed enrollment "
-                f"({closed_total:,} participants) would be about "
-                f"${lo / 1e6:,.0f}M-${hi / 1e6:,.0f}M. This is an UPPER BOUND on their "
-                f"remaining spend, because most of it is already incurred.")
-        if outc and rest:
-            text += (f" Event-driven outcomes trial(s) "
-                     f"{', '.join(t['nct'] for t in outc)} ({outc_n:,} participants) "
-                     f"are included in this; without them the figure is about "
-                     f"${r_lo / 1e6:,.0f}M-${r_hi / 1e6:,.0f}M ({rest_n:,} "
-                     f"participants).")
-        stmts.append({"text": text, "kind": "inference", "claim_ids": [],
-                      "evidence_ids": [e for t in closed for e in t["evidence_ids"]],
                       "unverified_numbers": []})
     stmts += funding_statements(evidence, calc, issues)
     for note in ("Trial status and enrollment are a snapshot of the registry at "
                  "the time of the search.",
                  "Cost per participant is an assumed range for the therapeutic area "
-                 "(not from the sources); real costs differ by trial design, "
-                 "country and duration."):
+                 "(not from the sources); the share of cost already spent is "
+                 "estimated from elapsed time, not from real progress; real costs "
+                 "differ by trial design, country and duration."):
         stmts.append({"text": f"Limit of the estimate: {note}", "kind": "inference",
                       "claim_ids": [], "evidence_ids": [], "unverified_numbers": []})
     return stmts, calc
@@ -1230,6 +1338,9 @@ def render_claims_md(report: dict) -> str:
                  + (f"  \n  ⚠ numbers not in the quote (found elsewhere in the "
                     f"record): {c['numbers_outside_quote']}"
                     if c.get("numbers_outside_quote") else "")
+        + (f"\n  ℹ claim про інший препарат {c['reclassified_other_drug']}: "
+           f"позначено як нейтральний competition"
+           if c.get("reclassified_other_drug") else "")
                  + ("  \n  ⚠ drug name is in the claim but not in the quote "
                     "(attribution not verified)" if c.get("drug_not_in_quote") else ""))
     return "\n".join(L) + "\n"
@@ -1318,7 +1429,7 @@ def main():
             "title": spec["title"],
             "statements": validate_statements(draft.statements, claim_map,
                                               spec["title"], issues),
-            "gaps": draft.gaps,
+            "gaps": [clean_ids(g) for g in draft.gaps],
         }
 
     # перевірка покриття: важливі claims (supports/contradicts), яких не цитує жоден розділ
