@@ -31,6 +31,7 @@ from typing import Literal
 import dotenv
 from google import genai
 from pydantic import BaseModel, Field
+import prompts
 
 # ---------------------------------------------------------------- налаштування
 
@@ -175,9 +176,7 @@ def main():
                     help="скільки частин обробляти одночасно")
     args = ap.parse_args()
 
-    if not PROMPT_PATH.exists():
-        sys.exit(f"Не знайдено {PROMPT_PATH}. Поклади extraction_prompt.txt у корінь проєкту.")
-    prompt = PROMPT_PATH.read_text(encoding="utf-8")
+    prompt = prompts.EXTRACTION_PROMPT
 
     dotenv.load_dotenv()
     key = os.environ.get("API_KEY")
