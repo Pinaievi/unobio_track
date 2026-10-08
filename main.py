@@ -25,7 +25,7 @@ DATAGETTER = ROOT / "datagetters"
 
 FETCH_SCRIPT = DATAGETTER / "delegator.py"
 SPLIT_SCRIPT = DATAGETTER / "split_evidence.py"
-TEXT_SCRIPT = ROOT / "json-to-text.py"
+TEXT_SCRIPT = ROOT / "claim_collector.py"
 
 
 def run_step(title: str, script: Path, args: list[str], cwd: Path) -> None:
