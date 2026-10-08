@@ -39,19 +39,27 @@ GENERAL RULES:
 2. Do NOT draw conclusions, make predictions, or give opinions.
 3. One claim = one fact, written as one short sentence.
 4. Every claim must cite the id of the record it comes from (evidence_id). Use only ids that
-   appear in the provided records.
+   appear in the provided records. A claim may use ONLY facts written in that single record:
+   never combine facts from different records, even if they describe the same trial (for
+   example, age limits are in the "nct_aact_population" record, not in the main trial
+   record).
 5. If a record contains nothing useful (no abstract text, no result, only a title), skip it.
    Do not invent claims to fill space.
 
 QUOTES AND NUMBERS:
 6. Every claim must include a quote: an exact, word-for-word copy of a fragment from that
-   record. A quote is never longer than 200 characters; if the supporting text is longer,
-   quote its most informative part. Do not paraphrase inside the quote. Do not fix typos.
+   record. A quote should be under 200 characters and must never exceed 300 characters; if
+   the supporting text is longer, quote its most informative part. Do not paraphrase inside the quote. Do not fix typos.
    Copy special symbols exactly as written (for example ², ≥, −, ·); never replace them with
    plain characters.
 7. The quote must be ONE continuous fragment copied exactly from the record. Never assemble
    a quote from several fields, never use "..." inside a quote, and prefer a full phrase or
-   sentence over a bare field name and number like "enrollment": 300.
+   sentence over a bare field name and number like "enrollment": 300. A quote is never a
+   single word or a bare number (for example "Placebo" or "32"): choose a phrase with enough
+   context to show what the fact is. Never build a quote by joining values from different
+   fields of the record (for example a statistic, its p-value and its confidence interval);
+   if the record holds such values only as separate fields, quote the outcome title or a
+   summary sentence instead.
 8. Records with source_type "nct_aact_population" list eligibility criteria as bullet items
    starting with "*". A quote must be ONE single bullet item, never several items joined
    together. If a claim summarizes several criteria, quote the most important single one.
@@ -71,7 +79,10 @@ HOW MANY CLAIMS (by record type):
 12. Main clinical trial records (source_type "nct" or "nct_aact"): one claim describing the
     trial (drug, population, comparator, primary outcome, and phase, status and enrollment if
     stated), with the quote taken from the title or summary text; plus one claim for the
-    results or for the reason the trial stopped, only if the record contains them.
+    reason the trial stopped, only if the record states it. If the text contains a part
+    starting with "Primary outcome results:", extract up to 3 claims from it, one per
+    reported comparison or dose group, each with its effect size, confidence interval and
+    p-value as written, and take the quote from that part of the text.
 13. Competition from trial records: if a main trial record shows that the studied drug is
     compared with another drug (a comparator arm or a head-to-head design), extract one
     claim naming the comparator, with stage "competition" and direction "neutral".
@@ -98,7 +109,11 @@ HOW MANY CLAIMS (by record type):
       with the year and the population they refer to, stage "unmet_need", direction
       "neutral";
     - results from animals or cells must have confidence "medium" or "low", and the claim
-      must say that they are not human data.
+      must say that they are not human data;
+    - the way an article was found does not decide the stage: use stage "translation" only
+      for exposure, tissue distribution, PK/PD or target engagement; use stage "mechanism"
+      for pathway activity and other biology in cells or animals; use stage "clinical" for
+      efficacy or safety results in patients.
 19. Case reports and safety signals are useful: if a record describes an adverse event or a
     complication in a patient or user, extract one claim stating that it is a single case,
     with stage "safety_or_failure", direction "contradicts" and confidence "low".
