@@ -57,6 +57,9 @@ class ClinicalTrialsGetter(DataGetter):
                 "status": status.get("overallStatus"),
                 "why_stopped": status.get("whyStopped"),
                 "start_date": status.get("startDateStruct", {}).get("date"),
+                # дати завершення потрібні для розрахунку капіталу за реєстром
+                "primary_completion": status.get("primaryCompletionDateStruct", {}).get("date"),
+                "completion": status.get("completionDateStruct", {}).get("date"),
                 "phases": design.get("phases", []),
                 "enrollment": design.get("enrollmentInfo", {}).get("count"),
                 "conditions": proto.get("conditionsModule", {}).get("conditions", []),

@@ -133,6 +133,14 @@ CLASSIFICATION:
       ongoing trial and background facts
     A trial being registered, recruiting or large is NOT evidence that the drug works.
     A safety problem or adverse event is "contradicts", not "supports".
+    Ex vivo, in vitro and isolated-tissue experiments (for example contractility of
+    isolated heart tissue, cell assays) are stage "mechanism" with confidence at most
+    "medium", never "translation". A change in contractility, rhythm or other cardiac
+    function seen only ex vivo or in vitro is direction "neutral" (or "contradicts" if it
+    is a harmful signal), never "supports".
+    Trial status wording: write "enrolls" or "is enrolling" only if the record status is
+    RECRUITING; for ACTIVE_NOT_RECRUITING write "is ongoing, enrollment closed"; for
+    NOT_YET_RECRUITING write "is planned". Never write "actively enrolling" otherwise.
     Direction is always about the studied drug. Facts about the disease (prevalence,
     burden, risk factors, causes of the disease) and facts about other drugs are always
     "neutral", even when the finding is negative or null. If a sentence reports both a
@@ -144,6 +152,12 @@ CLASSIFICATION:
     studies the share with ANY adverse event is background information, direction
     "neutral", not "contradicts". Use "contradicts" only for serious or treatment-related
     events, discontinuations, or rates clearly above placebo.
+    Competitor registry records (source_type "competitor_registry", title starting
+    "Competitor Phase 3 programme"): extract exactly ONE claim per record, stage
+    "competition", direction "neutral", confidence "high". The claim names the competitor
+    drug, its lead sponsor, the number of active Phase 3 trials and the planned
+    enrollment. The quote is the first sentence of the record text, copied exactly.
+    Never describe such a drug as effective or safe: the record is only trial activity.
 26. confidence: "high" if the fact is stated directly with numbers or a clear status,
     otherwise "medium" or "low".
 

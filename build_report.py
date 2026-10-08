@@ -227,6 +227,10 @@ RULES:
 14. Every claim with direction "supports" or "contradicts" in your list must be used in
    a statement, or its omission explained in "gaps" (for example because it concerns
    another drug). Do not silently skip the strongest positive or negative claims.
+15. Do not call a trend "dose-dependent", "dose-related" or "increasing with dose" in
+   your own words unless the cited numbers actually rise with the dose in order (for
+   example 4% then 12% then 8% is NOT monotonic: say the rates differ by dose and give
+   the numbers). Do not generalise from one trial to the whole drug.
 13. The percentage of participants with ANY adverse event in a Phase 1, healthy-volunteer
    or small dose-escalation cohort is not a safety signal by itself: nearly all
    participants report some event. Do not call it a "high incidence" or a "safety
@@ -360,6 +364,9 @@ RULES:
 2b. Lead the rationale with the strongest PEER-REVIEWED human result (for example a
    randomised trial with its comparator) and the strongest safety result. Company-reported
    or not-yet-peer-reviewed numbers may be used only as an inference with that caveat.
+   Write each such result as its OWN [E] statement that cites exactly ONE claim (for
+   example one dose of one randomised trial); do not merge several claims or several
+   papers into one statement, otherwise the statement is downgraded to [AI].
 3. critical_unknowns: facts that, if known, would change the recommendation. Concrete.
 4. diligence_questions: 5 to 10 questions a diligence team should ask the company or
    check in data. Each must be specific and answerable.
@@ -544,13 +551,17 @@ NOISE_UNMET_RE = re.compile(
 # шум у будь-якому етапі: доглядальники, гормони щитоподібної залози, не пов'язані з препаратом
 # рух учасників у Phase 1 (lost to follow-up тощо) не є сигналом безпеки
 NOISE_FLOW_RE = re.compile(r"(?i)lost to follow-?up|withdrawal by subject")
-NOISE_ANY_RE = re.compile(r"(?i)\b(?:caregivers?|study partners?|informants?|thyroid)\b")
+NOISE_ANY_RE = re.compile(
+    r"(?i)\b(?:caregivers?|study partners?|informants?|thyroid|anti-?doping|"
+    r"doping control|plasma detection window)\b")
+# один-два випадки в когорті з потоку учасників, без порівняння з контролем — не сигнал
+NOISE_FLOW_ONE_RE = re.compile(r"(?i)\b(?:one|1|two|2) participants?\b")
 MIN_QUOTE_LEN = 25
 # твердження про відсутність даних: у звіті це лише «у знайдених джерелах»
 GAP_RE = re.compile(
     r"(?i)\b(?:no|not any|without any)\s+(?:published\s+|publicly\s+available\s+|"
     r"reported\s+|available\s+)*(?:clinical|human|efficacy|safety|trial|data)|"
-    r"\b(?:lack|absence) of\b|\bnot (?:yet )?(?:been )?(?:published|reported)\b")
+    r"\b(?:lack|absence) of\b|\bno FDA[- ]approved\b|\bnot (?:yet )?(?:been )?(?:published|reported)\b")
 SOURCES_RE = re.compile(r"(?i)(?:retrieved|provided|available|reviewed|these|the) sources|"
                         r"in the (?:claims|dossier|records)|not covered by")
 
@@ -589,6 +600,11 @@ def percent_numbers(text: str) -> set:
             re.findall(r"(\d+(?:[.·]\d+)?)\s*%", text)}
 
 
+RESOLVED_TEXT_RE = re.compile(
+    r"(?i)\b(?:the )?(?:conflict|issue|dispute|question) (?:is|was|can be) "
+    r"resolved[^.]*\.\s*")
+
+
 def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
     """Присвоюємо id, перевіряємо evidence_id і цитату (по всьому запису).
     Повертаємо (добрі, відкинуті з причиною)."""
@@ -609,7 +625,18 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
         if not is_registry and len((c.get("quote") or "").strip()) < MIN_QUOTE_LEN:
             dropped.append({"reason": "цитата надто коротка", "claim": c})
             continue
+        q = c.get("quote") or ""
+        if len(q) > 400 and q.count(";") >= 8:
+            dropped.append({"reason": "шум: цитата — довгий список назв, а не твердження",
+                            "claim": c})
+            continue
         ctext = c.get("claim", "") + " " + c.get("quote", "")
+        if str(c.get("evidence_id", "")).endswith("_flow") and \
+                c.get("direction") == "contradicts" and \
+                NOISE_FLOW_ONE_RE.search(c.get("claim", "")):
+            dropped.append({"reason": "шум: поодинокий випадок у когорті без порівняння "
+                                      "з контролем", "claim": c})
+            continue
         if (c.get("direction") == "neutral" and NOISE_FLOW_RE.search(ctext)) or \
                 NOISE_ANY_RE.search(ctext) or (
                 c.get("stage") == "unmet_need" and NOISE_UNMET_RE.search(ctext)):
@@ -645,6 +672,15 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
         backed = numbers(c.get("quote", "")) | numbers(
             json.dumps(rec.get("meta") or {}, ensure_ascii=False))
         outside = sorted(claim_nums - backed)
+        # тривалість (N weeks/months) із запису, але не з цитати — це контекст, не результат:
+        # дозволяємо, лише якщо число є в записі (перевірено вище), і позначаємо
+        dur = set(re.findall(r"(?i)\b(\d+(?:[.,]\d+)?)\s*[- ]?(?:weeks?|wks?|months?|days?)\b",
+                             c.get("claim", "")))
+        dur_only = [n for n in outside if n in dur or n.replace(",", ".") in dur]
+        if dur_only:
+            outside = [n for n in outside if n not in dur_only]
+            c = dict(c)
+            c["duration_from_record"] = dur_only
         # ключові числа (відсотки) без опори в цитаті — claim відкидаємо
         unbacked_key = sorted(percent_numbers(c.get("claim", "")) & set(outside))
         if unbacked_key:
@@ -670,6 +706,16 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
             if others:
                 item["reclassified_other_drug"] = others
                 item["stage"], item["direction"] = "competition", "neutral"
+        # стаття не згадує цільовий препарат ні в claim, ні в цитаті, ні в заголовку:
+        # висновок за чи проти препарату з неї робити не можна (наприклад, епідеміологія)
+        if DRUG_NAMES and rec.get("source_type") in ("pubmed", "epmc_pmc", "epmc_ppr") \
+                and item.get("direction") in ("supports", "contradicts") \
+                and item.get("stage") in ("clinical", "safety_or_failure", "translation") \
+                and not any(nm in " ".join([item.get("claim", ""), item.get("quote", ""),
+                                            rec.get("title") or ""]).lower()
+                            for nm in DRUG_NAMES):
+            item["reclassified_no_target_drug"] = True
+            item["stage"], item["direction"] = "other", "neutral"
         # роки у флаг не виносимо: це шум (діапазони років з контексту запису)
         item["numbers_outside_quote"] = [n for n in outside if not YEAR_RE.match(n)]
         item["id"] = f"{prefix}{n:03d}"
@@ -700,6 +746,20 @@ def claim_numbers(claim: dict) -> set:
 # ---------------------------------------------------------------- перевірка чернеток
 
 MECH_STAGES = {"mechanism", "translation"}
+
+
+def _ot_label_mismatch(text: str, ids: list, claim_map: dict) -> bool:
+    """Open Targets: «overall» бал об'єднує типи доказів. Якщо текст називає тип
+    (genetic/clinical/literature), має бути claim із цим словом і з числом, що є в тексті."""
+    nums_text = numbers(strip_labels(text))
+    for kw in ("genetic", "clinical", "literature"):
+        if re.search(rf"(?i)\b{kw}", text):
+            ok = any(kw in claim_map[i]["claim"].lower()
+                     and (numbers(strip_labels(claim_map[i]["claim"])) & nums_text)
+                     for i in ids)
+            if not ok:
+                return True
+    return False
 
 
 def validate_statements(statements: list, claim_map: dict, section: str, issues: list,
@@ -746,12 +806,38 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                 reason = "поєднує біологію/PK і клінічні дані"
             elif {"supports", "contradicts"} <= dirs:
                 reason = "поєднує claims із протилежними напрямками"
+            elif len({claim_map[i].get("evidence_id") for i in ids}) > 1 \
+                    and CROSS_LINK_RE.search(s.text):
+                reason = ("зіставляє claims із різних записів (порівняння/зміна "
+                          "між джерелами — це висновок моделі, не факт)")
+            elif any(claim_map[i].get("source_type") == "opentargets" for i in ids) \
+                    and _ot_label_mismatch(s.text, ids, claim_map):
+                reason = ("тип доказу (genetic/clinical/literature) для балу Open Targets "
+                          "названо, але цитовані claims не дають такого балу з цими числами")
+            elif any(claim_map[i].get("confidence") == "low" for i in ids):
+                reason = "серед цитованих claims є low-confidence: не подаємо як факт"
+            elif section.startswith("Commercial") \
+                    and len({claim_map[i].get("evidence_id") for i in ids}) > 1 \
+                    and len(numbers(strip_labels(s.text))) >= 2:
+                reason = ("у комерції числа з різних записів в одному [E] "
+                          "(можуть бути різні показники)")
             elif single_evidence and len(ids) > 1:
                 reason = "у рекомендації факт має спиратися на один claim"
             elif single_evidence and any(
                     claim_map[i].get("confidence") == "low"
                     or claim_map[i].get("source_type") == "epmc_ppr" for i in ids):
                 reason = "у рекомендації не можна подавати low-confidence/препринт як факт"
+            if not reason:
+                # «%» не можна дописувати: якщо в claim число без %, то й у тексті без %
+                no_ci = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", item["text"])
+                have_pct = set()
+                for i in ids:
+                    have_pct |= percent_numbers(claim_map[i]["claim"]) \
+                        | percent_numbers(claim_map[i]["quote"])
+                bad_pct = sorted(percent_numbers(no_ci) - have_pct)
+                if bad_pct:
+                    reason = (f"число(а) {bad_pct} подано зі знаком % , а в цитованих "
+                              f"claims їх немає зі знаком % (одиницю дописано)")
             if not reason and single_evidence and len(ids) == 1:
                 # у рекомендації [E] = дослівно текст одного claim, без домислів моделі
                 item["text"] = claim_map[ids[0]]["claim"]
@@ -776,6 +862,57 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
         out.append(item)
     return out
 
+
+def claim_strength(c: dict) -> float:
+    """Груба «сила» клінічного claim: пізніша фаза, висока впевненість, більший ефект."""
+    t = c.get("claim", "")
+    sc = 0.0
+    if re.search(r"(?i)phase\s*(?:3|iii)\b|triumph|\bfda\b", t):
+        sc += 30
+    if c.get("confidence") == "high":
+        sc += 5
+    if re.search(r"(?i)placebo", t):
+        sc += 10
+    t_nci = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", t)  # 95% CI не ефект
+    pcts = [float(x.replace(",", ".")) for x in
+            re.findall(r"(\d+(?:[.,]\d+)?)\s*%", t_nci)]
+    if pcts:
+        sc += min(max(pcts), 40) / 4
+    return sc
+
+
+def lead_efficacy_item(claim_map: dict):
+    """Найсильніший клінічний claim про ефективність (supports, high, є % і placebo)."""
+    best, best_sc = None, 0.0
+    for c in claim_map.values():
+        if c.get("direction") != "supports" or c.get("stage") != "clinical" \
+                or c.get("confidence") != "high" or c.get("drug_not_in_quote"):
+            continue
+        t = c.get("claim", "")
+        t_nci = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", t)
+        if not (re.search(r"(?i)placebo", t) and re.search(r"\d\s*%", t_nci)):
+            continue
+        sc = claim_strength(c)
+        if sc > best_sc:
+            best, best_sc = c, sc
+    if not best:
+        return None
+    return {"text": best["claim"], "kind": "evidence", "claim_ids": [best["id"]],
+            "unverified_numbers": []}
+
+
+def order_rationale(items: list, claim_map: dict) -> list:
+    """Рекомендація: спочатку [E] (найсильніший клінічний результат першим), потім [AI]."""
+    ev = [x for x in items if x["kind"] == "evidence" and x["claim_ids"]]
+    rest = [x for x in items if x not in ev]
+    ev.sort(key=lambda x: -max(claim_strength(claim_map[i]) for i in x["claim_ids"]))
+    return ev + rest
+
+
+CROSS_LINK_RE = re.compile(
+    r"(?i)\bfrom\b[^.]{0,40}\d[^.]{0,20}\bto\b[^.]{0,20}\d|"
+    r"\b(?:rose|rise[ns]?|risen|higher than|lower than|whereas|building on|"
+    r"consistent with|confirm\w*)\b")
 
 PLACEBO_RE = re.compile(r"(?i)\bplacebo\b|control group|control arm|\bcontrols?\b")
 ACTIVE_RE = re.compile(r"(?i)other (?:incretin|glp|treatment|therap|drug|agent)|"
@@ -840,10 +977,23 @@ def validate_conflicts(draft: ConflictsDraft, claim_map: dict, issues: list):
                           f"supporting claims уже використані в іншій суперечності)")
             continue
         used_sup |= set(sup)
+        status = c.status
+        if status == "resolved" and \
+                len({claim_map[i].get("evidence_id") for i in sup + con}) > 1:
+            # дві сторони з різних досліджень (інша популяція/дизайн): «розв'язано» не доведено
+            status = "unresolved"
+            issues.append(f"Conflicts: «{c.topic[:50]}» — статус resolved знижено до "
+                          f"unresolved (сторони з різних досліджень)")
+        assessment = c.assessment or ""
+        if status == "unresolved" and RESOLVED_TEXT_RE.search(assessment):
+            # текст модели не должен говорить «resolved», коли код каже unresolved
+            assessment = RESOLVED_TEXT_RE.sub("", assessment).strip()
+            assessment = ("Not resolved: the two sides come from different studies. "
+                          + assessment).strip()
         out.append({"topic": c.topic, "endpoint": c.endpoint,
                     "shared_comparator": c.shared_comparator,
                     "supporting": sup, "contradicting": con,
-                    "assessment": c.assessment, "status": c.status})
+                    "assessment": assessment, "status": status})
     return out
 
 
@@ -1171,8 +1321,12 @@ def capital_from_registry(evidence: dict, claims: list, claim_map: dict,
                      "remaining_usd": [tot_lo * f_lo, tot_hi * f_hi]})
     calc = None
     if rows:
+        dated = [r for r in rows if not r["why"].startswith("dates missing")]
+        undated = [r for r in rows if r["why"].startswith("dates missing")]
         low = sum(r["remaining_usd"][0] for r in rows)
         high = sum(r["remaining_usd"][1] for r in rows)
+        d_low = sum(r["remaining_usd"][0] for r in dated)
+        d_high = sum(r["remaining_usd"][1] for r in dated)
         pcs = sorted(t["primary_completion"] for t in active
                      if t.get("primary_completion"))
         calc = {"participants_total": sum(r["participants"] for r in rows),
@@ -1183,17 +1337,25 @@ def capital_from_registry(evidence: dict, claims: list, claim_map: dict,
                 "trials_counted": [t["nct"] for t in counted],
                 "trials_enrollment_closed": [t["nct"] for t in closed],
                 "trials_excluded_done": [t["nct"] for t in done]}
-        lines = "; ".join(
-            f"{r['nct']}: ${r['remaining_usd'][0] / 1e6:,.0f}M-"
-            f"${r['remaining_usd'][1] / 1e6:,.0f}M ({r['why']})" for r in rows)
+        def line(r):
+            return (f"{r['nct']}: ${r['remaining_usd'][0] / 1e6:,.0f}M-"
+                    f"${r['remaining_usd'][1] / 1e6:,.0f}M ({r['why']})")
+        text = (f"AI inference with an ASSUMPTION that is not from the sources "
+                f"(cost range for the area '{area}', spend spread evenly between "
+                f"start and primary completion, at least "
+                f"{REMAINING_FLOOR * 100:.0f}% always left). Trials with known dates: "
+                + ("; ".join(line(r) for r in dated) or "none")
+                + f". Subtotal about ${d_low / 1e6:,.0f}M-${d_high / 1e6:,.0f}M.")
+        if undated:
+            text += (" Trials WITHOUT a primary completion date in the registry data "
+                     "(the range is wide because progress is unknown): "
+                     + "; ".join(line(r) for r in undated)
+                     + f". Together with them the total is about "
+                       f"${low / 1e6:,.0f}M-${high / 1e6:,.0f}M.")
+        text += " Excludes manufacturing, regulatory filing and launch."
+        calc["dated_usd"] = [d_low, d_high]
         stmts.append({
-            "text": f"AI inference with an ASSUMPTION that is not from the sources "
-                    f"(cost range for the area '{area}', spend spread evenly between "
-                    f"start and primary completion, at least "
-                    f"{REMAINING_FLOOR * 100:.0f}% always left): remaining spend per "
-                    f"trial: {lines}. Total about ${low / 1e6:,.0f}M-"
-                    f"${high / 1e6:,.0f}M (excludes manufacturing, regulatory "
-                    f"filing and launch).",
+            "text": text,
             "kind": "inference",
             "claim_ids": sorted({i for t in active for i in claim_ids_of(t)}),
             "evidence_ids": [e for t in active for e in t["evidence_ids"]],
@@ -1493,6 +1655,13 @@ def main():
 
     rationale = validate_statements(final.recommendation_rationale, claim_map,
                                     "Recommendation", issues, single_evidence=True)
+
+    lead = lead_efficacy_item(claim_map)
+    if lead and not any(lead["claim_ids"][0] in x["claim_ids"] for x in rationale):
+        rationale.append(lead)
+        issues.append(f"Recommendation: код додав головний результат ефективності "
+                      f"{lead['claim_ids'][0]} (модель його не процитувала)")
+    rationale = order_rationale(rationale, claim_map)
 
     recommendation = final.recommendation
     unresolved = [c for c in conflicts if c["status"] == "unresolved"]

@@ -218,8 +218,11 @@ def tab_compare(rep: dict, paths: list):
         color = REC_COLORS.get(r["recommendation"], "#57606a")
         col.markdown(f"**{title}**<br>" + badge(r["recommendation"], color),
                      unsafe_allow_html=True)
-    old_ids = {c["id"] for c in other["claims"]}
-    new_claims = [c for c in rep["claims"] if c["id"] not in old_ids]
+    # id перенумеровуються між прогонами, тому claims порівнюємо за записом і цитатою
+    def ckey(c):
+        return (c.get("evidence_id"), " ".join((c.get("quote") or "").split()))
+    old_keys = {ckey(c) for c in other["claims"]}
+    new_claims = [c for c in rep["claims"] if ckey(c) not in old_keys]
     st.markdown(f"**Нові claims: {len(new_claims)}**")
     for c in new_claims:
         st.markdown(f"- `{c['id']}` {c['claim']}"
