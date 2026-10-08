@@ -1,19 +1,24 @@
 """
-main.py — запускає весь конвеєр по черзі:
+main.py — запускає весь конвеєр від запиту до фінального звіту.
 
-  1. datagetter/delegator.py       збір даних з усіх джерел
-  2. datagetter/split_evidence.py  розбиття на частини в datagetter/results
-  3. json-to-text.py               обробка частин і збирання звіту
+Кроки:
+  1. fetch   — datagetters/delegator.py     (збір доказів із 5 джерел -> results/evidence_raw.json)
+  2. split   — datagetters/split_evidence.py (розбиття на частини -> results/evidence/)
+  3. claims  — claim_collector.py            (витяг фактів через LLM -> results/claims.json)
+  4. report  — build_report.py               (звіт -> results/report.md, report.json)
 
-Запуск:
-  python main.py                              # препарат за замовчуванням (retatrutide)
-  python main.py amycretin                    # один аргумент = препарат
-  python main.py "obesity" "semaglutide"      # хвороба + препарат
-  python main.py amycretin --skip-fetch       # не збирати дані заново, взяти готові
-
-Аргументи (крім --skip-fetch) передаються в delegator.py як є.
+Приклади (з кореня проєкту):
+  python main.py                                     # ретатрутид, ожиріння (за замовчуванням)
+  python main.py --drug retatrutide --indication obesity
+  python main.py --from claims                       # зібрані докази вже є, почати з витягу фактів
+  python main.py --only report                       # лише перебудувати звіт
+  python main.py --only report --extra extra_claims.json --out-prefix report_new \
+                 --compare results/report.json       # демо «нові докази змінюють висновок»
+  python main.py --dry-run                           # показати команди, нічого не запускаючи
 """
 
+import argparse
+import json
 import os
 import subprocess
 import sys
@@ -21,55 +26,168 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-DATAGETTER = ROOT / "datagetters"
-
-FETCH_SCRIPT = DATAGETTER / "delegator.py"
-SPLIT_SCRIPT = DATAGETTER / "split_evidence.py"
-TEXT_SCRIPT = ROOT / "claim_collector.py"
+RESULTS = ROOT / "results"
+STEPS = ["fetch", "split", "claims", "report"]
 
 
-def run_step(title: str, script: Path, args: list[str], cwd: Path) -> None:
-    """Запускає один крок. У разі помилки зупиняє весь конвеєр."""
-    if not script.exists():
-        print(f"\nНе знайдено файл: {script}")
-        sys.exit(1)
+def build_commands(args) -> dict:
+    """Команда для кожного кроку. Усі запускаються з кореня проєкту."""
+    py = sys.executable
 
-    print(f"\n{'=' * 60}\n{title}\n{'=' * 60}")
-    started = time.time()
+    # delegator: без аргументів = ретатрутид; один = препарат; два = хвороба + препарат
+    fetch = [py, str(ROOT / "datagetters" / "delegator.py")]
+    if args.indication and args.drug:
+        fetch += [args.indication, args.drug]
+    elif args.drug:
+        fetch += [args.drug]
 
-    env = os.environ.copy()
-    env["PYTHONIOENCODING"] = "utf-8"   # щоб кирилиця не ламалася в консолі Windows
+    report = [py, str(ROOT / "build_report.py")]
+    if args.drug:
+        report += ["--drug", args.drug]
+    if args.indication:
+        report += ["--indication", args.indication]
+    if args.extra:
+        report += ["--extra", args.extra]
+    if args.out_prefix:
+        report += ["--out-prefix", args.out_prefix]
+    if args.compare:
+        report += ["--compare", args.compare]
 
-    result = subprocess.run(
-        [sys.executable, str(script), *args],
-        cwd=cwd,
-        env=env,
-    )
+    claims = [py, str(ROOT / "claim_collector.py")]
+    if args.workers:
+        claims += ["--workers", str(args.workers)]
 
-    seconds = round(time.time() - started, 1)
-    if result.returncode != 0:
-        print(f"\nКрок «{title}» завершився з помилкою (код {result.returncode}). Далі не йдемо.")
-        sys.exit(result.returncode)
-    print(f"\nГотово за {seconds} с")
+    return {
+        "fetch": fetch,
+        "split": [py, str(ROOT / "datagetters" / "split_evidence.py")],
+        "claims": claims,
+        "report": report,
+    }
 
 
-def main() -> None:
-    args = sys.argv[1:]
+def clean_old_parts():
+    """Прибираємо старі частини evidence, щоб після нового збору не лишилось
+    зайвих файлів від попереднього запуску (інакше в claims потраплять застарілі записи)."""
+    folder = RESULTS / "evidence"
+    if not folder.exists():
+        return
+    old = list(folder.glob("evidence_part_*.json"))
+    for p in old:
+        p.unlink()
+    if old:
+        print(f"  Прибрано старих частин evidence: {len(old)}")
 
-    skip_fetch = "--skip-fetch" in args
-    args = [a for a in args if a != "--skip-fetch"]
 
-    total_started = time.time()
+def run_step(name: str, cmd: list, dry: bool) -> float:
+    print("\n" + "=" * 70)
+    print(f"КРОК: {name}")
+    print("  " + " ".join(cmd))
+    print("=" * 70, flush=True)
+    if dry:
+        return 0.0
 
-    if skip_fetch:
-        print("Крок 1 пропущено (--skip-fetch): використовуємо вже зібраний evidence_raw.json")
+    env = dict(os.environ)
+    env["PYTHONIOENCODING"] = "utf-8"   # щоб українські повідомлення не ламались у Windows
+    env["PYTHONUTF8"] = "1"
+    t0 = time.time()
+    code = subprocess.call(cmd, cwd=str(ROOT), env=env)
+    dt = time.time() - t0
+    if code != 0:
+        sys.exit(f"\nКрок «{name}» завершився з помилкою (код {code}). "
+                 f"Конвеєр зупинено.")
+    print(f"\nКрок «{name}» завершено за {dt:.1f} с")
+    return dt
+
+
+def print_summary(out_prefix: str, timings: dict, start_ts: str):
+    print("\n" + "=" * 70)
+    print("ПІДСУМОК")
+    print("=" * 70)
+    for name, dt in timings.items():
+        print(f"  {name:<8} {dt:>7.1f} с")
+    print(f"  {'разом':<8} {sum(timings.values()):>7.1f} с")
+
+    path = RESULTS / f"{out_prefix or 'report'}.json"
+    if not path.exists():
+        return
+    with open(path, encoding="utf-8") as f:
+        rep = json.load(f)
+    print(f"\n  Рекомендація: {rep.get('recommendation')}")
+    print(f"  Claims у звіті: {len(rep.get('claims', []))}")
+    print(f"  Конфліктів доказів: {len(rep.get('conflicts', []))}")
+
+    # вартість LLM за цей запуск: беремо з run_log.jsonl записи, зроблені після старту
+    log_path = RESULTS / "run_log.jsonl"
+    if log_path.exists():
+        groups = {}
+        with open(log_path, encoding="utf-8") as f:
+            for line in f:
+                try:
+                    e = json.loads(line)
+                except ValueError:
+                    continue
+                if e.get("ts", "") < start_ts:
+                    continue
+                g = "витяг фактів" if str(e.get("step", "")).startswith("claims:") \
+                    else "звіт"
+                s = groups.setdefault(g, [0, 0, 0, 0.0])
+                s[0] += 1
+                s[1] += e.get("input_tokens", 0)
+                s[2] += e.get("output_tokens", 0)
+                s[3] += e.get("cost_usd", 0.0)
+        print("\n  Вартість LLM за цей запуск (ціни в файлах — заглушки):")
+        total = 0.0
+        for g, (n, tin, tout, usd) in groups.items():
+            print(f"    {g:<14} викликів {n:>3}, токени {tin} / {tout}, ~${usd:.4f}")
+            total += usd
+        print(f"    {'разом':<14} ~${total:.4f}")
+    print(f"\n  Звіт:   results/{path.stem}.md")
+    print(f"  Claims: results/{path.stem}_claims.md")
+    print(f"  Логи:   results/run_log.jsonl")
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Запуск усього конвеєра андеррайтингу")
+    ap.add_argument("--drug", default=None, help="препарат (за замовчуванням retatrutide)")
+    ap.add_argument("--indication", default=None, help="показання (за замовчуванням obesity)")
+    ap.add_argument("--from", dest="start", choices=STEPS, default="fetch",
+                    help="почати з цього кроку (попередні пропускаються)")
+    ap.add_argument("--only", choices=STEPS, default=None, help="виконати лише цей крок")
+    ap.add_argument("--extra", default=None, help="файл з новими claims (для демо)")
+    ap.add_argument("--out-prefix", default=None, help="ім'я вихідного звіту, напр. report_new")
+    ap.add_argument("--compare", default=None, help="попередній report.json для порівняння")
+    ap.add_argument("--workers", type=int, default=None,
+                    help="потоків для витягу фактів (за замовчуванням як у claim_collector; "
+                         "став 2, якщо API відповідає 429)")
+    ap.add_argument("--dry-run", action="store_true", help="лише показати команди")
+    args = ap.parse_args()
+
+    if args.only:
+        steps = [args.only]
     else:
-        run_step("Крок 1/3: збір даних (delegator.py)", FETCH_SCRIPT, args, DATAGETTER)
+        steps = STEPS[STEPS.index(args.start):]
 
-    run_step("Крок 2/3: розбиття на частини (split_evidence.py)", SPLIT_SCRIPT, [], DATAGETTER)
-    run_step("Крок 3/3: обробка і звіт (json-to-text.py)", TEXT_SCRIPT, [], ROOT)
+    cmds = build_commands(args)
 
-    print(f"\nВесь конвеєр виконано за {round(time.time() - total_started, 1)} с")
+    # чи існують потрібні файли
+    for s in steps:
+        script = Path(cmds[s][1])
+        if not script.exists():
+            sys.exit(f"Не знайдено {script}. Запускай main.py з кореня проєкту.")
+
+    print(f"Препарат: {args.drug or 'retatrutide (за замовчуванням)'}, "
+          f"показання: {args.indication or 'obesity (за замовчуванням)'}")
+    print("Кроки: " + " -> ".join(steps))
+
+    start_ts = time.strftime("%Y-%m-%d %H:%M:%S")
+    timings = {}
+    for s in steps:
+        if s == "split" and not args.dry_run:
+            clean_old_parts()
+        timings[s] = run_step(s, cmds[s], args.dry_run)
+
+    if not args.dry_run:
+        print_summary(args.out_prefix, timings, start_ts)
 
 
 if __name__ == "__main__":
