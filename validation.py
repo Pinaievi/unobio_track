@@ -2,7 +2,7 @@ import re
 from typing import Literal
 from pydantic import BaseModel, Field
 from text_utils import *
-
+from config import *
 
 class Conflict(BaseModel):
     topic: str = Field(description="What the disagreement is about, one line.")
@@ -26,7 +26,6 @@ class Conflict(BaseModel):
 class ConflictsDraft(BaseModel):
     conflicts: list[Conflict]
 
-DRUG_NAMES: set = set()
 
 PLACEBO_RE = re.compile(r"(?i)\bplacebo\b|control group|control arm|\bcontrols?\b")
 ACTIVE_RE = re.compile(r"(?i)other (?:incretin|glp|treatment|therap|drug|agent)|"
@@ -34,6 +33,10 @@ ACTIVE_RE = re.compile(r"(?i)other (?:incretin|glp|treatment|therap|drug|agent)|
                        r"active comparator|danuglipron")
 
 RISK_ASSOC_RE = re.compile(r"(?i)hazard ratio|\bHR\b|odds ratio|\bOR\b\s*[=:]?\s*\d|relative risk")
+
+INN_RE = re.compile(
+    r"(?i)\b[a-z]{3,}(?:mab|tug|cept|tinib|rasib|parib|ciclib|stat|tide|glutide|"
+    r"siran|gene|vir|tecan|degib|sertib|lisib|zomib)\b")
 
 NOT_CONFLICT_RE = re.compile(
     r"(?i)not an? (?:true |real |direct |empirical )*(?:contradiction|conflict)|"
@@ -339,3 +342,8 @@ def order_rationale(items: list, claim_map: dict) -> list:
 
 def claim_numbers(claim: dict) -> set:
     return numbers(claim["claim"]) | numbers(claim["quote"])
+
+def other_drugs_in(text: str) -> list:
+    """Назви препаратів у тексті, яких немає серед імен цільового препарату."""
+    return sorted({m.group(0).lower() for m in INN_RE.finditer(text or "")}
+                  - {n.lower() for n in DRUG_NAMES})
