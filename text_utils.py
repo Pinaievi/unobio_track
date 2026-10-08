@@ -2,6 +2,10 @@ import re
 import unicodedata
 import json
 
+def read_all_text(path: str) -> str: 
+    with open(path,"r") as f:
+        return f.read()
+
 def squash(text: str) -> str:
     """Лояльне порівняння: m² -> m2, потім лишаємо лише літери й цифри."""
     text = unicodedata.normalize("NFKC", text).lower()

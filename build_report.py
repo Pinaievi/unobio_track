@@ -5,14 +5,14 @@ import os
 import re
 import sys
 import time
-import unicodedata
 from pathlib import Path
 from typing import Literal
 
 import dotenv
 from google import genai
 from pydantic import BaseModel, Field
-from text_utils import *
+from prompts import *
+from validation import *
 
 MODEL = "gemini-3.1-flash-lite"      
 FINAL_MODEL = "gemini-3.1-flash-lite"
@@ -68,63 +68,6 @@ ALIASES = {
 }
 INDICATION_WORDS: set = set()
 INDICATION_SYNONYMS = {"obesity": ["overweight", "weight", "adipos", "bmi", "bariatric"]}
-DRUG_NAMES: set = set()
-
-COMMON_RULES = """
-You are a biotech investment analyst writing one section of an underwriting report.
-You receive a numbered list of CLAIMS. Each claim was extracted from a source record and
-its quote was verified. This list is your ONLY source of facts.
-
-RULES:
-1. Use only facts from the provided claims. No outside knowledge, no invented numbers.
-2. Every statement has kind "evidence" or "inference".
-   - "evidence": restates what the cited claims say. Every number in it must appear in
-     the cited claims.
-   - "inference": your own reasoning (a conclusion, an implication, an estimate). Say
-     clearly that it is an inference. It must cite the claims it rests on.
-3. Cite claim ids ONLY in the claim_ids field, exactly as given (for example C012).
-   Never write ids inside the statement text. Never invent ids.
-4. Look for contradicting evidence. If any claim has direction "contradicts", it must
-   be addressed in the section, not ignored. Never present a claim as support for a
-   statement it does not say.
-5. Weight claims by confidence and source type: preprints, animal or cell data, ex vivo
-   tissue, single cases and trial registry entries without results are weak evidence.
-   A registered or recruiting trial is NOT evidence that the drug works. Placebo is a
-   control, not a competitor.
-6. If the claims do not cover something this section needs, do not fill the hole with
-   guesses. List it in "gaps".
-7. Write 3 to 8 statements. Short, concrete, no marketing language.
-8. If a statement connects facts from DIFFERENT claims (cause and effect, correlation,
-   "which leads to", a comparison between sources), it is an inference, not evidence.
-   Mark it as "inference". Use kind "evidence" only for what a single claim says or
-   for a plain list of facts that each claim states on its own.
-9. Do not call a drug approved, a standard of care or a competitor unless a claim says
-   so. A claim that a drug's label text mentions an indication does not mean the drug
-   is approved for it.
-10. A missing record in a database (for example "no label found in openFDA") only
-   shows that no record was found. Do not state "not approved" or "no regulatory
-   status" as evidence: write "no label record was found in openFDA", or mark the
-   conclusion as an inference.
-11. Do not add facts that no cited claim states (for example "nearing completion",
-   "large-scale", "positive preclinical data"). If you need such a statement, it is an
-   inference and must say what it rests on.
-12. The claims you see are only the part of the dossier relevant to this section; other
-   sections hold other claims. Never write that data "does not exist" or "was not
-   provided" for the whole project (for example "no human trial data"). Write gaps as
-   "not covered by the claims of this section" or as concrete questions to check.
-14. Every claim with direction "supports" or "contradicts" in your list must be used in
-   a statement, or its omission explained in "gaps" (for example because it concerns
-   another drug). Do not silently skip the strongest positive or negative claims.
-15. Do not call a trend "dose-dependent", "dose-related" or "increasing with dose" in
-   your own words unless the cited numbers actually rise with the dose in order (for
-   example 4% then 12% then 8% is NOT monotonic: say the rates differ by dose and give
-   the numbers). Do not generalise from one trial to the whole drug.
-13. The percentage of participants with ANY adverse event in a Phase 1, healthy-volunteer
-   or small dose-escalation cohort is not a safety signal by itself: nearly all
-   participants report some event. Do not call it a "high incidence" or a "safety
-   concern" unless a cited claim compares it with placebo or reports serious or
-   treatment-related events. Say what was measured and that the comparison is missing.
-"""
 
 SECTIONS = [
     {
@@ -188,88 +131,6 @@ SECTIONS = [
     },
 ]
 
-CONFLICTS_TASK = """
-You are a skeptical due-diligence analyst. Below are claims that support {drug} and
-claims that contradict it (direction supports / contradicts). Find the disagreements:
-topics where one or more claims point one way and one or more point the other way
-(for example: efficacy vs tolerability, safety in a meta-analysis vs a single trial,
-animal results vs human results).
-
-RULES:
-1. A conflict needs at least one supporting AND at least one contradicting claim that
-   measure the SAME endpoint in a comparable setting (same outcome, same kind of
-   population). Do not pair unrelated claims.
-1b. Both sides must use the SAME comparator (for example both against placebo). A
-   result against placebo and a result against other drugs are different questions:
-   do not pair them. Fill endpoint and shared_comparator honestly. Prefer pairs where
-   both sides are randomised trials or meta-analyses; a low-certainty claim, a single
-   case or animal data does not balance a trial result (reflect that in status).
-2. Not a conflict: a trade-off inside one result (for example a higher dose gives more
-   weight loss and more dropouts), a general safety summary versus one specific adverse
-   event, or animal results versus a human result of a different outcome.
-3. Every conflict must be about a DIFFERENT topic. A claim may be the supporting side
-   of only one conflict. Do not repeat the same pair under another title.
-4. Cite claim ids only in the id lists, exactly as given. Never invent ids. Do not
-   write ids inside the text.
-5. assessment is your inference: weigh confidence, source type, dose, population and
-   stated certainty. status "resolved" only if one side is clearly stronger on the
-   evidence given; otherwise "unresolved".
-6. 0 to 4 conflicts. If there are no real conflicts, return an empty list: that is a
-   valid answer.
-7. These are NOT conflicts, do not output them: two claims that describe the same effect
-   in different words (for example "statistically significant" versus "modest"); a
-   mechanistic hypothesis or preclinical rationale versus an observed clinical result;
-   a class-wide finding versus a finding about one specific drug. If your assessment
-   would say "not an empirical contradiction", leave the topic out.
-8. Each side must contain at least one claim that is about {drug} itself. A finding
-   about another drug or a whole drug class versus a finding about {drug} is not a
-   conflict; a review's general statement versus one specific trial is not a conflict.
-"""
-
-FINAL_TASK = """
-You are the investment committee analyst. Below are the drafted sections of the report,
-the conflicts found between supporting and contradicting evidence, the capital
-estimate, and the counts of claims by stage and direction. Produce the final part of
-the report.
-
-RULES:
-1. recommendation is one of "Invest", "Conditional", "Do Not Invest".
-   - Default to "Conditional" when critical unknowns remain or conflicts are unresolved.
-   - "Invest" only if the evidence is strong, human efficacy and safety are shown in the
-     claims, and no unresolved contradicting evidence is material.
-   - "Do Not Invest" if the claims show failure or a serious unresolved safety problem.
-2. recommendation_rationale: 3 to 6 statements that justify the recommendation and cite
-   claim ids. Use kind "evidence" ONLY for a statement that restates a SINGLE claim
-   (cite that one id). Every conclusion, weighing, or link between claims (mechanism
-   plus clinical result, efficacy versus tolerability, etc.) is kind "inference". Include the strongest argument for AND the strongest argument against,
-   and address the unresolved conflicts. Do not write claim ids inside the text.
-   Keep the strength of every cited claim: if its confidence is "low" or "medium", or it
-   comes from an indirect comparison / network meta-analysis / preprint / subgroup, say so
-   in the text ("low-certainty", "indirect comparison", "preliminary"). Never turn such a
-   claim into a firm statement about competitors (for example "worse than competitors"):
-   a comparison with other drugs is allowed only if a cited claim is a direct head-to-head
-   trial; otherwise write that the signal comes from indirect data and needs confirmation.
-2b. Lead the rationale with the strongest PEER-REVIEWED human result (for example a
-   randomised trial with its comparator) and the strongest safety result. Company-reported
-   or not-yet-peer-reviewed numbers may be used only as an inference with that caveat.
-   Write each such result as its OWN [E] statement that cites exactly ONE claim (for
-   example one dose of one randomised trial); do not merge several claims or several
-   papers into one statement, otherwise the statement is downgraded to [AI].
-3. critical_unknowns: facts that, if known, would change the recommendation. Concrete.
-4. diligence_questions: 5 to 10 questions a diligence team should ask the company or
-   check in data. Each must be specific and answerable.
-5. what_would_change_the_conclusion: concrete new evidence that would move the
-   recommendation up or down (for example a specific kind of trial result).
-6. Use only the facts in the sections and claims. Cite claim ids exactly as given.
-7. Do not present any-adverse-event percentages from Phase 1 or healthy-volunteer cohorts
-   as a safety problem unless the claims compare them with placebo. Do not list as a
-   critical unknown something that the KNOWN NAMES line already answers.
-8. Do not use kind "evidence" for a bare mechanism-of-action fact; start with the
-   strongest clinical or safety claim. A gap in the claims (for example "no clinical
-   data") is a statement about the retrieved sources, not about the drug: write "the
-   retrieved sources contain no ..." and mark it "inference".
-"""
-
 TRUNC_RE = re.compile(r"(?:[;,(=<>±:]|\s[a-z])$")
 LOW_CERT_RE = re.compile(
     r"(?i)\b(?:very )?low[- ](?:certainty|quality)\b|not yet peer[- ]reviewed|"
@@ -289,13 +150,6 @@ NOISE_ANY_RE = re.compile(
 NOISE_FLOW_ONE_RE = re.compile(r"(?i)\b(?:one|1|two|2) participants?\b")
 MIN_QUOTE_LEN = 25
 
-GAP_RE = re.compile(
-    r"(?i)\b(?:no|not any|without any)\s+(?:published\s+|publicly\s+available\s+|"
-    r"reported\s+|available\s+)*(?:clinical|human|efficacy|safety|trial|data)|"
-    r"\b(?:lack|absence) of\b|\bno FDA[- ]approved\b|\bnot (?:yet )?(?:been )?(?:published|reported)\b")
-SOURCES_RE = re.compile(r"(?i)(?:retrieved|provided|available|reviewed|these|the) sources|"
-                        r"in the (?:claims|dossier|records)|not covered by")
-
 INN_RE = re.compile(
     r"(?i)\b[a-z]{3,}(?:mab|tug|cept|tinib|rasib|parib|ciclib|stat|tide|glutide|"
     r"siran|gene|vir|tecan|degib|sertib|lisib|zomib)\b")
@@ -303,46 +157,6 @@ OTHER_DRUG_STAGES = {"translation", "mechanism", "clinical", "safety_or_failure"
 
 ENROLLING = {"RECRUITING", "NOT_YET_RECRUITING", "ENROLLING_BY_INVITATION"}
 
-NOT_CONFLICT_RE = re.compile(
-    r"(?i)not an? (?:true |real |direct |empirical )*(?:contradiction|conflict)|"
-    r"matter of (?:clinical )?(?:judg|interpret)|mechanistic hypothesis|"
-    r"not (?:really )?contradict")
-
-CROSS_LINK_RE = re.compile(
-    r"(?i)\bfrom\b[^.]{0,40}\d[^.]{0,20}\bto\b[^.]{0,20}\d|"
-    r"\b(?:rose|rise[ns]?|risen|higher than|lower than|whereas|building on|"
-    r"consistent with|confirm\w*)\b")
-
-PLACEBO_RE = re.compile(r"(?i)\bplacebo\b|control group|control arm|\bcontrols?\b")
-ACTIVE_RE = re.compile(r"(?i)other (?:incretin|glp|treatment|therap|drug|agent)|"
-                       r"tirzepatide|semaglutide|dulaglutide|liraglutide|"
-                       r"active comparator|danuglipron")
-
-RISK_ASSOC_RE = re.compile(r"(?i)hazard ratio|\bHR\b|odds ratio|\bOR\b\s*[=:]?\s*\d|relative risk")
-
-NO_HUMAN_DATA_RES = [
-    re.compile(r"(?i)\b(?:do(?:es)? not|did not|no|without|lack(?:s|ing)?|absence of)\b"
-               r"[^.;]{0,80}\b(?:results? (?:from|of) (?:human )?clinical (?:trials?|studies)"
-               r"|human (?:clinical )?(?:trials?|data|results|efficacy|evidence)"
-               r"|clinical (?:trial|efficacy|outcome) (?:data|results))"),
-    re.compile(r"(?i)clinical efficacy[^.;]{0,80}(?:preclinical|case report)"),
-    re.compile(r"(?i)\bpreclinical\b[^.;]{0,40}\b(?:and|plus)\b[^.;]{0,20}\bcase report"),
-]
-
-MECH_STAGES = {"mechanism", "translation"}
-RESOLVED_TEXT_RE = re.compile(
-    r"(?i)\b(?:the )?(?:conflict|issue|dispute|question) (?:is|was|can be) "
-    r"resolved[^.]*\.\s*")
-
-def cost_for_indication(indication: str):
-    """Повертає (область, мін, макс) USD на учасника за ключовими словами показання."""
-    t = (indication or "").lower()
-    for area, (lo, hi, words) in AREA_COSTS.items():
-        for w in words:
-            if (len(w) <= 4 and re.search(rf"\b{re.escape(w)}\b", t)) or \
-                    (len(w) > 4 and w in t):
-                return area, lo, hi
-    return DEFAULT_COST
 
 class Statement(BaseModel):
     text: str = Field(description="One or two sentences of the report text. "
@@ -360,28 +174,6 @@ class SectionDraft(BaseModel):
     gaps: list[str] = Field(
         description="What is missing in the provided claims for this section."
     )
-
-class Conflict(BaseModel):
-    topic: str = Field(description="What the disagreement is about, one line.")
-    endpoint: str = Field(
-        description="The ONE outcome that both sides measure (for example "
-                    "'permanent discontinuation due to adverse events')."
-    )
-    shared_comparator: str = Field(
-        description="The comparator that BOTH sides use: 'placebo', the name of an "
-                    "active drug, or 'none stated'. Both sides must share it."
-    )
-    supporting_claim_ids: list[str]
-    contradicting_claim_ids: list[str]
-    assessment: str = Field(
-        description="Your inference: which side is stronger and why (confidence, "
-                    "source type, dose, population, certainty) or why it cannot be "
-                    "decided. Do not write claim ids inside the text."
-    )
-    status: Literal["resolved", "unresolved"]
-
-class ConflictsDraft(BaseModel):
-    conflicts: list[Conflict]
 
 class FinalDraft(BaseModel):
     recommendation: Literal["Invest", "Conditional", "Do Not Invest"]
@@ -443,6 +235,16 @@ class Runner:
         raise RuntimeError(f"Крок {step} не вдався після {MAX_RETRIES} спроб: "
                            f"{last_err}")
 
+def cost_for_indication(indication: str):
+    """Повертає (область, мін, макс) USD на учасника за ключовими словами показання."""
+    t = (indication or "").lower()
+    for area, (lo, hi, words) in AREA_COSTS.items():
+        for w in words:
+            if (len(w) <= 4 and re.search(rf"\b{re.escape(w)}\b", t)) or \
+                    (len(w) > 4 and w in t):
+                return area, lo, hi
+    return DEFAULT_COST
+
 def known_names_line(drug: str) -> str:
     """Рядок для промпту: інші назви того самого препарату (з конфігурації пошуку)."""
     names = ALIASES.get((drug or "").lower(), [])
@@ -503,14 +305,6 @@ def other_drugs_in(text: str) -> list:
     """Назви препаратів у тексті, яких немає серед імен цільового препарату."""
     return sorted({m.group(0).lower() for m in INN_RE.finditer(text or "")}
                   - {n.lower() for n in DRUG_NAMES})
-
-def mentions_drug(c: dict) -> bool:
-    """Чи згадує claim (текст, цитата, заголовок запису) цільовий препарат."""
-    if not DRUG_NAMES:
-        return True
-    t = " ".join([c.get("claim", ""), c.get("quote", ""),
-                  c.get("record_title") or ""]).lower()
-    return any(nm in t for nm in DRUG_NAMES)
 
 def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
     """Присвоюємо id, перевіряємо evidence_id і цитату (по всьому запису).
@@ -654,266 +448,6 @@ def claims_for_prompt(claims: list) -> str:
             "claim": c["claim"],
         }, ensure_ascii=False))
     return "\n".join(rows)
-
-def claim_numbers(claim: dict) -> set:
-    return numbers(claim["claim"]) | numbers(claim["quote"])
-
-def _ot_label_mismatch(text: str, ids: list, claim_map: dict) -> bool:
-    """Open Targets: «overall» бал об'єднує типи доказів. Якщо текст називає тип
-    (genetic/clinical/literature), має бути claim із цим словом і з числом, що є в тексті."""
-    nums_text = numbers(strip_labels(text))
-    for kw in ("genetic", "clinical", "literature"):
-        if re.search(rf"(?i)\b{kw}", text):
-            ok = any(kw in claim_map[i]["claim"].lower()
-                     and (numbers(strip_labels(claim_map[i]["claim"])) & nums_text)
-                     for i in ids)
-            if not ok:
-                return True
-    return False
-
-def validate_statements(statements: list, claim_map: dict, section: str, issues: list,
-                        single_evidence: bool = False):
-    """Прибираємо вигадані id, позначаємо числа без підтримки в claims.
-    «evidence» знижуємо до «inference», якщо воно склеює різне:
-      - claims з біології/PK (mechanism, translation) і з клініки разом;
-      - claims із напрямками supports і contradicts разом;
-      - (single_evidence) більше одного claim: у рекомендації факт = один claim."""
-    out = []
-    for s in statements:
-        ids = [i for i in s.claim_ids if i in claim_map]
-        bad = [i for i in s.claim_ids if i not in claim_map]
-        if bad:
-            issues.append(f"{section}: вигадані id {bad} прибрано")
-        item = {"text": s.text, "kind": s.kind, "claim_ids": ids,
-                "unverified_numbers": []}
-        gap = GAP_RE.search(s.text)
-        if gap and not SOURCES_RE.search(s.text):
-            if gap.start() <= 12:
-                item["text"] = ("In the retrieved sources: " + s.text[0].lower() + s.text[1:])
-
-            if s.kind == "evidence":
-                item["kind"] = "inference"
-            issues.append(f"{section}: твердження про відсутність даних -> [AI]"
-                          f"{' з приміткою про джерела' if gap.start() <= 12 else ''}: "
-                          f"{s.text[:70]}")
-        if single_evidence and ids and item["kind"] == "evidence" \
-                and all(claim_map[i]["stage"] in MECH_STAGES for i in ids):
-            issues.append(f"{section}: тривіальний [E] про механізм прибрано з "
-                          f"рекомендації (він є в розділі 1): {s.text[:70]}")
-            continue
-        if item["kind"] == "evidence":
-            if not ids:
-                issues.append(f"{section}: evidence без claims відкинуто: "
-                              f"{s.text[:70]}")
-                continue
-            if section.startswith("Commercial") and all(
-                    claim_map[i].get("source_type") == "nct_aact_population" for i in ids):
-                
-                issues.append(f"{section}: [E] лише на критеріях включення в дослідження "
-                              f"(не показник ринку) відкинуто: {s.text[:70]}")
-                continue
-            families = {claim_map[i]["stage"] in MECH_STAGES for i in ids}
-            dirs = {claim_map[i]["direction"] for i in ids}
-            reason = None
-            if len(families) > 1:
-                reason = "поєднує біологію/PK і клінічні дані"
-            elif {"supports", "contradicts"} <= dirs:
-                reason = "поєднує claims із протилежними напрямками"
-            elif len({claim_map[i].get("evidence_id") for i in ids}) > 1 \
-                    and CROSS_LINK_RE.search(s.text):
-                reason = ("зіставляє claims із різних записів (порівняння/зміна "
-                          "між джерелами — це висновок моделі, не факт)")
-            elif any(claim_map[i].get("source_type") == "opentargets" for i in ids) \
-                    and _ot_label_mismatch(s.text, ids, claim_map):
-                reason = ("тип доказу (genetic/clinical/literature) для балу Open Targets "
-                          "названо, але цитовані claims не дають такого балу з цими числами")
-            elif any(claim_map[i].get("confidence") == "low" for i in ids):
-                reason = "серед цитованих claims є low-confidence: не подаємо як факт"
-            elif section.startswith("Commercial") \
-                    and len({claim_map[i].get("evidence_id") for i in ids}) > 1 \
-                    and len(numbers(strip_labels(s.text))) >= 2:
-                reason = ("у комерції числа з різних записів в одному [E] "
-                          "(можуть бути різні показники)")
-            elif section.startswith("Commercial") and RISK_ASSOC_RE.search(s.text):
-                reason = ("ризик-асоціація (HR/OR) описує хворобу, а не розмір ринку: "
-                          "не подаємо як факт про комерційну можливість")
-            elif single_evidence and len(ids) > 1:
-                reason = "у рекомендації факт має спиратися на один claim"
-            elif single_evidence and any(
-                    claim_map[i].get("confidence") == "low"
-                    or claim_map[i].get("source_type") == "epmc_ppr" for i in ids):
-                reason = "у рекомендації не можна подавати low-confidence/препринт як факт"
-            if not reason:
-
-                no_ci = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", item["text"])
-                have_pct = set()
-                for i in ids:
-                    have_pct |= percent_numbers(claim_map[i]["claim"]) \
-                        | percent_numbers(claim_map[i]["quote"])
-                bad_pct = sorted(percent_numbers(no_ci) - have_pct)
-                if bad_pct:
-                    reason = (f"число(а) {bad_pct} подано зі знаком % , а в цитованих "
-                              f"claims їх немає зі знаком % (одиницю дописано)")
-            if not reason and single_evidence and len(ids) == 1:
-                item["text"] = claim_map[ids[0]]["claim"]
-            if reason:
-                item["kind"] = "inference"
-                issues.append(f"{section}: [E] знижено до [AI] — {reason}: "
-                              f"{s.text[:70]}")
-            else:
-                have = set()
-                for i in ids:
-                    have |= claim_numbers(claim_map[i])
-                missing = sorted(numbers(strip_labels(item["text"])) - have)
-                if missing and single_evidence:
-                    item["kind"] = "inference"
-                    issues.append(f"{section}: [E] знижено до [AI] — числа {missing} "
-                                  f"відсутні в цитованому claim: {s.text[:70]}")
-                elif missing:
-                    item["unverified_numbers"] = missing
-                    issues.append(f"{section}: числа {missing} відсутні в цитованих "
-                                  f"claims: {s.text[:70]}")
-        out.append(item)
-    return out
-
-def says_no_human_data(text: str) -> bool:
-    return any(r.search(text or "") for r in NO_HUMAN_DATA_RES)
-
-def drop_false_absence(sections: dict, claim_map: dict, issues: list):
-    """Якщо в досьє є сильний клінічний claim, прибираємо з розділів твердження й gaps
-    на кшталт «немає клінічних даних у людей»: вони суперечать самому досьє."""
-    lead = lead_efficacy_item(claim_map)
-    if not lead:
-        return
-    lid = lead["claim_ids"][0]
-    for sec in sections.values():
-        kept = []
-        for st in sec["statements"]:
-            if says_no_human_data(st["text"]):
-                issues.append(f"{sec['title']}: твердження прибрано — воно каже, що "
-                              f"клінічних даних у людей немає, але в досьє є {lid}: "
-                              f"{st['text'][:70]}")
-            else:
-                kept.append(st)
-        sec["statements"] = kept
-        gaps = []
-        for g in sec["gaps"]:
-            if says_no_human_data(g):
-                issues.append(f"{sec['title']}: gap прибрано — суперечить {lid}: {g[:70]}")
-            else:
-                gaps.append(g)
-        sec["gaps"] = gaps
-
-def claim_strength(c: dict) -> float:
-    """Груба «сила» клінічного claim: пізніша фаза, висока впевненість, більший ефект."""
-    t = c.get("claim", "")
-    sc = 0.0
-    if re.search(r"(?i)phase\s*(?:3|iii)\b|triumph|\bfda\b", t):
-        sc += 30
-    if c.get("confidence") == "high":
-        sc += 5
-    if re.search(r"(?i)placebo", t):
-        sc += 10
-    t_nci = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", t)
-    pcts = [float(x.replace(",", ".")) for x in
-            re.findall(r"(\d+(?:[.,]\d+)?)\s*%", t_nci)]
-    if pcts:
-        sc += min(max(pcts), 40) / 4
-    return sc
-
-def lead_efficacy_item(claim_map: dict):
-    """Найсильніший клінічний claim про ефективність (supports, high, є % і placebo)."""
-    best, best_sc = None, 0.0
-    for c in claim_map.values():
-        if c.get("direction") != "supports" or c.get("stage") != "clinical" \
-                or c.get("confidence") != "high" or c.get("drug_not_in_quote"):
-            continue
-        t = c.get("claim", "")
-        t_nci = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", t)
-        if not (re.search(r"(?i)placebo", t) and re.search(r"\d\s*%", t_nci)):
-            continue
-        sc = claim_strength(c)
-        if sc > best_sc:
-            best, best_sc = c, sc
-    if not best:
-        return None
-    return {"text": best["claim"], "kind": "evidence", "claim_ids": [best["id"]],
-            "unverified_numbers": []}
-
-def order_rationale(items: list, claim_map: dict) -> list:
-    """Рекомендація: спочатку [E] (найсильніший клінічний результат першим), потім [AI]."""
-    ev = [x for x in items if x["kind"] == "evidence" and x["claim_ids"]]
-    rest = [x for x in items if x not in ev]
-    ev.sort(key=lambda x: -max(claim_strength(claim_map[i]) for i in x["claim_ids"]))
-    return ev + rest
-
-def comparators(ids: list, claim_map: dict) -> set:
-    """Із якими компараторами порівнюють claims: placebo / active (за текстом claim)."""
-    out = set()
-    for i in ids:
-        t = claim_map[i]["claim"]
-        if PLACEBO_RE.search(t):
-            out.add("placebo")
-        if ACTIVE_RE.search(t):
-            out.add("active")
-    return out
-
-def validate_conflicts(draft: ConflictsDraft, claim_map: dict, issues: list):
-    """Перевіряємо id ТА напрямок: у supporting мають бути лише claims із direction
-    'supports', у contradicting — лише 'contradicts' (модель інколи плутає боки)."""
-    out = []
-    used_sup = set()
-    for c in draft.conflicts:
-        sup = [i for i in c.supporting_claim_ids
-               if i in claim_map and claim_map[i]["direction"] == "supports"]
-        con = [i for i in c.contradicting_claim_ids
-               if i in claim_map and claim_map[i]["direction"] == "contradicts"]
-        if len(sup) != len(c.supporting_claim_ids) or \
-                len(con) != len(c.contradicting_claim_ids):
-            issues.append(f"Conflicts: у темі «{c.topic[:50]}» прибрано id, яких "
-                          f"немає або чий напрямок не збігається з боком конфлікту")
-        if not sup or not con:
-            issues.append(f"Conflicts: тему «{c.topic[:50]}» відкинуто "
-                          f"(немає claims з обох боків)")
-            continue
-        if not any(mentions_drug(claim_map[i]) for i in sup) or \
-                not any(mentions_drug(claim_map[i]) for i in con):
-            issues.append(f"Conflicts: тему «{c.topic[:50]}» відкинуто — з одного "
-                          f"боку немає жодного claim про цільовий препарат "
-                          f"(клас або інший препарат проти нашого)")
-            continue
-        if NOT_CONFLICT_RE.search(c.assessment or ""):
-            issues.append(f"Conflicts: тему «{c.topic[:50]}» відкинуто — сама оцінка "
-                          f"каже, що це не емпіричне протиріччя")
-            continue
-        cs, cc = comparators(sup, claim_map), comparators(con, claim_map)
-        if cs and cc and not (cs & cc):
-            issues.append(f"Conflicts: тему «{c.topic[:50]}» відкинуто — сторони "
-                          f"порівнюють із різним компаратором ({sorted(cs)} проти "
-                          f"{sorted(cc)})")
-            continue
-        if set(sup) <= used_sup:
-            issues.append(f"Conflicts: тему «{c.topic[:50]}» відкинуто (ті самі "
-                          f"supporting claims уже використані в іншій суперечності)")
-            continue
-        used_sup |= set(sup)
-        status = c.status
-        if status == "resolved" and \
-                len({claim_map[i].get("evidence_id") for i in sup + con}) > 1:
-            
-            status = "unresolved"
-            issues.append(f"Conflicts: «{c.topic[:50]}» — статус resolved знижено до "
-                          f"unresolved (сторони з різних досліджень)")
-        assessment = c.assessment or ""
-        if status == "unresolved" and RESOLVED_TEXT_RE.search(assessment):
-            assessment = RESOLVED_TEXT_RE.sub("", assessment).strip()
-            assessment = ("Not resolved: the two sides come from different studies. "
-                          + assessment).strip()
-        out.append({"topic": c.topic, "endpoint": c.endpoint,
-                    "shared_comparator": c.shared_comparator,
-                    "supporting": sup, "contradicting": con,
-                    "assessment": assessment, "status": status})
-    return out
 
 def reported_trials(claims: list, evidence: dict) -> set:
     """NCT-номери випробувань, результати яких уже є в літературі: стаття (не реєстр)
