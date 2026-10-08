@@ -12,7 +12,7 @@ from typing import Literal
 import dotenv
 from google import genai
 from pydantic import BaseModel, Field
-
+from text_utils import *
 
 MODEL = "gemini-3.1-flash-lite"      
 FINAL_MODEL = "gemini-3.1-flash-lite"
@@ -451,23 +451,12 @@ def known_names_line(drug: str) -> str:
     return (f"KNOWN NAMES (search configuration, not evidence from the sources): "
             f"{drug} = {' = '.join(names)}. Treat them as the same drug.\n")
 
-def squash(text: str) -> str:
-    """Лояльне порівняння: m² -> m2, потім лишаємо лише літери й цифри."""
-    text = unicodedata.normalize("NFKC", text).lower()
-    return re.sub(r"[\W_]+", "", text)
-
 def quote_ok(quote: str, target_squashed: str) -> bool:
     """Цитата перевірена, якщо кожен її шматок є в записі. Розділювачі шматків:
     '...' та маркер пункту списку '*'. Шматки коротші за 8 символів ігноруємо."""
     pieces = [p for p in re.split(r"\.{3}|…|(?:^|\s)\*\s", quote)
               if len(squash(p)) >= 8]
     return bool(pieces) and all(squash(p) in target_squashed for p in pieces)
-
-def canon(n: str) -> str:
-    """30.0 -> 30, 27.50 -> 27.5."""
-    if "." in n:
-        n = n.rstrip("0").rstrip(".")
-    return n
 
 def numbers(text: str) -> set:
     """Числа з тексту: десяткові або від двох цифр. NCT-номери ігноруємо,
