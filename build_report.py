@@ -170,6 +170,8 @@ ALIASES = {
     "mivelsiran": ["ALN-APP"],
     "hro761": ["HRO-761"],
 }
+INDICATION_WORDS: set = set()   # ключові слова показання (заповнює main)
+INDICATION_SYNONYMS = {"obesity": ["overweight", "weight", "adipos", "bmi", "bariatric"]}
 DRUG_NAMES: set = set()   # імена препарату для перевірки цитат (заповнює main)
 
 
@@ -630,6 +632,13 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
             dropped.append({"reason": "шум: цитата — довгий список назв, а не твердження",
                             "claim": c})
             continue
+        # unmet need має бути про наше показання, а не про сусідню хворобу
+        if INDICATION_WORDS and c.get("stage") == "unmet_need" \
+                and rec.get("source_type") in ("pubmed", "epmc_pmc", "epmc_ppr") \
+                and not any(w in (c.get("claim", "") + " " + c.get("quote", "")).lower()
+                            for w in INDICATION_WORDS):
+            dropped.append({"reason": "шум: unmet need не про показання", "claim": c})
+            continue
         ctext = c.get("claim", "") + " " + c.get("quote", "")
         if str(c.get("evidence_id", "")).endswith("_flow") and \
                 c.get("direction") == "contradicts" and \
@@ -668,8 +677,13 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
         if LOW_CERT_RE.search(c.get("quote", "")) and c.get("confidence") != "low":
             c["confidence"] = "low"
             c["confidence_adjusted"] = "цитата: low certainty / не рецензовано / від компанії"
-        # є в записі, але не в цитаті і не в meta
-        backed = numbers(c.get("quote", "")) | numbers(
+        # антидопінгове/аналітичне дослідження (кілька осіб) — не клінічний доказ
+        if re.search(r"(?i)doping", rec.get("title") or "") and c.get("confidence") != "low":
+            c = dict(c)
+            c["confidence"] = "low"
+            c["confidence_adjusted"] = "назва запису: антидопінгове дослідження малої вибірки"
+        # є в записі, але не в цитаті і не в meta (числа з назви запису теж дозволені)
+        backed = numbers(c.get("quote", "")) | numbers(rec.get("title") or "") | numbers(
             json.dumps(rec.get("meta") or {}, ensure_ascii=False))
         outside = sorted(claim_nums - backed)
         # тривалість (N weeks/months) із запису, але не з цитати — це контекст, не результат:
@@ -706,12 +720,13 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
             if others:
                 item["reclassified_other_drug"] = others
                 item["stage"], item["direction"] = "competition", "neutral"
-        # стаття не згадує цільовий препарат ні в claim, ні в цитаті, ні в заголовку:
+        # стаття не згадує цільовий препарат ні в цитаті, ні в заголовку (назву в claim
+        # могла дописати модель):
         # висновок за чи проти препарату з неї робити не можна (наприклад, епідеміологія)
         if DRUG_NAMES and rec.get("source_type") in ("pubmed", "epmc_pmc", "epmc_ppr") \
                 and item.get("direction") in ("supports", "contradicts") \
                 and item.get("stage") in ("clinical", "safety_or_failure", "translation") \
-                and not any(nm in " ".join([item.get("claim", ""), item.get("quote", ""),
+                and not any(nm in " ".join([item.get("quote", ""),
                                             rec.get("title") or ""]).lower()
                             for nm in DRUG_NAMES):
             item["reclassified_no_target_drug"] = True
@@ -799,6 +814,12 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                 issues.append(f"{section}: evidence без claims відкинуто: "
                               f"{s.text[:70]}")
                 continue
+            if section.startswith("Commercial") and all(
+                    claim_map[i].get("source_type") == "nct_aact_population" for i in ids):
+                # критерії включення в дослідження — це не про ринок
+                issues.append(f"{section}: [E] лише на критеріях включення в дослідження "
+                              f"(не показник ринку) відкинуто: {s.text[:70]}")
+                continue
             families = {claim_map[i]["stage"] in MECH_STAGES for i in ids}
             dirs = {claim_map[i]["direction"] for i in ids}
             reason = None
@@ -821,6 +842,9 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                     and len(numbers(strip_labels(s.text))) >= 2:
                 reason = ("у комерції числа з різних записів в одному [E] "
                           "(можуть бути різні показники)")
+            elif section.startswith("Commercial") and RISK_ASSOC_RE.search(s.text):
+                reason = ("ризик-асоціація (HR/OR) описує хворобу, а не розмір ринку: "
+                          "не подаємо як факт про комерційну можливість")
             elif single_evidence and len(ids) > 1:
                 reason = "у рекомендації факт має спиратися на один claim"
             elif single_evidence and any(
@@ -861,6 +885,50 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                                   f"claims: {s.text[:70]}")
         out.append(item)
     return out
+
+
+RISK_ASSOC_RE = re.compile(r"(?i)hazard ratio|\bHR\b|odds ratio|\bOR\b\s*[=:]?\s*\d|relative risk")
+
+# Твердження «клінічних даних у людей немає / лише доклінічні» — хибні, якщо в досьє є
+# сильний клінічний результат (фаза 3 / плацебо). Модель бачить у розділі лише частину claims.
+NO_HUMAN_DATA_RES = [
+    re.compile(r"(?i)\b(?:do(?:es)? not|did not|no|without|lack(?:s|ing)?|absence of)\b"
+               r"[^.;]{0,80}\b(?:results? (?:from|of) (?:human )?clinical (?:trials?|studies)"
+               r"|human (?:clinical )?(?:trials?|data|results|efficacy|evidence)"
+               r"|clinical (?:trial|efficacy|outcome) (?:data|results))"),
+    re.compile(r"(?i)clinical efficacy[^.;]{0,80}(?:preclinical|case report)"),
+    re.compile(r"(?i)\bpreclinical\b[^.;]{0,40}\b(?:and|plus)\b[^.;]{0,20}\bcase report"),
+]
+
+
+def says_no_human_data(text: str) -> bool:
+    return any(r.search(text or "") for r in NO_HUMAN_DATA_RES)
+
+
+def drop_false_absence(sections: dict, claim_map: dict, issues: list):
+    """Якщо в досьє є сильний клінічний claim, прибираємо з розділів твердження й gaps
+    на кшталт «немає клінічних даних у людей»: вони суперечать самому досьє."""
+    lead = lead_efficacy_item(claim_map)
+    if not lead:
+        return
+    lid = lead["claim_ids"][0]
+    for sec in sections.values():
+        kept = []
+        for st in sec["statements"]:
+            if says_no_human_data(st["text"]):
+                issues.append(f"{sec['title']}: твердження прибрано — воно каже, що "
+                              f"клінічних даних у людей немає, але в досьє є {lid}: "
+                              f"{st['text'][:70]}")
+            else:
+                kept.append(st)
+        sec["statements"] = kept
+        gaps = []
+        for g in sec["gaps"]:
+            if says_no_human_data(g):
+                issues.append(f"{sec['title']}: gap прибрано — суперечить {lid}: {g[:70]}")
+            else:
+                gaps.append(g)
+        sec["gaps"] = gaps
 
 
 def claim_strength(c: dict) -> float:
@@ -1539,6 +1607,10 @@ def main():
     DRUG_NAMES.clear()
     DRUG_NAMES.update(n.lower() for n in
                       [args.drug] + ALIASES.get((args.drug or "").lower(), []) if n)
+    INDICATION_WORDS.clear()
+    for w in re.findall(r"[a-zA-Z]{4,}", (args.indication or "").lower()):
+        INDICATION_WORDS.add(w[:6])
+        INDICATION_WORDS.update(INDICATION_SYNONYMS.get(w, []))
     claims, dropped = prepare_claims(claims_raw, evidence, loose, "C")
 
     if args.extra:
@@ -1593,6 +1665,8 @@ def main():
                                               spec["title"], issues),
             "gaps": [clean_ids(g) for g in draft.gaps],
         }
+
+    drop_false_absence(sections, claim_map, issues)
 
     # перевірка покриття: важливі claims (supports/contradicts), яких не цитує жоден розділ
     cited = {i for sec in sections.values() for st in sec["statements"]
@@ -1657,7 +1731,8 @@ def main():
                                     "Recommendation", issues, single_evidence=True)
 
     lead = lead_efficacy_item(claim_map)
-    if lead and not any(lead["claim_ids"][0] in x["claim_ids"] for x in rationale):
+    if lead and not any(x["kind"] == "evidence" and lead["claim_ids"][0] in x["claim_ids"]
+                        for x in rationale):
         rationale.append(lead)
         issues.append(f"Recommendation: код додав головний результат ефективності "
                       f"{lead['claim_ids'][0]} (модель його не процитувала)")
