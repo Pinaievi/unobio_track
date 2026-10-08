@@ -48,7 +48,36 @@ MAX_PRIMARY_VALUES = 8       # скільки значень по групах �
 MAX_COMPARISONS = 6          # скільки порівнянь груп (p-value, інтервали) на одну кінцеву точку
 OUTCOME_TITLE_LIMIT = 250    # символів у назві кінцевої точки
 
-SYNONYMS = {"retatrutide": ["LY3437943"]}
+# Кодові назви препаратів: у реєстрі багато випробувань названі не INN, а кодом.
+SYNONYMS = {
+    "retatrutide": ["LY3437943"],
+    "maridebart cafraglutide": ["MariTide", "AMG 133", "AMG133"],
+    "amycretin": ["NN9487"],
+    "petrelintide": ["ZP8396"],
+    "trontinemab": ["RO7126209", "RG6102"],
+    "lepodisiran": ["LY3819469"],
+    "zilebesiran": ["ALN-AGT01"],
+    "sonelokimab": ["M1095", "ALX-0761"],
+    "efruxifermin": ["AKR-001"],
+    "divarasib": ["GDC-6036"],
+    "frexalimab": ["SAR441344"],
+    "duvakitug": ["TEV-48574", "SAR447189"],
+    "elironrasib": ["RMC-6291"],
+    "zoldonrasib": ["RMC-9805"],
+    "verekitug": ["UPB-101"],
+    "navenibart": ["STAR-0215"],
+    "kt-474": ["SAR444656"],
+    "mivelsiran": ["ALN-APP"],
+    "hro761": ["HRO-761"],
+}
+
+
+def condition_patterns(indication: str) -> list:
+    """Показання -> список шаблонів по словах. Апостроф-присвійне ('s) прибираємо,
+    щоб 'alzheimer disease' знаходило "Alzheimer's Disease" у реєстрі."""
+    text = re.sub(r"['’]s\b", "", indication.lower())
+    words = re.findall(r"[a-z0-9]+", text)
+    return [f"%{w}%" for w in words]
 
 # Які показники базової характеристики нас цікавлять (регулярний вираз PostgreSQL).
 # \m ... \M — межі слова, щоб "age" не збігалось із "percentage".
@@ -527,9 +556,11 @@ class AACTGetter(DataGetter):
                    )"""
             )
         if query.indication:
-            params["cond_pattern"] = f"%{query.indication}%"
+            # усі слова показання мають бути в одній назві стану (в будь-якому порядку)
+            params["cond_patterns"] = condition_patterns(query.indication)
             conditions_sql.append(
-                "s.nct_id IN (SELECT nct_id FROM conditions WHERE name ILIKE %(cond_pattern)s)"
+                "s.nct_id IN (SELECT nct_id FROM conditions "
+                "WHERE name ILIKE ALL(%(cond_patterns)s))"
             )
 
         params["limit"] = MAX_STUDIES

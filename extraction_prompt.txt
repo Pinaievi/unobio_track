@@ -138,6 +138,12 @@ CLASSIFICATION:
     "neutral", even when the finding is negative or null. If a sentence reports both a
     higher frequency of an adverse event and no significant difference in serious events,
     extract them as two separate claims, each with its own direction.
+    Adverse-event percentages: when a record gives the share of participants with any
+    adverse event per group, extract the placebo group too (one claim per group, each
+    with its group size if stated). In Phase 1, healthy-volunteer and dose-escalation
+    studies the share with ANY adverse event is background information, direction
+    "neutral", not "contradicts". Use "contradicts" only for serious or treatment-related
+    events, discontinuations, or rates clearly above placebo.
 26. confidence: "high" if the fact is stated directly with numbers or a clear status,
     otherwise "medium" or "low".
 

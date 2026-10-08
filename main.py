@@ -6,6 +6,7 @@ main.py — запускає весь конвеєр від запиту до ф
   2. split   — datagetters/split_evidence.py (розбиття на частини -> results/evidence/)
   3. claims  — claim_collector.py            (витяг фактів через LLM -> results/claims.json)
   4. report  — build_report.py               (звіт -> results/report.md, report.json)
+  5. ui      — app.py (Streamlit)             (drill-down сайт зі звітом; відкривається сам)
 
 Приклади (з кореня проєкту):
   python main.py                                     # ретатрутид, ожиріння (за замовчуванням)
@@ -14,7 +15,11 @@ main.py — запускає весь конвеєр від запиту до ф
   python main.py --only report                       # лише перебудувати звіт
   python main.py --only report --extra extra_claims.json --out-prefix report_new \
                  --compare results/report.json       # демо «нові докази змінюють висновок»
+  python main.py --no-ui                             # не відкривати сайт після конвеєра
+  python main.py --ui-only                           # лише відкрити сайт для наявних звітів
   python main.py --dry-run                           # показати команди, нічого не запускаючи
+
+Після кроків конвеєра сайт відкривається автоматично (зупинити: Ctrl+C у консолі).
 """
 
 import argparse
@@ -63,6 +68,38 @@ def build_commands(args) -> dict:
         "claims": claims,
         "report": report,
     }
+
+
+def launch_ui(report_name: str, dry: bool):
+    """Запускає Streamlit-сайт (app.py) і відкриває вибраний звіт.
+    Блокує консоль, поки користувач не натисне Ctrl+C."""
+    app = ROOT / "app.py"
+    cmd = [sys.executable, "-m", "streamlit", "run", str(app)]
+    print("\n" + "=" * 70)
+    print("САЙТ: drill-down звіту")
+    print("  " + " ".join(cmd))
+    print("=" * 70, flush=True)
+    if dry:
+        return
+    if not app.exists():
+        print(f"Не знайдено {app}, сайт не запущено.")
+        return
+    try:
+        import streamlit  # noqa: F401  (лише перевірка, що встановлено)
+    except ImportError:
+        print("Streamlit не встановлено. Виконай: pip install streamlit\n"
+              "потім: python main.py --ui-only")
+        return
+    env = dict(os.environ)
+    env["PYTHONIOENCODING"] = "utf-8"
+    env["PYTHONUTF8"] = "1"
+    env["UNDERWRITING_REPORT"] = report_name   # app.py відкриє саме цей звіт
+    print("Сайт відкриється в браузері (http://localhost:8501). "
+          "Зупинити: Ctrl+C.", flush=True)
+    try:
+        subprocess.call(cmd, cwd=str(ROOT), env=env)
+    except KeyboardInterrupt:
+        print("\nСайт зупинено.")
 
 
 def clean_old_parts():
@@ -159,8 +196,17 @@ def main():
     ap.add_argument("--workers", type=int, default=None,
                     help="потоків для витягу фактів (за замовчуванням як у claim_collector; "
                          "став 2, якщо API відповідає 429)")
+    ap.add_argument("--no-ui", action="store_true",
+                    help="не відкривати сайт зі звітом після конвеєра")
+    ap.add_argument("--ui-only", action="store_true",
+                    help="лише відкрити сайт (конвеєр не запускати)")
     ap.add_argument("--dry-run", action="store_true", help="лише показати команди")
     args = ap.parse_args()
+
+    report_name = f"{args.out_prefix or 'report'}.json"
+    if args.ui_only:
+        launch_ui(report_name, args.dry_run)
+        return
 
     if args.only:
         steps = [args.only]
@@ -188,6 +234,8 @@ def main():
 
     if not args.dry_run:
         print_summary(args.out_prefix, timings, start_ts)
+    if not args.no_ui:
+        launch_ui(report_name, args.dry_run)
 
 
 if __name__ == "__main__":
