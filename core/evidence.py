@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
-from text_utils import *
-from config import *
-from validation import other_drugs_in
+from core.text_utils import *
+from core.config import *
+from core.validation import other_drugs_in
 
 TRUNC_RE = re.compile(r"(?:[;,(=<>±:]|\s[a-z])$")
 LOW_CERT_RE = re.compile(

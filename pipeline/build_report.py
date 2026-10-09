@@ -12,10 +12,10 @@ import dotenv
 from google import genai
 from pydantic import BaseModel, Field
 from prompts import *
-from validation import *
-from md_rendering import *
-from evidence import *
-from capital import *
+from core.validation import *
+from core.md_rendering import *
+from core.evidence import *
+from core.capital import *
 
 MODEL = "gemini-3.1-flash-lite"      
 FINAL_MODEL = "gemini-3.1-flash-lite"

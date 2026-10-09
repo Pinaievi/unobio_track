@@ -1,8 +1,8 @@
 import re
 from typing import Literal
 from pydantic import BaseModel, Field
-from text_utils import *
-from config import *
+from core.text_utils import *
+from core.config import *
 
 class Conflict(BaseModel):
     topic: str = Field(description="What the disagreement is about, one line.")

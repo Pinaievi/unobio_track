@@ -2,8 +2,8 @@ import json
 import re
 
 from datetime import date, datetime
-from config import * 
-from text_utils import *
+from core.config import * 
+from core.text_utils import *
 
 AREA_COSTS = {
     "oncology": (40_000, 120_000,

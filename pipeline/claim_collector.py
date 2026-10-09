@@ -33,7 +33,7 @@ from google import genai
 from pydantic import BaseModel, Field
 import prompts
 
-from config import PRICE_OUT_PER_M, PRICE_IN_PER_M
+from core.config import PRICE_OUT_PER_M, PRICE_IN_PER_M
 
 # ---------------------------------------------------------------- налаштування
 
