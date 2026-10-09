@@ -38,18 +38,17 @@ HOST = "aact-db.ctti-clinicaltrials.org"
 PORT = 5432
 DBNAME = "aact"
 
-MAX_STUDIES = 200            # скільки випробувань максимум беремо
-CRITERIA_LIMIT = 700         # символів на розділ критеріїв (inclusion / exclusion)
-MAX_BASELINE_ROWS = 14       # скільки показників базової характеристики на групу
-MAX_DROP_REASONS = 6         # скільки причин виходу показуємо на групу
-MAX_PK_OUTCOMES = 4          # скільки фармакокінетичних результатів на випробування
-MAX_PK_VALUES = 12           # скільки значень на один фармакокінетичний результат
-MAX_PRIMARY_OUTCOMES = 3     # скільки первинних кінцевих точок з результатами на випробування
-MAX_PRIMARY_VALUES = 8       # скільки значень по групах на одну кінцеву точку
-MAX_COMPARISONS = 6          # скільки порівнянь груп (p-value, інтервали) на одну кінцеву точку
-OUTCOME_TITLE_LIMIT = 250    # символів у назві кінцевої точки
+MAX_STUDIES = 200
+CRITERIA_LIMIT = 700
+MAX_BASELINE_ROWS = 14
+MAX_DROP_REASONS = 6
+MAX_PK_OUTCOMES = 4
+MAX_PK_VALUES = 12
+MAX_PRIMARY_OUTCOMES = 3
+MAX_PRIMARY_VALUES = 8
+MAX_COMPARISONS = 6
+OUTCOME_TITLE_LIMIT = 250
 
-# Кодові назви препаратів: у реєстрі багато випробувань названі не INN, а кодом.
 SYNONYMS = {
     "retatrutide": ["LY3437943"],
     "maridebart cafraglutide": ["MariTide", "AMG 133", "AMG133"],
@@ -80,21 +79,17 @@ def condition_patterns(indication: str) -> list:
     words = re.findall(r"[a-z0-9]+", text)
     return [f"%{w}%" for w in words]
 
-# Які показники базової характеристики нас цікавлять (регулярний вираз PostgreSQL).
-# \m ... \M — межі слова, щоб "age" не збігалось із "percentage".
 BASELINE_PATTERN = (
     r"\mage\M|\msex\M|gender|body mass index|\mbmi\M|body weight|weight|hba1c|glycated|"
     r"glycosylated|\mrace\M|ethnic|duration of|waist"
 )
 
-# Які результати вважаємо фармакокінетичними.
 PK_PATTERN = (
     r"pharmacokinetic|\m(?:auc|cmax|tmax|t1/2|clearance)|half[- ]life|"
     r"(?:plasma|serum) concentration"
 )
 
 
-# ---------- підключення ----------
 
 def _connect() -> psycopg.Connection:
     user = os.environ.get("AACT_USER")
@@ -139,7 +134,6 @@ def safe_chain(conn, label: str, queries: list[str], params: dict) -> list[dict]
     return []
 
 
-# ---------- допоміжні функції ----------
 
 def _s(value) -> str | None:
     """Дати й інші типи -> рядок для JSON."""
@@ -240,7 +234,6 @@ def by_key(rows: list[dict], key: str) -> dict:
     return out
 
 
-# ---------- завантаження додаткових даних (кожен блок ізольований) ----------
 
 def load_eligibility(conn, ncts):
     rows = safe(conn, "критерії відбору",
@@ -354,7 +347,6 @@ def load_primary_results(conn, ncts) -> dict[str, list[dict]]:
     ], {"ids": ids})
 
     analyses = safe_chain(conn, "p-value та інтервали первинних результатів", [
-        # розширений: які саме групи порівнюються, відсоток інтервалу, знак біля p-value
         """SELECT oa.outcome_id, oa.param_type, oa.param_value,
                   oa.p_value, oa.p_value_modifier,
                   oa.ci_percent, oa.ci_lower_limit, oa.ci_upper_limit, oa.method,
@@ -366,7 +358,6 @@ def load_primary_results(conn, ncts) -> dict[str, list[dict]]:
            FROM outcome_analyses oa
            WHERE oa.outcome_id = ANY(%(ids)s)
            ORDER BY oa.outcome_id, oa.id""",
-        # простий: те, що вже працювало раніше
         """SELECT oa.outcome_id, oa.param_type, oa.param_value, oa.p_value,
                   oa.ci_lower_limit, oa.ci_upper_limit, oa.method
            FROM outcome_analyses oa
@@ -381,7 +372,7 @@ def load_primary_results(conn, ncts) -> dict[str, list[dict]]:
     for o in outcomes:
         v = values_by.get(o["id"], [])[:MAX_PRIMARY_VALUES]
         a = analyses_by.get(o["id"], [])[:MAX_COMPARISONS]
-        if not v and not a:          # результатів по цій кінцевій точці не опубліковано
+        if not v and not a:
             continue
         bucket = result.setdefault(o["nct_id"], [])
         if len(bucket) < MAX_PRIMARY_OUTCOMES:
@@ -392,7 +383,6 @@ def load_primary_results(conn, ncts) -> dict[str, list[dict]]:
     return result
 
 
-# ---------- текст блоку з результатами ----------
 
 def primary_results_text(outcomes: list[dict]) -> str:
     """Блок «Primary outcome results:» для поля text основного запису.
@@ -431,7 +421,6 @@ def primary_analyses_meta(outcomes: list[dict]) -> list[dict]:
     return flat
 
 
-# ---------- побудова додаткових записів ----------
 
 def companion(nct: str, kind: str, title: str, text: str, meta: dict) -> dict:
     """Додатковий запис до випробування. source_type відрізняється від основного,
@@ -488,7 +477,6 @@ def population_record(nct, brief_title, elig, baseline_rows, group_n):
 def flow_record(nct, brief_title, milestones, drops):
     steps: dict[str, dict[str, object]] = {}
     for m in milestones:
-        # якщо періодів кілька, лишаємо перше значення для групи й кроку
         steps.setdefault(m["grp"], {}).setdefault(m["step"], m["count"])
     flow_text = "; ".join(
         f"{grp}: started {v.get('STARTED', 'n/a')}, completed {v.get('COMPLETED', 'n/a')}"
@@ -534,7 +522,6 @@ def pk_record(nct, brief_title, outcomes, values_by_outcome):
                      {"pk_outcomes": meta_items})
 
 
-# ---------- сам getter ----------
 
 class AACTGetter(DataGetter):
     name = "aact"
@@ -557,7 +544,6 @@ class AACTGetter(DataGetter):
                    )"""
             )
         if query.indication:
-            # усі слова показання мають бути в одній назві стану (в будь-якому порядку)
             params["cond_patterns"] = condition_patterns(query.indication)
             conditions_sql.append(
                 "s.nct_id IN (SELECT nct_id FROM conditions "
@@ -603,7 +589,6 @@ class AACTGetter(DataGetter):
                               *load_flow(conn, ncts),
                               *load_pk(conn, ncts))
 
-        # публічна база AACT інколи розриває з'єднання: повторюємо до 3 разів
         last_err = None
         for attempt in range(3):
             try:
@@ -625,7 +610,6 @@ class AACTGetter(DataGetter):
             nct = r["nct_id"]
             brief = r["brief_title"] or nct
 
-            # 1. основний запис: опис випробування + (якщо є) блок з результатами
             outcomes = primary.get(nct, [])
             text = (r["summary"] or "").strip()
             if outcomes:
@@ -660,17 +644,14 @@ class AACTGetter(DataGetter):
                 },
             })
 
-            # 2. популяція й критерії (+ базові характеристики, якщо є результати)
             elig = eligibility.get(nct)
             if elig and (elig.get("criteria") or elig.get("population")):
                 records.append(population_record(
                     nct, brief, elig, baseline.get(nct, []), group_n))
 
-            # 3. рух учасників і причини виходу (лише коли є результати)
             if milestones.get(nct) or drops.get(nct):
                 records.append(flow_record(nct, brief, milestones.get(nct, []), drops.get(nct, [])))
 
-            # 4. фармакокінетика (лише коли є результати)
             if pk_outcomes.get(nct):
                 records.append(pk_record(nct, brief, pk_outcomes[nct], pk_values))
 

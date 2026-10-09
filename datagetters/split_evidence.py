@@ -13,12 +13,11 @@ import json
 import sys
 from pathlib import Path
 
-# Корінь проєкту = папка, що лежить над папкою зі скриптом (unobio_track).
 ROOT = Path(__file__).resolve().parent.parent
 INPUT_PATH = ROOT / "results" / "evidence_raw.json"
 PARTS_DIR = ROOT / "results" / "evidence"
 DEFAULT_LINE_LIMIT = 100
-HEADER_OVERHEAD = 12   # приблизно рядків на службову шапку кожного файлу
+HEADER_OVERHEAD = 12
 
 
 def count_lines(record: dict) -> int:
@@ -30,7 +29,6 @@ def split_records(records: list[dict], line_limit: int) -> list[list[dict]]:
     chunks, current, current_lines = [], [], HEADER_OVERHEAD
     for rec in records:
         lines = count_lines(rec)
-        # запис не влазить у поточну частину, а вона не порожня -> починаємо нову
         if current and current_lines + lines > line_limit:
             chunks.append(current)
             current, current_lines = [], HEADER_OVERHEAD
@@ -55,7 +53,6 @@ def main() -> None:
         sys.exit(1)
 
     PARTS_DIR.mkdir(parents=True, exist_ok=True)
-    # видаляємо старі частини, щоб вони не змішались з новими
     for old in PARTS_DIR.glob("evidence_part_*.json"):
         old.unlink()
 

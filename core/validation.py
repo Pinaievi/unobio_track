@@ -193,7 +193,6 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                     issues.append(f"{section}: числа {missing} відсутні в цитованих "
                                   f"claims: {s.text[:70]}")
         if single_evidence and item["kind"] == "inference" and ids:
-            # висновок моделі в рекомендації теж не має містити чисел, яких нема в цитованих claims
             have = set()
             for i in ids:
                 have |= claim_numbers(claim_map[i])
@@ -288,8 +287,6 @@ def drop_false_absence(sections: dict, claim_map: dict, issues: list):
                 gaps.append(g)
         sec["gaps"] = gaps
    
-# Твердження про відсутність ПОРІВНЯЛЬНИХ даних («немає head-to-head») — не те саме, що
-# «немає клінічних даних у людей». Їх не чіпаємо цим правилом.
 COMPARATIVE_RE = re.compile(r"(?i)head[- ]to[- ]head|comparative|comparison|\bversus\b|\bvs\.?\b|"
                             r"direct(?:ly)? compar|active comparator|other agents|competitor")
 
@@ -392,7 +389,7 @@ def key_efficacy_items(claim_map: dict, cited: set, n: int = 3) -> list:
                 or c.get("stage") != "clinical" or c.get("confidence") != "high" \
                 or c.get("drug_not_in_quote"):
             continue
-        t = c.get("claim", "") + " " + c.get("quote", "")   # % і плацебо можуть бути лише в цитаті
+        t = c.get("claim", "") + " " + c.get("quote", "")
         t_nci = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", t)
         if not (re.search(r"(?i)placebo", t) and re.search(r"\d\s*%", t_nci)):
             continue
@@ -437,7 +434,6 @@ def other_drugs_in(text: str) -> list:
                   - {n.lower() for n in DRUG_NAMES})
 
 
-# ---------------------------------------------------------------- червоні прапори
 
 HOLD_RE = re.compile(r"(?i)clinical hold")
 HOLD_LIFTED_RE = re.compile(r"(?i)\b(?:lifted|released|removed|resolved)\b|no clinical hold|not (?:been )?placed")
@@ -482,6 +478,19 @@ LEVELS = ["Do Not Invest", "Conditional", "Invest"]
 def downgrade_recommendation(rec: str) -> str:
     """На один рівень вниз: Invest -> Conditional -> Do Not Invest."""
     return LEVELS[max(0, LEVELS.index(rec) - 1)]
+
+STOP_CATEGORIES = {"death_or_life_threatening_harm", "regulatory_halt_or_refusal",
+                   "programme_terminated", "failed_pivotal_trial", "invalid_key_result"}
+
+def expected_after_flags(base: str, flags: list) -> str:
+    """Найвищий рівень, дозволений після критичних знахідок. Категорії «зупиняє програму»
+    (смерть, регуляторна зупинка, закриття, провал реєстраційного дослідження, недійсний
+    ключовий результат) дають Do Not Invest; інша критична знахідка — на один рівень нижче.
+    Категорію ставить модель-тріаж; для знахідок лише від запасного фільтру категорії немає,
+    і вони вважаються «зупиняє програму» (фільтр ловить лише такі події)."""
+    if any((f.get("category") is None) or f.get("category") in STOP_CATEGORIES for f in flags):
+        return "Do Not Invest"
+    return downgrade_recommendation(base)
 
 def new_evidence_items(claim_map: dict, rationale: list, flag_ids: set, n: int = 3) -> list:
     """Найважливіші НОВІ claims (is_extra, high), яких ще немає в Recommendation як [E].
@@ -541,7 +550,6 @@ def drop_false_h2h_absence(sections: dict, rationale: list, claim_map: dict, iss
     return out
 
 
-# ---------------------------------------------------------------- тріаж тяжкості (модель)
 
 class Severity(BaseModel):
     claim_id: str

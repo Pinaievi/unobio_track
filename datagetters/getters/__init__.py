@@ -3,7 +3,7 @@
 import importlib
 import pkgutil
 
-from .base import DataGetter, Query  # noqa: F401
+from .base import DataGetter, Query
 
 
 def discover() -> list[DataGetter]:

@@ -43,8 +43,13 @@ def render_md(report: dict, claims_file: str) -> str:
             cat = f" [{f['category']}]" if f.get("category") else ""
             L.append(f"> - {f['id']} (found by {' + '.join(f.get('found_by', []))}){cat}: "
                      f"{f.get('reason', '')}")
-        L.append(f">\n> Policy: a verified critical finding lowers the recommendation by one "
-                 f"level.{step}\n")
+        L.append(f">\n> Policy: a critical finding that stops the programme (death, regulatory "
+                 f"halt, termination, failed pivotal trial, invalid key result) gives Do Not Invest; "
+                 f"any other critical finding lowers the recommendation by one level.{step}\n")
+    gate = report.get("invest_gate") or {}
+    if gate.get("checked") and not gate.get("passed"):
+        L.append("> ⚖ **Invest gate.** The model proposed Invest, but the code lowered it to "
+                 "Conditional: " + "; ".join(gate.get("reasons", [])) + ".\n")
     stmts(report["recommendation_rationale"])
     n = 2
     for key in ["scientific_thesis", "translation_thesis", "clinical_plan",

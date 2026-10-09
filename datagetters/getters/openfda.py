@@ -35,20 +35,16 @@ BASE = "https://api.fda.gov"
 LABEL_URL = f"{BASE}/drug/label.json"
 EVENT_URL = f"{BASE}/drug/event.json"
 
-MAX_LABELS = 3          # скільки різних інструкцій (брендів) максимум беремо
-TOP_REACTIONS = 10      # скільки найчастіших побічних реакцій показуємо
-TOP_COMPETITORS = 500   # скільки назв препаратів запитуємо (з запасом: частину відфільтруємо)
-MAX_LISTED = 150        # скільки назв максимум виводимо в текст запису
-MAX_NAME_LEN = 60       # довші назви вважаємо сумішами з багатьох компонентів
+MAX_LABELS = 3
+TOP_REACTIONS = 10
+TOP_COMPETITORS = 500
+MAX_LISTED = 150
+MAX_NAME_LEN = 60
 
-# Інструкції часто формулюють показання іншими словами, ніж назва хвороби
-# (наприклад, "chronic weight management" замість "obesity"). Додавай свої сюди.
 INDICATION_ALIASES = {
     "obesity": ["weight management", "excess body weight"],
 }
 
-# Розділи інструкції: (поле в API, заголовок у тексті, максимум символів).
-# Для кожного розділу беремо перший доступний варіант поля зі списку.
 SECTIONS = [
     (["indications_and_usage"], "Indications and usage", 600),
     (["boxed_warning"], "Boxed warning", 700),
@@ -65,7 +61,6 @@ class FDAError(RuntimeError):
     """Помилка запиту до openFDA (мережа або неочікувана відповідь)."""
 
 
-# ---------- запит до API з кешем ----------
 
 def fda_get(url: str, params: dict) -> dict | None:
     """GET-запит до openFDA. Повертає None, якщо збігів немає (відповідь 404).
@@ -78,23 +73,23 @@ def fda_get(url: str, params: dict) -> dict | None:
 
     request_params = dict(params)
     api_key = os.environ.get("OPENFDA_API_KEY")
-    if api_key:                                  # ключ не потрапляє ні в кеш, ні в посилання
+    if api_key:
         request_params["api_key"] = api_key
 
     last = None
     for attempt in range(3):
         try:
             resp = requests.get(url, params=request_params, headers=HEADERS, timeout=30)
-        except requests.RequestException as e:   # проблеми з мережею — повторюємо
+        except requests.RequestException as e:
             last = e
             time.sleep(2 * (attempt + 1))
             continue
 
-        if resp.status_code == 404:              # openFDA так відповідає, коли збігів немає
+        if resp.status_code == 404:
             path.write_text(json.dumps({"_not_found": True}), encoding="utf-8")
             return None
 
-        if resp.status_code in (429, 500, 502, 503, 504):   # перевантаження — повторюємо
+        if resp.status_code in (429, 500, 502, 503, 504):
             last = f"HTTP {resp.status_code}"
             time.sleep(3 * (attempt + 1))
             continue
@@ -116,7 +111,6 @@ def public_url(url: str, params: dict) -> str:
     return f"{url}?{urlencode(params)}"
 
 
-# ---------- допоміжні функції ----------
 
 def slug(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_") or "x"
@@ -175,7 +169,6 @@ def filter_terms(terms: list[dict]) -> tuple[list[dict], int]:
     return kept, len(terms) - len(kept)
 
 
-# ---------- побудова записів evidence ----------
 
 def label_record(label: dict) -> dict:
     ofda = label.get("openfda") or {}
@@ -265,8 +258,6 @@ def faers_record(generic: str, total: int, serious: int | None,
 
 def indication_record(indication: str, search_terms: list[str],
                       terms: list[dict], omitted: int, url: str) -> dict:
-    # У тексті назви йдуть за алфавітом, а не за кількістю інструкцій: кількість
-    # відображає лише число виробників препарату, а не його значущість.
     shown = sorted(t["term"] for t in terms)[:MAX_LISTED]
     omitted_text = (
         f" {omitted} further entries with multi-ingredient names (mostly mixtures) "
@@ -293,12 +284,11 @@ def indication_record(indication: str, search_terms: list[str],
             "indication": indication,
             "search_terms": search_terms,
             "omitted_multi_ingredient": omitted,
-            "drugs": terms[:MAX_LISTED],    # порядок за кількістю інструкцій, довідково
+            "drugs": terms[:MAX_LISTED],
         },
     }
 
 
-# ---------- сам getter ----------
 
 class OpenFDAGetter(DataGetter):
     name = "openfda"
@@ -308,16 +298,14 @@ class OpenFDAGetter(DataGetter):
             return []
 
         records: list[dict] = []
-        generics: list[str] = []      # загальні назви знайдених препаратів (для FAERS)
+        generics: list[str] = []
 
-        # 1. Інструкція до препарату
         if query.mechanism:
             try:
                 records += self._labels(query.mechanism, generics)
             except FDAError as e:
                 print(f"[openfda] пошук інструкцій пропущено: {e}")
 
-        # 2. Побічні ефекти (лише якщо препарат знайдено, інакше запитів не витрачаємо)
         for generic in generics[:2]:
             try:
                 rec = self._faers(generic)
@@ -326,7 +314,6 @@ class OpenFDAGetter(DataGetter):
             except FDAError as e:
                 print(f"[openfda] побічні ефекти для {generic} пропущено: {e}")
 
-        # 3. Схвалені препарати з таким показанням
         if query.indication:
             try:
                 rec = self._indication_competitors(query.indication)
@@ -339,7 +326,6 @@ class OpenFDAGetter(DataGetter):
 
         return records
 
-    # --- частини getter ---
 
     def _labels(self, mechanism: str, generics: list[str]) -> list[dict]:
         n = quote(mechanism)
@@ -352,10 +338,8 @@ class OpenFDAGetter(DataGetter):
         results = (data or {}).get("results") or []
 
         if not results:
-            # препарату немає в базі інструкцій: фіксуємо це явним записом
             return [absent_record(mechanism, params)]
 
-        # найновіші інструкції першими; з кожного бренду беремо одну
         results.sort(key=lambda r: r.get("effective_time") or "", reverse=True)
         seen_brands, chosen = set(), []
         for label in results:
@@ -402,7 +386,6 @@ class OpenFDAGetter(DataGetter):
                             public_url(EVENT_URL, reactions_params))
 
     def _indication_competitors(self, indication: str) -> dict | None:
-        # шукаємо і за назвою хвороби, і за її поширеними формулюваннями в інструкціях
         search_terms = [indication] + INDICATION_ALIASES.get(indication.lower(), [])
         params = {
             "search": " OR ".join(

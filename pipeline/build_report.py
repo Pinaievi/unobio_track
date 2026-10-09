@@ -11,8 +11,6 @@ from typing import Literal
 import dotenv
 from google import genai
 from pydantic import BaseModel, Field
-# Корінь проєкту = тека над pipeline/. Python за замовчуванням бачить лише теку скрипта
-# (pipeline/), тому додаємо корінь і core/ у шлях імпорту вручну.
 ROOT = Path(__file__).resolve().parent.parent
 for _p in (ROOT, ROOT / "core"):
     if str(_p) not in sys.path:
@@ -141,6 +139,12 @@ class FinalDraft(BaseModel):
     )
     recommendation_rationale: list[Statement]
     critical_unknowns: list[str]
+    blocking_unknowns: list[str] = Field(
+        default_factory=list,
+        description="The subset of critical_unknowns (copy the exact text) whose UNFAVOURABLE "
+                    "answer would break the investment thesis, so that investing before they are "
+                    "answered is not justified. Empty if the remaining unknowns are ordinary "
+                    "diligence items (confirmation, pricing, scale-up, long-term follow-up).")
     diligence_questions: list[str] = Field(description="5 to 10 questions.")
     what_would_change_the_conclusion: list[str] = Field(
         description="Concrete new evidence that would move the recommendation up or down."
@@ -321,7 +325,6 @@ def main():
     drop_false_absence(sections, claim_map, issues)
     drop_false_h2h_absence(sections, [], claim_map, issues)
 
-    # ключові результати ефективності, яких не взяв жоден розділ, код додає в клінічний план
     cited_now = {i for sec in sections.values() for st in sec["statements"]
                  for i in st["claim_ids"]}
     extra_eff = key_efficacy_items(claim_map, cited_now)
@@ -384,7 +387,6 @@ def main():
         or "none identified"
     capital_text = "\n".join(f"- {s['text']}" for s in capital_stmts)
     contra = [c for c in claims if c["direction"] == "contradicts"]
-    # тріаж тяжкості: модель сама оцінює, що критичне (без списку подій у коді)
     tri_pool = [c for c in claims if c["direction"] == "contradicts"
                 or c["stage"] in ("safety_or_failure", "regulatory")]
     triage = []
@@ -412,8 +414,12 @@ def main():
                       "finding can stop the programme on its own):\n" + flags_text
                     + "\nPOLICY: first fill recommendation_without_critical_findings (all "
                       "other evidence, ignoring the critical findings). If CRITICAL FINDINGS "
-                      "is not 'none', your final recommendation must be one level lower than "
-                      "that (Invest -> Conditional, Conditional -> Do Not Invest). Write the "
+                      "is not 'none', your final recommendation must be lower than that: "
+                      "if a critical finding is a death or life-threatening harm caused by the drug, "
+                      "a regulatory halt or refusal, a terminated programme, a failed pivotal trial or "
+                      "an invalid key result, the final recommendation is Do Not Invest; for any "
+                      "other critical finding it is one level lower (Invest -> Conditional, "
+                      "Conditional -> Do Not Invest). Write the "
                       "rationale, critical_unknowns and what_would_change_the_conclusion for "
                       "your FINAL recommendation."                    + "\n\nALL CONTRADICTING CLAIMS:\n" + claims_for_prompt(contra))
     final = runner.call("final", FINAL_MODEL, final_prompt, FinalDraft)
@@ -429,7 +435,6 @@ def main():
                       f"{lead['claim_ids'][0]} (модель його не процитувала)")
     rationale = drop_false_h2h_absence({}, rationale, claim_map, issues)
 
-    # червоні прапори й найважливіші нові докази мають бути в Recommendation як [E]
     have_e = {i for x in rationale if x["kind"] == "evidence" for i in x["claim_ids"]}
     for f in flags:
         if f["id"] not in have_e:
@@ -445,19 +450,24 @@ def main():
 
     recommendation = final.recommendation
     model_recommendation = recommendation
-    unresolved = [c for c in conflicts if c["status"] == "unresolved"]
-    if recommendation == "Invest" and (final.critical_unknowns or unresolved):
-        recommendation = "Conditional"
-        issues.append("Рекомендацію «Invest» знижено до «Conditional»: "
-                      "залишаються критичні невідомі або невирішені суперечності.")
+    invest_gate = {"checked": recommendation == "Invest", "passed": True, "reasons": []}
+    if recommendation == "Invest":
+        if not any(c.get("stage") == "clinical" and c.get("direction") == "supports"
+                   and c.get("confidence") == "high" for c in claim_map.values()):
+            invest_gate["reasons"].append("the dossier has no high-confidence clinical claim supporting efficacy")
+        if final.blocking_unknowns:
+            invest_gate["reasons"].append("the model named blocking unknowns: "
+                                          + "; ".join(final.blocking_unknowns))
+        if invest_gate["reasons"]:
+            invest_gate["passed"] = False
+            recommendation = "Conditional"
+            issues.append("Рекомендацію «Invest» знижено до «Conditional»: "
+                          + " | ".join(invest_gate["reasons"]))
 
-    # правило наслідку: підтверджена критична знахідка знижує вивід на один рівень відносно
-    # того, що модель сказала б БЕЗ неї. Що критичне — вирішує модель-тріаж (+ запасний
-    # фільтр), не список у коді. Код лише перевіряє узгодженість двох відповідей моделі.
     rule_by = "none"
     if flags:
         who = "; ".join(f"{f['id']} ({'+'.join(f['found_by'])})" for f in flags)
-        expected = downgrade_recommendation(final.recommendation_without_critical_findings)
+        expected = expected_after_flags(final.recommendation_without_critical_findings, flags)
         if LEVELS.index(recommendation) > LEVELS.index(expected):
             issues.append(f"Правило критичних знахідок ({who}): без знахідок модель дала б "
                           f"«{final.recommendation_without_critical_findings}», з ними має бути "
@@ -496,6 +506,7 @@ def main():
         "generated": time.strftime("%Y-%m-%d %H:%M:%S"),
         "recommendation": recommendation,
         "recommendation_by_model": model_recommendation,
+        "invest_gate": invest_gate,
         "critical_rule_applied_by": rule_by,
         "red_flags": flags,
         "severity_triage": triage,

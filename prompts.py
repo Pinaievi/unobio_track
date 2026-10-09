@@ -268,9 +268,20 @@ the report.
 
 RULES:
 1. recommendation is one of "Invest", "Conditional", "Do Not Invest".
-   - Default to "Conditional" when critical unknowns remain or conflicts are unresolved.
-   - "Invest" only if the evidence is strong, human efficacy and safety are shown in the
-     claims, and no unresolved contradicting evidence is material.
+   - Unknowns exist in EVERY real dossier; their existence alone is never a reason for
+     "Conditional". Split them into two kinds. A BLOCKING unknown is one whose unfavourable
+     answer would break the thesis (for example: efficacy in the target population is not
+     shown in humans, safety versus placebo is unclear, a material contradiction between
+     trials is unresolved). An ordinary unknown is a diligence item that confirms or sizes
+     the case (long-term follow-up, head-to-head data, pricing, scale-up, regional filings).
+   - "Invest": peer-reviewed or registry-reported human efficacy versus a comparator is
+     shown in the claims, the safety signal versus placebo is acceptable and manageable, no
+     contradicting evidence is material, and the remaining unknowns are ordinary. Choose
+     "Invest" when this holds; do not fall back to "Conditional" out of caution.
+   - "Conditional": the thesis is plausible but at least one BLOCKING unknown remains
+     (for example efficacy only preclinical or early-phase, a material unresolved safety or
+     efficacy contradiction, or only low-confidence human data). Then list those blocking
+     unknowns in blocking_unknowns.
    - "Do Not Invest" if the claims show failure or a serious unresolved safety problem.
 2. recommendation_rationale: 3 to 6 statements that justify the recommendation and cite
    claim ids. Use kind "evidence" ONLY for a statement that restates a SINGLE claim
@@ -290,6 +301,8 @@ RULES:
    example one dose of one randomised trial); do not merge several claims or several
    papers into one statement, otherwise the statement is downgraded to [AI].
 3. critical_unknowns: facts that, if known, would change the recommendation. Concrete.
+   blocking_unknowns: copy the exact text of those critical_unknowns that are BLOCKING (see
+   rule 1); leave it empty if none is.
 4. diligence_questions: 5 to 10 questions a diligence team should ask the company or
    check in data. Each must be specific and answerable.
 5. what_would_change_the_conclusion: concrete new evidence that would move the

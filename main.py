@@ -39,7 +39,6 @@ def build_commands(args) -> dict:
     """Команда для кожного кроку. Усі запускаються з кореня проєкту."""
     py = sys.executable
 
-    # delegator: без аргументів = ретатрутид; один = препарат; два = хвороба + препарат
     fetch = [py, str(ROOT / "datagetters" / "delegator.py")]
     if args.indication and args.drug:
         fetch += [args.indication, args.drug]
@@ -85,7 +84,7 @@ def launch_ui(report_name: str, dry: bool):
         print(f"Не знайдено {app}, сайт не запущено.")
         return
     try:
-        import streamlit  # noqa: F401  (лише перевірка, що встановлено)
+        import streamlit
     except ImportError:
         print("Streamlit не встановлено. Виконай: pip install streamlit\n"
               "потім: python main.py --ui-only")
@@ -93,7 +92,7 @@ def launch_ui(report_name: str, dry: bool):
     env = dict(os.environ)
     env["PYTHONIOENCODING"] = "utf-8"
     env["PYTHONUTF8"] = "1"
-    env["UNDERWRITING_REPORT"] = report_name   # app.py відкриє саме цей звіт
+    env["UNDERWRITING_REPORT"] = report_name
     print("Сайт відкриється в браузері (http://localhost:8501). "
           "Зупинити: Ctrl+C.", flush=True)
     try:
@@ -124,7 +123,7 @@ def run_step(name: str, cmd: list, dry: bool) -> float:
         return 0.0
 
     env = dict(os.environ)
-    env["PYTHONIOENCODING"] = "utf-8"   # щоб українські повідомлення не ламались у Windows
+    env["PYTHONIOENCODING"] = "utf-8"
     env["PYTHONUTF8"] = "1"
     t0 = time.time()
     code = subprocess.call(cmd, cwd=str(ROOT), env=env)
@@ -153,7 +152,6 @@ def print_summary(out_prefix: str, timings: dict, start_ts: str):
     print(f"  Claims у звіті: {len(rep.get('claims', []))}")
     print(f"  Конфліктів доказів: {len(rep.get('conflicts', []))}")
 
-    # вартість LLM за цей запуск: беремо з run_log.jsonl записи, зроблені після старту
     log_path = RESULTS / "run_log.jsonl"
     if log_path.exists():
         groups = {}
@@ -215,7 +213,6 @@ def main():
 
     cmds = build_commands(args)
 
-    # чи існують потрібні файли
     for s in steps:
         script = Path(cmds[s][1])
         if not script.exists():

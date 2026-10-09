@@ -19,7 +19,6 @@ STAGES_ORDER = ["mechanism", "translation", "clinical", "safety_or_failure",
                 "competition", "unmet_need", "regulatory"]
 
 
-# ---------------------------------------------------------------- дані
 
 def list_reports() -> list:
     """Файли звітів: results/*.json, у яких є ключ recommendation."""
@@ -44,7 +43,6 @@ def is_synthetic(claim: dict) -> bool:
     return claim.get("source_type") == "demo_synthetic"
 
 
-# ---------------------------------------------------------------- відображення
 
 def badge(text: str, color: str) -> str:
     return (f"<span style='background:{color};color:white;padding:2px 9px;"
@@ -122,7 +120,6 @@ def render_statements(items: list, claims: dict, sources: dict, key: str,
                            "або обмеження оцінки).")
 
 
-# ---------------------------------------------------------------- вкладки
 
 def tab_report(rep: dict, claims: dict, sources: dict, only_evidence: bool):
     st.subheader("1. Recommendation")
@@ -218,7 +215,6 @@ def tab_compare(rep: dict, paths: list):
         color = REC_COLORS.get(r["recommendation"], "#57606a")
         col.markdown(f"**{title}**<br>" + badge(r["recommendation"], color),
                      unsafe_allow_html=True)
-    # id перенумеровуються між прогонами, тому claims порівнюємо за записом і цитатою
     def ckey(c):
         return (c.get("evidence_id"), " ".join((c.get("quote") or "").split()))
     old_keys = {ckey(c) for c in other["claims"]}
@@ -270,7 +266,6 @@ def tab_run(rep: dict):
                     f" — claims: {', '.join(s['claim_ids']) or '—'}")
 
 
-# ---------------------------------------------------------------- головна
 
 def main():
     paths = list_reports()
@@ -283,7 +278,6 @@ def main():
     with st.sidebar:
         st.header("Звіт")
         names = [p.name for p in paths]
-        # main.py передає ім'я щойно створеного звіту через змінну середовища
         wanted = os.environ.get("UNDERWRITING_REPORT")
         default_idx = names.index(wanted) if wanted in names else 0
         choice = st.selectbox("Файл", names, index=default_idx)
@@ -314,6 +308,10 @@ def main():
         st.warning("🚩 Правило критичних знахідок: " + "; ".join(
             f"{f['id']} ({'+'.join(f.get('found_by', []))}): {f.get('reason', '')}"
             for f in rep["red_flags"]) + "." + step)
+    gate = rep.get("invest_gate") or {}
+    if gate.get("checked") and not gate.get("passed"):
+        st.info("⚖ Invest gate: модель запропонувала Invest, код знизив до Conditional — "
+                + "; ".join(gate.get("reasons", [])))
     if any(is_synthetic(c) for c in rep["claims"]):
         st.error("DEMO: звіт містить СИНТЕТИЧНІ докази (source_type "
                  "demo_synthetic), вигадані лише для перевірки конвеєра. "

@@ -31,8 +31,6 @@ from typing import Literal
 import dotenv
 from google import genai
 from pydantic import BaseModel, Field
-# Корінь проєкту = тека над pipeline/. Python за замовчуванням бачить лише теку скрипта
-# (pipeline/), тому додаємо корінь і core/ у шлях імпорту вручну.
 ROOT = Path(__file__).resolve().parent.parent
 for _p in (ROOT, ROOT / "core"):
     if str(_p) not in sys.path:
@@ -42,7 +40,6 @@ import prompts
 
 from core.config import PRICE_OUT_PER_M, PRICE_IN_PER_M
 
-# ---------------------------------------------------------------- налаштування
 
 MODEL = "gemini-3.1-flash-lite"
 MAX_RETRIES = 3
@@ -54,7 +51,6 @@ OUTPUT_FILE = RESULTS / "claims.json"
 LOG_PATH = RESULTS / "run_log.jsonl"
 
 
-# ---------------------------------------------------------------- схема відповіді
 
 class Claim(BaseModel):
     claim: str
@@ -75,7 +71,6 @@ class ClaimsResponse(BaseModel):
     claims: list[Claim]
 
 
-# ---------------------------------------------------------------- допоміжні
 
 _log_lock = threading.Lock()
 _totals = {"in": 0, "out": 0, "cost": 0.0, "calls": 0}
@@ -116,7 +111,7 @@ def log_call(step: str, attempt: int, tin: int, tout: int, estimated: bool,
         "tokens_estimated": estimated, "cost_usd": round(cost, 6),
         "seconds": round(seconds, 2),
     }
-    with _log_lock:  # кілька потоків пишуть в один файл
+    with _log_lock:
         with open(LOG_PATH, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
         _totals["in"] += tin
@@ -157,7 +152,7 @@ def process_part(client, prompt: str, path: Path):
             cost = log_call(f"claims:{path.stem}", attempt, tin, tout, est,
                             time.time() - t0)
             return [c.model_dump() for c in parsed.claims], tin, tout, cost
-        except Exception as e:  # ліміти, мережа, невалідний JSON
+        except Exception as e:
             last_err = e
             print(f"  [{path.name}] спроба {attempt}/{MAX_RETRIES} не вдалась: {e}")
             time.sleep(3 * attempt)
@@ -166,11 +161,10 @@ def process_part(client, prompt: str, path: Path):
                 try:
                     client.files.delete(name=uploaded.name)
                 except Exception:
-                    pass  # не критично: файл і так зникне з сервера за терміном
+                    pass
     raise RuntimeError(f"{path.name}: {last_err}")
 
 
-# ---------------------------------------------------------------- головна логіка
 
 def main():
     ap = argparse.ArgumentParser()
@@ -210,7 +204,6 @@ def main():
                 failed.append(f"{p.name}: {e}")
                 print(f"  [{p.name}] НЕ ОБРОБЛЕНО: {e}", flush=True)
 
-    # порядок claims такий самий, як порядок частин, незалежно від того, хто швидше
     all_claims = []
     for p in parts:
         all_claims.extend(by_part.get(p, []))

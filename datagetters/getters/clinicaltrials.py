@@ -17,7 +17,7 @@ class ClinicalTrialsGetter(DataGetter):
         if query.mechanism:
             names = [query.mechanism] + SYNONYMS.get(query.mechanism.lower(), [])
             params["query.intr"] = " OR ".join(names)
-        if len(params) == 3:   # ні захворювання, ні механізму
+        if len(params) == 3:
             return []
 
         records = []
@@ -57,7 +57,6 @@ class ClinicalTrialsGetter(DataGetter):
                 "status": status.get("overallStatus"),
                 "why_stopped": status.get("whyStopped"),
                 "start_date": status.get("startDateStruct", {}).get("date"),
-                # дати завершення потрібні для розрахунку капіталу за реєстром
                 "primary_completion": status.get("primaryCompletionDateStruct", {}).get("date"),
                 "completion": status.get("completionDateStruct", {}).get("date"),
                 "phases": design.get("phases", []),

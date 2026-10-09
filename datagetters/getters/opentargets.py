@@ -22,20 +22,19 @@ from .base import CACHE_DIR, HEADERS, DataGetter, Query
 
 URL = "https://api.platform.opentargets.org/api/v4/graphql"
 
-MAX_DRUGS = 2           # скільки препаратів максимум розбираємо
-MAX_TARGETS = 3         # скільки мішеней максимум розбираємо
-TOP_DISEASES = 100      # скільки топ-захворювань завантажуємо для мішені
-SHOW_DISEASES = 8       # скільки з них виводимо в текст запису
-MAX_ASSOC = 3           # скільки збігів «мішень – indication» зберігаємо
-MIN_ASSOC_SCORE = 0.1   # поріг для запасного пошуку за підрядком (відсікає шум)
-FUNC_LIMIT = 600        # максимальна довжина опису функції мішені
+MAX_DRUGS = 2
+MAX_TARGETS = 3
+TOP_DISEASES = 100
+SHOW_DISEASES = 8
+MAX_ASSOC = 3
+MIN_ASSOC_SCORE = 0.1
+FUNC_LIMIT = 600
 
 
 class OTError(RuntimeError):
     """Помилка запиту до Open Targets (мережа або схема GraphQL)."""
 
 
-# ---------- запит до API з кешем ----------
 
 def gql(query: str, variables: dict | None = None) -> dict:
     """POST-запит до GraphQL. Успішні відповіді кешуються на диск, як в інших getters."""
@@ -56,12 +55,12 @@ def gql(query: str, variables: dict | None = None) -> dict:
                 headers=HEADERS,
                 timeout=30,
             )
-        except requests.RequestException as e:      # проблеми з мережею — повторюємо
+        except requests.RequestException as e:
             last = e
             time.sleep(2 * (attempt + 1))
             continue
 
-        if resp.status_code in (429, 500, 502, 503, 504):   # сервер зайнятий — повторюємо
+        if resp.status_code in (429, 500, 502, 503, 504):
             last = f"HTTP {resp.status_code}"
             time.sleep(2 * (attempt + 1))
             continue
@@ -71,7 +70,7 @@ def gql(query: str, variables: dict | None = None) -> dict:
         except ValueError:
             raise OTError(f"відповідь не JSON (HTTP {resp.status_code})")
 
-        if body.get("errors"):      # помилка схеми — повторювати немає сенсу
+        if body.get("errors"):
             msg = "; ".join(e.get("message", "?") for e in body["errors"])
             raise OTError(msg[:1500])
 
@@ -82,7 +81,6 @@ def gql(query: str, variables: dict | None = None) -> dict:
     raise OTError(f"мережа: {last}")
 
 
-# ---------- GraphQL-запити ----------
 
 SEARCH_Q = """
 query($q: String!, $entities: [String!]) {
@@ -91,8 +89,6 @@ query($q: String!, $entities: [String!]) {
   }
 }"""
 
-# Запит до самої схеми: які підполя має тип DrugLabelAndSource.
-# Синоніми й торгові назви препарату тепер об'єкти, а не прості рядки.
 LABEL_TYPE_Q = '{ __type(name: "DrugLabelAndSource") { fields { name } } }'
 
 TARGET_Q = """
@@ -106,8 +102,6 @@ query($id: String!, $size: Int!) {
   }
 }"""
 
-# Назва поля з максимальною фазою для показання змінювалась між версіями API,
-# тому пробуємо обидва варіанти по черзі.
 INDICATION_FIELDS = ["maxPhaseForIndication", "maxClinicalStage"]
 
 
@@ -179,7 +173,6 @@ def drug_indications(chembl_id: str) -> list[dict]:
     return []
 
 
-# ---------- допоміжні функції ----------
 
 def fmt_scores(datatype_scores: list[dict]) -> str:
     """Бали за типами доказів, лише ненульові: 'genetic_association 0.12, clinical 0.8'."""
@@ -224,7 +217,6 @@ def match_indication(rows: list[dict], indication: str, indication_ids: set[str]
     ]
 
 
-# ---------- побудова записів evidence ----------
 
 def drug_record(drug: dict, indications: list[dict], fuzzy: bool) -> dict:
     moa_rows = (drug.get("mechanismsOfAction") or {}).get("rows") or []
@@ -265,7 +257,7 @@ def drug_record(drug: dict, indications: list[dict], fuzzy: bool) -> dict:
                 for r in moa_rows
             ],
             "indications": indications[:15],
-            "fuzzy_match": fuzzy,     # True = назва препарату знайдена нечітким збігом
+            "fuzzy_match": fuzzy,
         },
     }
 
@@ -286,7 +278,6 @@ def target_record(target: dict, matched: list[dict], indication: str) -> dict:
         f"Number of diseases associated with this target in Open Targets: {assoc.get('count')}. "
         f"Top associated diseases: {top}."
     )
-    # якщо вказали indication, але збігу серед топ-100 немає — фіксуємо це як факт
     if indication and not matched:
         text += (
             f" Among the top {TOP_DISEASES} diseases associated with this target, "
@@ -339,7 +330,6 @@ def association_record(target: dict, row: dict) -> dict:
     }
 
 
-# ---------- сам getter ----------
 
 class OpenTargetsGetter(DataGetter):
     name = "opentargets"
@@ -351,12 +341,10 @@ class OpenTargetsGetter(DataGetter):
 
         records: list[dict] = []
 
-        # 1. Шукаємо препарат і мішень за назвою
         hits = search(query.mechanism, ["drug", "target"])
         drug_hits = [h for h in hits if (h.get("entity") or "").lower() == "drug"][:MAX_DRUGS]
         target_hits = [h for h in hits if (h.get("entity") or "").lower() == "target"]
 
-        # 2. Завантажуємо препарати. Спершу дізнаємось, як у схемі влаштовані синоніми.
         sel = label_selection()
         drug_q = build_drug_query(sel)
 
@@ -369,11 +357,9 @@ class OpenTargetsGetter(DataGetter):
                 loaded.append(drug)
 
         matching = [d for d in loaded if drug_matches(d, query.mechanism)]
-        # якщо жоден не збігся — лишаємо перший, але позначаємо як нечіткий збіг
         chosen = matching or loaded[:1]
         fuzzy = not matching
 
-        # збираємо мішені, на які діють препарати
         target_ids: list[str] = []
         for drug in chosen:
             records.append(drug_record(drug, drug_indications(drug["id"]), fuzzy))
@@ -383,7 +369,6 @@ class OpenTargetsGetter(DataGetter):
                     if t["id"] not in target_ids:
                         target_ids.append(t["id"])
 
-        # мішені, знайдені прямим пошуком (якщо ввели, наприклад, "GLP1R")
         for h in target_hits[:2]:
             if h["id"] not in target_ids:
                 target_ids.append(h["id"])
@@ -392,13 +377,11 @@ class OpenTargetsGetter(DataGetter):
             print(f"[opentargets] за запитом '{query.mechanism}' нічого не знайдено")
             return []
 
-        # 3. Якщо вказано захворювання — шукаємо його ідентифікатори (EFO/MONDO)
         indication_ids: set[str] = set()
         if query.indication:
             for h in search(query.indication, ["disease"])[:3]:
                 indication_ids.add(h["id"])
 
-        # 4. Розбираємо мішені та їхні зв'язки із захворюванням
         for tid in target_ids[:MAX_TARGETS]:
             target = gql(TARGET_Q, {"id": tid, "size": TOP_DISEASES}).get("target")
             if not target:

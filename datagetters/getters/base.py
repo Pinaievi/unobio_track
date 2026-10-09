@@ -16,8 +16,8 @@ HEADERS = {"User-Agent": "secrethon-underwriting/0.1"}
 
 @dataclass(frozen=True)
 class Query:
-    indication: str = ""   # захворювання (можна залишити порожнім)
-    mechanism: str = ""    # препарат, мішень або механізм (можна залишити порожнім)
+    indication: str = ""
+    mechanism: str = ""
 
 
 class DataGetter(ABC):

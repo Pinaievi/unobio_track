@@ -17,16 +17,13 @@ import re
 from .base import DataGetter, Query, get_json
 
 URL = "https://clinicaltrials.gov/api/v2/studies"
-MAX_PAGES = 5            # до 500 випробувань на запит
-TOP_DRUGS = 12           # скільки препаратів-конкурентів лишаємо
+MAX_PAGES = 5
+TOP_DRUGS = 12
 STATUSES = "RECRUITING|ACTIVE_NOT_RECRUITING|NOT_YET_RECRUITING|ENROLLING_BY_INVITATION"
 DRUG_TYPES = {"DRUG", "BIOLOGICAL", "COMBINATION_PRODUCT"}
 
-# Назви цільового препарату в реєстрі (щоб не рахувати його конкурентом самому собі).
-# Це конфігурація пошуку, а не evidence.
 SYNONYMS = {"retatrutide": ["ly3437943"]}
 
-# Не препарати: плацебо, стандартна терапія, спосіб життя
 SKIP_RE = re.compile(
     r"(?i)placebo|sham|saline|standard of care|usual care|diet|exercise|lifestyle|"
     r"counsel|behaviou?r|surgery|bypass|sleeve|device|education|vehicle|matching|"
@@ -79,7 +76,6 @@ class CompetitorsGetter(DataGetter):
                 continue
             arms = proto.get("armsInterventionsModule", {}).get("interventions", [])
             names = [i.get("name", "") for i in arms]
-            # випробування з нашим препаратом (будь-де в інтервенціях) пропускаємо
             blob = " ".join(names).lower() + " " + \
                 proto.get("identificationModule", {}).get("officialTitle", "").lower()
             if any(o in blob for o in own):

@@ -37,8 +37,7 @@ FACTS_URL = "https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json"
 SEARCH_URL = "https://efts.sec.gov/LATEST/search-index"
 BROWSE_URL = "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={cik:010d}"
 
-# Препарат -> тикер спонсора. КОНФІГУРАЦІЯ ПОШУКУ (не докази): склав з пам'яті,
-# перед демо перевір (угоди з поглинання могли змінити власника).
+
 SPONSORS = {
     "retatrutide": "LLY",
     "lepodisiran": "LLY",
@@ -56,14 +55,13 @@ SPONSORS = {
     "navenibart": "ATXS",
     "kt-474": "KYMR",
     "hro761": "NVS",
-    # None = спонсор відомий і НЕ подає звіти до SEC: пошук за текстом не робимо,
-    # бо він знаходить випадкові компанії (конкурентів, власників роялті)
-    "trontinemab": None,    # Roche
-    "divarasib": None,      # Roche
-    "petrelintide": None,   # Zealand Pharma
+
+    "trontinemab": None,    
+    "divarasib": None,      
+    "petrelintide": None,
 }
 
-# Теги XBRL: (таксономія, тег). Беремо перший, що знайшовся.
+
 TAGS = {
     "rd": [("us-gaap", "ResearchAndDevelopmentExpense"),
            ("us-gaap", "ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost"),
@@ -105,9 +103,6 @@ def _sec_get(url: str, params: dict | None = None) -> dict:
 
 
 def _pick(facts: dict, kind: str):
-    """Повертає (тег, одиниця, список фактів). Компанії змінюють теги з роками
-    (наприклад R&D з/без придбаних проєктів), тому беремо тег з НАЙСВІЖІШИМИ даними,
-    а не перший знайдений."""
     best = (None, None, [], "")
     for taxonomy, tag in TAGS[kind]:
         node = facts.get("facts", {}).get(taxonomy, {}).get(tag)
@@ -125,7 +120,6 @@ def _pick(facts: dict, kind: str):
 
 
 def _latest_annual(rows: list):
-    """Останній річний факт: форма 10-K/20-F, тривалість близько року."""
     best = None
     for r in rows:
         if r.get("form") not in ANNUAL_FORMS or not r.get("end"):
@@ -162,15 +156,11 @@ STOP = {"inc", "corp", "corporation", "co", "company", "plc", "ltd", "limited", 
 
 
 def _norm_name(name: str) -> list:
-    """Назва компанії -> список значущих слів (без Inc, Corp, & тощо)."""
     words = re.sub(r"[^a-z0-9]+", " ", (name or "").lower().replace("&", " ")).split()
     return [w for w in words if w not in STOP]
 
 
 def match_sponsor(sponsor: str, tickers: dict):
-    """Шукає в списку SEC компанію з такою ж назвою, як лідер-спонсор у реєстрі.
-    Збіг: слова однакові, або слова SEC-назви — початок назви спонсора
-    (наприклад «Novartis Pharmaceuticals» -> «NOVARTIS AG»). Нічого не знайдено = None."""
     sp = _norm_name(sponsor)
     if not sp:
         return None
@@ -207,9 +197,6 @@ class EdgarGetter(DataGetter):
         return [rec]
 
     def refine(self, query: Query, evidence: list):
-        """Друга фаза (її викликає delegator після всіх getters): спонсор беремо з реєстру
-        випробувань (поле lead_sponsor), а не з ручної таблиці. Повертає (записи,
-        типи записів, які треба замінити) або None, якщо нічого не змінюємо."""
         from collections import Counter
         drug = (query.mechanism or "").strip()
         counts = Counter(
@@ -232,11 +219,10 @@ class EdgarGetter(DataGetter):
         print(f"[edgar] спонсор з реєстру «{sponsor}» -> {company} ({ticker})")
         return [rec], {"sec_filings"}
 
-    # ------------------------------------------------------------ пошук компанії
     def _find_company(self, drug: str):
         key = drug.lower()
         if key in SPONSORS and SPONSORS[key] is None:
-            return None, None, None, False      # відомий не-SEC спонсор
+            return None, None, None, False
         ticker = SPONSORS.get(key)
         tickers = _sec_get(TICKERS_URL)
         if ticker:
@@ -250,7 +236,6 @@ class EdgarGetter(DataGetter):
             print(f"[edgar] спонсора «{drug}» немає в SPONSORS; пошук за текстом "
                   f"вимкнено (EDGAR_ALLOW_UNVERIFIED=1 вмикає)")
             return None, None, None, False
-        # запасний варіант: повнотекстовий пошук за назвою препарату
         try:
             data = _sec_get(SEARCH_URL, {"q": f'"{drug}"', "forms": "10-K,20-F"})
             for hit in data.get("hits", {}).get("hits", []):
@@ -267,7 +252,6 @@ class EdgarGetter(DataGetter):
             print(f"[edgar] повнотекстовий пошук не вдався: {e}")
         return None, None, None, False
 
-    # ------------------------------------------------------------ запис
     def _build_record(self, drug, cik, company, ticker, verified, facts):
         rd_tag, rd_unit, rd_rows = _pick(facts, "rd")
         cash_tag, cash_unit, cash_rows = _pick(facts, "cash")

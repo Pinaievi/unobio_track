@@ -17,9 +17,8 @@ from pathlib import Path
 
 from getters import DataGetter, Query, discover
 
-GETTER_TIMEOUT = 90  # секунд на одне джерело
+GETTER_TIMEOUT = 90
 
-# Корінь проєкту = папка, що лежить над папкою з getters (unobio_track).
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = ROOT / "results"
 OUTPUT_PATH = RESULTS_DIR / "evidence_raw.json"
@@ -27,8 +26,6 @@ OUTPUT_PATH = RESULTS_DIR / "evidence_raw.json"
 DEFAULT_INDICATION = ""
 DEFAULT_MECHANISM = "retatrutide"
 
-# Джерела, що описують одні й ті самі випробування (ключ дубля = номер NCT).
-# Чим більше число, тим бажаніша версія запису: в AACT є результати (p-value, інтервали).
 TRIAL_SOURCE_PRIORITY = {"nct_aact": 2, "nct": 1}
 
 
@@ -41,9 +38,9 @@ def dedupe(evidence: list[dict]) -> tuple[list[dict], int]:
        У полі meta.also_found_in зберігається, в яких іще базах воно знайшлося.
     Порядок записів зберігається.
     """
-    best: dict[str, dict] = {}       # ключ дубля -> найкращий запис
-    order: list[str] = []            # порядок першої появи ключів
-    also_in: dict[str, list[str]] = {}   # ключ -> джерела, де знайшлося те саме випробування
+    best: dict[str, dict] = {}
+    order: list[str] = []
+    also_in: dict[str, list[str]] = {}
 
     for rec in evidence:
         if rec["source_type"] in TRIAL_SOURCE_PRIORITY:
@@ -59,7 +56,6 @@ def dedupe(evidence: list[dict]) -> tuple[list[dict], int]:
             also_in[key] = []
             continue
 
-        # дубль: лишаємо запис із вищим пріоритетом, іншого запам'ятовуємо
         current = best[key]
         current_priority = TRIAL_SOURCE_PRIORITY.get(current["source_type"], 0)
         if priority > current_priority:
@@ -102,7 +98,7 @@ def run(query: Query, getters: list[DataGetter] | None = None) -> dict:
             evidence += records
             trace.append({"getter": name, "ok": True,
                           "count": len(records), "seconds": round(seconds, 2)})
-        except Exception as e:  # одне джерело, що впало, не валить решту
+        except Exception as e:
             trace.append({"getter": name, "ok": False,
                           "error": f"{type(e).__name__}: {e}"})
 
@@ -110,8 +106,6 @@ def run(query: Query, getters: list[DataGetter] | None = None) -> dict:
 
     unique, removed = dedupe(evidence)
 
-    # друга фаза: getters, що вміють уточнювати результат за даними інших джерел
-    # (edgar бере спонсора з реєстру випробувань і замінює запис із ручної таблиці)
     for g in getters:
         refine = getattr(g, "refine", None)
         if refine is None:
@@ -144,9 +138,9 @@ def parse_args(args: list[str]) -> tuple[str, str]:
     args = [a.strip() for a in args]
     if len(args) == 0:
         return DEFAULT_INDICATION, DEFAULT_MECHANISM
-    if len(args) == 1:          # лише препарат
+    if len(args) == 1:
         return "", args[0]
-    if len(args) == 2:          # хвороба + препарат
+    if len(args) == 2:
         return args[0], args[1]
     print('Використання:\n'
           '  python delegator.py                      (за замовчуванням)\n'
@@ -173,7 +167,7 @@ def main() -> None:
         else:
             print(f"{t['getter']:<18} ПОМИЛКА  {t['error']}")
 
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)   # створюємо results/, якщо її ще немає
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(
         json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
