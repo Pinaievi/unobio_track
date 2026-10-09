@@ -190,16 +190,3 @@ def claims_for_prompt(claims: list) -> str:
             "claim": c["claim"],
         }, ensure_ascii=False))
     return "\n".join(rows)
-
-def reported_trials(claims: list, evidence: dict) -> set:
-    """NCT-номери випробувань, результати яких уже є в літературі: стаття (не реєстр)
-    згадує NCT і дає claim із напрямком supports/contradicts. Такі випробування
-    не потребують капіталу до наступної віхи."""
-    out = set()
-    for c in claims:
-        if c["source_type"] in ("pubmed", "epmc_pmc", "epmc_ppr") \
-                and c["direction"] in ("supports", "contradicts"):
-            rec = evidence.get(c["evidence_id"], {})
-            blob = (rec.get("text") or "") + " " + (rec.get("title") or "")
-            out |= set(re.findall(r"NCT\d{8}", blob))
-    return out

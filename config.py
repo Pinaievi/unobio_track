@@ -1,1 +1,4 @@
 DRUG_NAMES: set = set()
+
+PRICE_IN_PER_M = 0.10
+PRICE_OUT_PER_M = 0.40
