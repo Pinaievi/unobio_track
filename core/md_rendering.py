@@ -1,4 +1,3 @@
-
 def render_md(report: dict, claims_file: str) -> str:
     L = []
     L.append(f"# Investment Underwriting Report: {report['drug']} in "
@@ -28,6 +27,24 @@ def render_md(report: dict, claims_file: str) -> str:
             L.append("_Gaps in the data:_ " + "; ".join(sec["gaps"]) + "\n")
 
     L.append(f"## 1. Recommendation: {report['recommendation']}\n")
+    if report.get("red_flags"):
+        who = report.get("critical_rule_applied_by")
+        by_model = report.get("recommendation_by_model")
+        if who == "code":
+            step = (f" The model proposed **{by_model}**; the code lowered it to "
+                    f"**{report['recommendation']}**.")
+        else:
+            step = (f" The model applied the rule itself and recommended "
+                    f"**{report['recommendation']}**; the code only checked it.")
+        L.append("> 🚩 **Critical-finding rule.** A separate severity review (a model call, "
+                 "with a keyword backstop) rated these findings as able to stop the "
+                 "programme on their own:")
+        for f in report["red_flags"]:
+            cat = f" [{f['category']}]" if f.get("category") else ""
+            L.append(f"> - {f['id']} (found by {' + '.join(f.get('found_by', []))}){cat}: "
+                     f"{f.get('reason', '')}")
+        L.append(f">\n> Policy: a verified critical finding lowers the recommendation by one "
+                 f"level.{step}\n")
     stmts(report["recommendation_rationale"])
     n = 2
     for key in ["scientific_thesis", "translation_thesis", "clinical_plan",

@@ -31,6 +31,13 @@ from typing import Literal
 import dotenv
 from google import genai
 from pydantic import BaseModel, Field
+# Корінь проєкту = тека над pipeline/. Python за замовчуванням бачить лише теку скрипта
+# (pipeline/), тому додаємо корінь і core/ у шлях імпорту вручну.
+ROOT = Path(__file__).resolve().parent.parent
+for _p in (ROOT, ROOT / "core"):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
+
 import prompts
 
 from core.config import PRICE_OUT_PER_M, PRICE_IN_PER_M
@@ -41,12 +48,10 @@ MODEL = "gemini-3.1-flash-lite"
 MAX_RETRIES = 3
 DEFAULT_WORKERS = 4
 
-ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "results"
 FOLDER = RESULTS / "evidence"
 OUTPUT_FILE = RESULTS / "claims.json"
 LOG_PATH = RESULTS / "run_log.jsonl"
-PROMPT_PATH = ROOT / "extraction_prompt.txt"
 
 
 # ---------------------------------------------------------------- схема відповіді

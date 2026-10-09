@@ -11,6 +11,13 @@ from typing import Literal
 import dotenv
 from google import genai
 from pydantic import BaseModel, Field
+# Корінь проєкту = тека над pipeline/. Python за замовчуванням бачить лише теку скрипта
+# (pipeline/), тому додаємо корінь і core/ у шлях імпорту вручну.
+ROOT = Path(__file__).resolve().parent.parent
+for _p in (ROOT, ROOT / "core"):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
+
 from prompts import *
 from core.validation import *
 from core.md_rendering import *
@@ -21,7 +28,6 @@ MODEL = "gemini-3.1-flash-lite"
 FINAL_MODEL = "gemini-3.1-flash-lite"
 MAX_RETRIES = 3
 
-ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "results"
 
 ALIASES = {
@@ -128,6 +134,11 @@ class SectionDraft(BaseModel):
 
 class FinalDraft(BaseModel):
     recommendation: Literal["Invest", "Conditional", "Do Not Invest"]
+    recommendation_without_critical_findings: Literal["Invest", "Conditional", "Do Not Invest"] = Field(
+        description="What you would recommend if the CRITICAL FINDINGS section did not "
+                    "exist (judge all other evidence only). If it is 'none', repeat the "
+                    "recommendation."
+    )
     recommendation_rationale: list[Statement]
     critical_unknowns: list[str]
     diligence_questions: list[str] = Field(description="5 to 10 questions.")
@@ -304,10 +315,29 @@ def main():
             "title": spec["title"],
             "statements": validate_statements(draft.statements, claim_map,
                                               spec["title"], issues),
-            "gaps": [clean_ids(g) for g in draft.gaps],
+            "gaps": [strip_inline_ids(g) for g in draft.gaps],
         }
 
     drop_false_absence(sections, claim_map, issues)
+    drop_false_h2h_absence(sections, [], claim_map, issues)
+
+    # ключові результати ефективності, яких не взяв жоден розділ, код додає в клінічний план
+    cited_now = {i for sec in sections.values() for st in sec["statements"]
+                 for i in st["claim_ids"]}
+    extra_eff = key_efficacy_items(claim_map, cited_now)
+    if extra_eff and "clinical_plan" in sections:
+        stm = sections["clinical_plan"]["statements"]
+        last_e = max([k for k, x in enumerate(stm) if x["kind"] == "evidence"], default=-1)
+        stm[last_e + 1:last_e + 1] = extra_eff
+        issues.append("Clinical development plan: код додав ключові результати ефективності "
+                      + ", ".join(x["claim_ids"][0] for x in extra_eff)
+                      + " (жоден розділ їх не процитував)")
+
+    ct = cross_trial_item(claim_map)
+    if ct and "competitive_landscape" in sections:
+        sections["competitive_landscape"]["statements"].append(ct)
+        issues.append(f"Competitive landscape: код додав непряме порівняння ефективності "
+                      f"{ct['claim_ids'][0]} vs {ct['claim_ids'][1]} (різні дослідження, не head-to-head)")
 
     cited = {i for sec in sections.values() for st in sec["statements"]
              for i in st["claim_ids"]}
@@ -354,6 +384,22 @@ def main():
         or "none identified"
     capital_text = "\n".join(f"- {s['text']}" for s in capital_stmts)
     contra = [c for c in claims if c["direction"] == "contradicts"]
+    # тріаж тяжкості: модель сама оцінює, що критичне (без списку подій у коді)
+    tri_pool = [c for c in claims if c["direction"] == "contradicts"
+                or c["stage"] in ("safety_or_failure", "regulatory")]
+    triage = []
+    if tri_pool:
+        print("  Тріаж тяжкості знахідок...")
+        tprompt = (TRIAGE_TASK.format(**ctx) + known_names_line(args.drug)
+                   + "\nCLAIMS (one JSON per line):\n" + claims_for_prompt(tri_pool))
+        triage = validate_triage(runner.call("triage", MODEL, tprompt, TriageDraft),
+                                 claim_map, issues)
+    flags = merge_flags(triage, claim_map)
+    flag_ids = {f["id"] for f in flags}
+    flags_text = "\n".join(f"- {f['id']}: {f['reason']}: {f['claim']}" for f in flags) or "none"
+    majors = [t for t in triage if t["level"] == "major"]
+    if majors:
+        flags_text += "\n(major, not critical: " + ", ".join(t["id"] for t in majors) + ")"
     final_prompt = (FINAL_TASK
                     + f"\nDRUG: {args.drug}\nINDICATION: {args.indication}\n"
                     + known_names_line(args.drug) + "\n"
@@ -362,7 +408,14 @@ def main():
                     + "\n\nDRAFTED SECTIONS:\n" + "\n".join(sections_text)
                     + "\n\nCONFLICTS:\n" + conflicts_text
                     + "\n\nCAPITAL ESTIMATE:\n" + capital_text
-                    + "\n\nALL CONTRADICTING CLAIMS:\n" + claims_for_prompt(contra))
+                    + "\n\nCRITICAL FINDINGS (rated by a separate severity review; a critical "
+                      "finding can stop the programme on its own):\n" + flags_text
+                    + "\nPOLICY: first fill recommendation_without_critical_findings (all "
+                      "other evidence, ignoring the critical findings). If CRITICAL FINDINGS "
+                      "is not 'none', your final recommendation must be one level lower than "
+                      "that (Invest -> Conditional, Conditional -> Do Not Invest). Write the "
+                      "rationale, critical_unknowns and what_would_change_the_conclusion for "
+                      "your FINAL recommendation."                    + "\n\nALL CONTRADICTING CLAIMS:\n" + claims_for_prompt(contra))
     final = runner.call("final", FINAL_MODEL, final_prompt, FinalDraft)
 
     rationale = validate_statements(final.recommendation_rationale, claim_map,
@@ -374,14 +427,48 @@ def main():
         rationale.append(lead)
         issues.append(f"Recommendation: код додав головний результат ефективності "
                       f"{lead['claim_ids'][0]} (модель його не процитувала)")
-    rationale = order_rationale(rationale, claim_map)
+    rationale = drop_false_h2h_absence({}, rationale, claim_map, issues)
+
+    # червоні прапори й найважливіші нові докази мають бути в Recommendation як [E]
+    have_e = {i for x in rationale if x["kind"] == "evidence" for i in x["claim_ids"]}
+    for f in flags:
+        if f["id"] not in have_e:
+            rationale.append({"text": f["claim"], "kind": "evidence",
+                              "claim_ids": [f["id"]], "unverified_numbers": []})
+            issues.append(f"Recommendation: код додав критичну знахідку {f['id']} "
+                          f"({f['kind']}, знайшов: {'+'.join(f['found_by'])}) — модель її не процитувала")
+    for it in new_evidence_items(claim_map, rationale, flag_ids):
+        rationale.append(it)
+        issues.append(f"Recommendation: код додав нове свідчення {it['claim_ids'][0]} "
+                      f"(is_extra) — воно має бути видно в рекомендації")
+    rationale = order_rationale(rationale, claim_map, flag_ids)
 
     recommendation = final.recommendation
+    model_recommendation = recommendation
     unresolved = [c for c in conflicts if c["status"] == "unresolved"]
     if recommendation == "Invest" and (final.critical_unknowns or unresolved):
         recommendation = "Conditional"
         issues.append("Рекомендацію «Invest» знижено до «Conditional»: "
                       "залишаються критичні невідомі або невирішені суперечності.")
+
+    # правило наслідку: підтверджена критична знахідка знижує вивід на один рівень відносно
+    # того, що модель сказала б БЕЗ неї. Що критичне — вирішує модель-тріаж (+ запасний
+    # фільтр), не список у коді. Код лише перевіряє узгодженість двох відповідей моделі.
+    rule_by = "none"
+    if flags:
+        who = "; ".join(f"{f['id']} ({'+'.join(f['found_by'])})" for f in flags)
+        expected = downgrade_recommendation(final.recommendation_without_critical_findings)
+        if LEVELS.index(recommendation) > LEVELS.index(expected):
+            issues.append(f"Правило критичних знахідок ({who}): без знахідок модель дала б "
+                          f"«{final.recommendation_without_critical_findings}», з ними має бути "
+                          f"не вище «{expected}»; модель дала «{recommendation}» — знижено кодом.")
+            recommendation = expected
+            rule_by = "code"
+        else:
+            rule_by = "model"
+            issues.append(f"Правило критичних знахідок ({who}): без знахідок модель дала б "
+                          f"«{final.recommendation_without_critical_findings}», з ними — "
+                          f"«{recommendation}» (правило виконано моделлю).")
 
     print("5/5 Збираю джерела та зберігаю...")
     used = {}
@@ -408,6 +495,10 @@ def main():
         "drug": args.drug, "indication": args.indication,
         "generated": time.strftime("%Y-%m-%d %H:%M:%S"),
         "recommendation": recommendation,
+        "recommendation_by_model": model_recommendation,
+        "critical_rule_applied_by": rule_by,
+        "red_flags": flags,
+        "severity_triage": triage,
         "recommendation_rationale": rationale,
         "sections": sections,
         "capital_to_next_milestone": capital_stmts,
@@ -446,6 +537,8 @@ def main():
         old = load_json(Path(args.compare))
         print("\nПОРІВНЯННЯ З ПОПЕРЕДНІМ ЗВІТОМ")
         print(f"  Було: {old['recommendation']}  ->  Стало: {recommendation}")
+        if flags:
+            print("  Критичні знахідки: " + "; ".join(f"{f['id']} ({f['kind']})" for f in flags))
         new_ids = [c["id"] for c in claims if c.get("is_extra")]
         print(f"  Нові claims: {', '.join(new_ids) or 'немає'}")
         old_unknowns = set(old.get("critical_unknowns", []))

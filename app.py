@@ -305,6 +305,15 @@ def main():
     st.markdown(f"## {rep['drug']} in {rep['indication']}  "
                 + badge(rep["recommendation"], color), unsafe_allow_html=True)
     st.caption(f"Згенеровано {rep['generated']} · claims: {len(rep['claims'])}")
+    if rep.get("red_flags"):
+        if rep.get("critical_rule_applied_by") == "code":
+            step = (f" Модель запропонувала «{rep.get('recommendation_by_model')}», "
+                    f"код знизив до «{rep['recommendation']}».")
+        else:
+            step = " Модель сама застосувала правило; код лише перевірив."
+        st.warning("🚩 Правило критичних знахідок: " + "; ".join(
+            f"{f['id']} ({'+'.join(f.get('found_by', []))}): {f.get('reason', '')}"
+            for f in rep["red_flags"]) + "." + step)
     if any(is_synthetic(c) for c in rep["claims"]):
         st.error("DEMO: звіт містить СИНТЕТИЧНІ докази (source_type "
                  "demo_synthetic), вигадані лише для перевірки конвеєра. "

@@ -1,4 +1,3 @@
-
 EXTRACTION_PROMPT = """
 You are a fact-extraction assistant for biotech investment due diligence.
 
@@ -303,4 +302,41 @@ RULES:
    strongest clinical or safety claim. A gap in the claims (for example "no clinical
    data") is a statement about the retrieved sources, not about the drug: write "the
    retrieved sources contain no ..." and mark it "inference".
+"""
+
+TRIAGE_TASK = """
+You are the safety and risk reviewer on an investment committee. Below are claims about
+{drug} in {indication} (contradicting evidence and safety or regulatory claims). Rate how
+serious each claim is FOR THE INVESTMENT DECISION. Judge by the meaning of the claim, not
+by keywords.
+
+LEVELS:
+- critical: a finding that on its own could stop, suspend or seriously threaten the
+  development or approval of {drug}. Examples of the KIND of finding (not a closed list):
+  a death or life-threatening harm plausibly caused by the drug; a regulatory action that
+  halts or blocks the programme; termination or suspension of the programme for safety
+  or lack of efficacy; a failed pivotal trial; evidence that a key efficacy result is
+  invalid; any other event of comparable weight.
+- major: serious but the programme can continue: clearly higher discontinuation or
+  adverse-event rates than the comparator, dose-limiting toxicity, loss of competitive
+  differentiation, failure to show superiority over a competitor. IMPORTANT: a higher
+  rate of adverse events, serious adverse events or discontinuations than a comparator
+  is "major", however large the difference, unless the claim reports deaths, a regulatory
+  action or termination.
+- minor: everything else (weak, indirect, single low-certainty reports, class-wide
+  statements, tolerability details).
+
+RULES:
+1. Rate only claims that are about {drug} itself. A harm or hold of another drug is not
+   critical for {drug}.
+2. A claim from a low-confidence source, or a single report with unclear causality, is at
+   most "major" unless the claim itself states that the harm is probably caused by the
+   drug.
+3. Use only the claim ids exactly as given. Never invent ids. Return only claims you rate
+   "critical" or "major"; leave the rest out.
+4. category (for "critical"): death_or_life_threatening_harm, regulatory_halt_or_refusal,
+   programme_terminated, failed_pivotal_trial, invalid_key_result, or
+   other_equivalent_weight (only for an event that clearly weighs as much as those; say
+   in reason why). For "major" use not_critical.
+5. reason: one short sentence saying why this level, in your own words.
 """

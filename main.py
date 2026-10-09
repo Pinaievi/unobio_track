@@ -46,7 +46,7 @@ def build_commands(args) -> dict:
     elif args.drug:
         fetch += [args.drug]
 
-    report = [py, str(ROOT / "build_report.py")]
+    report = [py, str(ROOT / "pipeline" / "build_report.py")]
     if args.drug:
         report += ["--drug", args.drug]
     if args.indication:
@@ -58,7 +58,7 @@ def build_commands(args) -> dict:
     if args.compare:
         report += ["--compare", args.compare]
 
-    claims = [py, str(ROOT / "claim_collector.py")]
+    claims = [py, str(ROOT / "pipeline" / "claim_collector.py")]
     if args.workers:
         claims += ["--workers", str(args.workers)]
 

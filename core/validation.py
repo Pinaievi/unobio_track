@@ -1,8 +1,8 @@
 import re
 from typing import Literal
 from pydantic import BaseModel, Field
-from core.text_utils import *
-from core.config import *
+from text_utils import *
+from config import *
 
 class Conflict(BaseModel):
     topic: str = Field(description="What the disagreement is about, one line.")
@@ -32,7 +32,7 @@ ACTIVE_RE = re.compile(r"(?i)other (?:incretin|glp|treatment|therap|drug|agent)|
                        r"tirzepatide|semaglutide|dulaglutide|liraglutide|"
                        r"active comparator|danuglipron")
 
-RISK_ASSOC_RE = re.compile(r"(?i)hazard ratio|\bHR\b|odds ratio|\bOR\b\s*[=:]?\s*\d|relative risk")
+RISK_ASSOC_RE = re.compile(r"(?i)hazard ratio|odds ratio|relative risk|(?-i:\bHR\b)|(?-i:\bOR\b)\s*[=:]?\s*\d")
 
 INN_RE = re.compile(
     r"(?i)\b[a-z]{3,}(?:mab|tug|cept|tinib|rasib|parib|ciclib|stat|tide|glutide|"
@@ -68,12 +68,24 @@ CROSS_LINK_RE = re.compile(
 GAP_RE = re.compile(
     r"(?i)\b(?:no|not any|without any)\s+(?:published\s+|publicly\s+available\s+|"
     r"reported\s+|available\s+)*(?:clinical|human|efficacy|safety|trial|data)|"
-    r"\b(?:lack|absence) of\b|\bno FDA[- ]approved\b|\bnot (?:yet )?(?:been )?(?:published|reported)\b")
+    r"\b(?:lack|absence) of\b|\bno FDA[- ](?:approved|drug labels?|labels?)\b|"
+    r"\bnot (?:yet )?(?:been )?(?:published|reported)\b|"
+    r"\bcannot be (?:estimated|determined)\b|"
+    r"\b(?:indicating|suggesting|implying)\b[^.]{0,80}\b(?:not|no)\b[^.]{0,40}\bapprov")
 
 SOURCES_RE = re.compile(r"(?i)(?:retrieved|provided|available|reviewed|these|the) sources|"
                         r"in the (?:claims|dossier|records)|not covered by")
 
 MECH_STAGES = {"mechanism", "translation"}
+
+ID_LIST_RE = re.compile(r"\s*[\[(]\s*(?:(?:claims?\s+)?[CX]\d{3}\s*[,;]?\s*(?:and\s+)?)+[\])]")
+
+def strip_inline_ids(text: str) -> str:
+    """Номери claims мають бути лише в claim_ids. Прибираємо їх із вільного тексту:
+    «[X002]» і «(C101, C102)» зникають, «claim C101» -> «a claim»."""
+    t = ID_LIST_RE.sub("", text or "")
+    t = re.sub(r"(?i)\b(?:claims?\s+)?[CX]\d{3}\b", "a claim", t)
+    return re.sub(r"\s{2,}", " ", t).strip()
 
 def validate_statements(statements: list, claim_map: dict, section: str, issues: list,
                         single_evidence: bool = False):
@@ -88,7 +100,7 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
         bad = [i for i in s.claim_ids if i not in claim_map]
         if bad:
             issues.append(f"{section}: вигадані id {bad} прибрано")
-        item = {"text": s.text, "kind": s.kind, "claim_ids": ids,
+        item = {"text": strip_inline_ids(s.text), "kind": s.kind, "claim_ids": ids,
                 "unverified_numbers": []}
         gap = GAP_RE.search(s.text)
         if gap and not SOURCES_RE.search(s.text):
@@ -138,7 +150,10 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                     and len(numbers(strip_labels(s.text))) >= 2:
                 reason = ("у комерції числа з різних записів в одному [E] "
                           "(можуть бути різні показники)")
-            elif section.startswith("Commercial") and RISK_ASSOC_RE.search(s.text):
+            elif section.startswith("Commercial") and (
+                    RISK_ASSOC_RE.search(s.text)
+                    or any(RISK_ASSOC_RE.search(claim_map[i]["claim"] + " " + claim_map[i]["quote"])
+                           for i in ids)):
                 reason = ("ризик-асоціація (HR/OR) описує хворобу, а не розмір ринку: "
                           "не подаємо як факт про комерційну можливість")
             elif single_evidence and len(ids) > 1:
@@ -177,6 +192,17 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                     item["unverified_numbers"] = missing
                     issues.append(f"{section}: числа {missing} відсутні в цитованих "
                                   f"claims: {s.text[:70]}")
+        if single_evidence and item["kind"] == "inference" and ids:
+            # висновок моделі в рекомендації теж не має містити чисел, яких нема в цитованих claims
+            have = set()
+            for i in ids:
+                have |= claim_numbers(claim_map[i])
+            txt = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", item["text"])
+            missing = sorted(numbers(strip_labels(txt)) - have)
+            if missing:
+                issues.append(f"{section}: [AI] прибрано — числа {missing} відсутні в "
+                              f"цитованих claims: {s.text[:70]}")
+                continue
         out.append(item)
     return out
 
@@ -262,8 +288,16 @@ def drop_false_absence(sections: dict, claim_map: dict, issues: list):
                 gaps.append(g)
         sec["gaps"] = gaps
    
+# Твердження про відсутність ПОРІВНЯЛЬНИХ даних («немає head-to-head») — не те саме, що
+# «немає клінічних даних у людей». Їх не чіпаємо цим правилом.
+COMPARATIVE_RE = re.compile(r"(?i)head[- ]to[- ]head|comparative|comparison|\bversus\b|\bvs\.?\b|"
+                            r"direct(?:ly)? compar|active comparator|other agents|competitor")
+
 def says_no_human_data(text: str) -> bool:
-    return any(r.search(text or "") for r in NO_HUMAN_DATA_RES)
+    t = text or ""
+    if COMPARATIVE_RE.search(t) or other_drugs_in(t):
+        return False
+    return any(r.search(t) for r in NO_HUMAN_DATA_RES)
 
 def comparators(ids: list, claim_map: dict) -> set:
     """Із якими компараторами порівнюють claims: placebo / active (за текстом claim)."""
@@ -333,12 +367,66 @@ def mentions_drug(c: dict) -> bool:
                   c.get("record_title") or ""]).lower()
     return any(nm in t for nm in DRUG_NAMES)
 
-def order_rationale(items: list, claim_map: dict) -> list:
-    """Рекомендація: спочатку [E] (найсильніший клінічний результат першим), потім [AI]."""
+def order_rationale(items: list, claim_map: dict, flag_ids: set = None) -> list:
+    """Рекомендація: спочатку [E] «за» (найсильніший клінічний результат першим),
+    потім [E] червоні прапори, потім інші [E] про ризики (contradicts), потім [AI]."""
+    flag_ids = flag_ids or set()
     ev = [x for x in items if x["kind"] == "evidence" and x["claim_ids"]]
     rest = [x for x in items if x not in ev]
-    ev.sort(key=lambda x: -max(claim_strength(claim_map[i]) for i in x["claim_ids"]))
+
+    def key(x):
+        risk = any(claim_map[i].get("direction") == "contradicts" for i in x["claim_ids"])
+        flag = any(i in flag_ids for i in x["claim_ids"])
+        grp = 1 if flag else (2 if risk else 0)
+        return (grp, -max(claim_strength(claim_map[i]) for i in x["claim_ids"]))
+    ev.sort(key=key)
     return ev + rest
+
+
+def key_efficacy_items(claim_map: dict, cited: set, n: int = 3) -> list:
+    """Найсильніші клінічні результати ефективності (supports, high, плацебо і %), яких
+    не процитував жоден розділ. Код додає їх у Clinical development plan як [E]."""
+    cands = []
+    for c in claim_map.values():
+        if c["id"] in cited or c.get("direction") != "supports" \
+                or c.get("stage") != "clinical" or c.get("confidence") != "high" \
+                or c.get("drug_not_in_quote"):
+            continue
+        t = c.get("claim", "") + " " + c.get("quote", "")   # % і плацебо можуть бути лише в цитаті
+        t_nci = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", t)
+        if not (re.search(r"(?i)placebo", t) and re.search(r"\d\s*%", t_nci)):
+            continue
+        cands.append((claim_strength(c), c))
+    cands.sort(key=lambda x: -x[0])
+    return [{"text": c["claim"], "kind": "evidence", "claim_ids": [c["id"]],
+             "unverified_numbers": []} for _, c in cands[:n]]
+
+def cross_trial_item(claim_map: dict):
+    """Непряме порівняння ефективності: головний результат цільового препарату (плацебо-контроль)
+    і claim про середню втрату ваги інших препаратів. Це висновок, а не факт: інші дослідження."""
+    lead = lead_efficacy_item(claim_map)
+    if not lead:
+        return None
+    best = None
+    for c in claim_map.values():
+        t = c.get("claim", "")
+        if c.get("stage") != "competition" or mentions_drug(c):
+            continue
+        if not (re.search(r"(?i)weight (?:loss|reduction)", t) and re.search(r"\d\s*%", t)
+                and other_drugs_in(t)):
+            continue
+        if best is None or c.get("confidence") == "high" and best.get("confidence") != "high":
+            best = c
+    if not best:
+        return None
+    a = lead["text"].rstrip(". ")
+    b = best["claim"].rstrip(". ")
+    return {"text": (f"Indirect cross-study comparison, not a head-to-head trial. {a}. "
+                     f"Other agents: {b}. The studies differ in populations, doses and duration, "
+                     f"so this does not prove that retatrutide is better."),
+            "kind": "inference", "claim_ids": [lead["claim_ids"][0], best["id"]],
+            "unverified_numbers": []}
+
 
 def claim_numbers(claim: dict) -> set:
     return numbers(claim["claim"]) | numbers(claim["quote"])
@@ -347,3 +435,168 @@ def other_drugs_in(text: str) -> list:
     """Назви препаратів у тексті, яких немає серед імен цільового препарату."""
     return sorted({m.group(0).lower() for m in INN_RE.finditer(text or "")}
                   - {n.lower() for n in DRUG_NAMES})
+
+
+# ---------------------------------------------------------------- червоні прапори
+
+HOLD_RE = re.compile(r"(?i)clinical hold")
+HOLD_LIFTED_RE = re.compile(r"(?i)\b(?:lifted|released|removed|resolved)\b|no clinical hold|not (?:been )?placed")
+DEATH_RE = re.compile(r"(?i)\b(?:deaths?|died|fatal(?:ity|ities)?)\b")
+NO_DEATH_RE = re.compile(r"(?i)\b(?:no|zero|0)\s+(?:\w+[- ])?deaths?\b|death\s*\(0\)|deaths?:?\s*0\b")
+DRUG_REL_RE = re.compile(r"(?i)drug[- ]induced|drug[- ]related|treatment[- ]related|"
+                         r"attributed to|probabl[ye] related|caused by|related to (?:the )?(?:study )?(?:drug|treatment)")
+SAFETY_STOP_RE = re.compile(r"(?i)(?:programme?|development|trials?|studies|enrol?lment)[^.;]{0,50}"
+                            r"\b(?:terminated|halted|suspended|paused)\b")
+SAFETY_WORD_RE = re.compile(r"(?i)safety|liver|hepat|toxicit|adverse|death|injury")
+
+def red_flag_kind(c: dict):
+    """Тип «червоного прапора» для claim або None. Прапор = впевнений (high) claim, що
+    суперечить тезі, про цільовий препарат, і каже про: клінічний hold FDA, смерть,
+    пов'язану з препаратом, або зупинку програми/досліджень з міркувань безпеки."""
+    if c.get("direction") != "contradicts" or c.get("confidence") != "high":
+        return None
+    if c.get("source_type") == "nct_aact_population" or c.get("drug_not_in_quote"):
+        return None
+    if not mentions_drug(c):
+        return None
+    t = c.get("claim", "")
+    if HOLD_RE.search(t) and not HOLD_LIFTED_RE.search(t):
+        return "FDA clinical hold"
+    if DEATH_RE.search(t) and not NO_DEATH_RE.search(t) and DRUG_REL_RE.search(t):
+        return "drug-related death"
+    if SAFETY_STOP_RE.search(t) and SAFETY_WORD_RE.search(t):
+        return "programme/trials halted for safety"
+    return None
+
+def red_flags(claim_map: dict) -> list:
+    out = []
+    for c in claim_map.values():
+        k = red_flag_kind(c)
+        if k:
+            out.append({"id": c["id"], "kind": k, "claim": c["claim"],
+                        "is_extra": bool(c.get("is_extra"))})
+    return out
+
+LEVELS = ["Do Not Invest", "Conditional", "Invest"]
+
+def downgrade_recommendation(rec: str) -> str:
+    """На один рівень вниз: Invest -> Conditional -> Do Not Invest."""
+    return LEVELS[max(0, LEVELS.index(rec) - 1)]
+
+def new_evidence_items(claim_map: dict, rationale: list, flag_ids: set, n: int = 3) -> list:
+    """Найважливіші НОВІ claims (is_extra, high), яких ще немає в Recommendation як [E].
+    Спершу червоні прапори, потім claims про безпеку/порівняння з конкурентом."""
+    have = {i for x in rationale if x["kind"] == "evidence" for i in x["claim_ids"]}
+    cands = []
+    for c in claim_map.values():
+        if not c.get("is_extra") or c.get("confidence") != "high" or c["id"] in have:
+            continue
+        if c.get("direction") not in ("supports", "contradicts"):
+            continue
+        pr = 0 if c["id"] in flag_ids else (1 if c.get("stage") in ("competition", "safety_or_failure",
+                                                                     "regulatory") else 2)
+        cands.append((pr, c["id"], c))
+    cands.sort(key=lambda x: (x[0], x[1]))
+    return [{"text": c["claim"], "kind": "evidence", "claim_ids": [c["id"]],
+             "unverified_numbers": []} for _, _, c in cands[:n]]
+
+H2H_ABSENCE_RE = re.compile(r"(?i)\b(?:no|not|lack(?:s|ing)?|absence of|without|unavailable)\b[^.;]{0,90}"
+                            r"head[- ]to[- ]head|head[- ]to[- ]head[^.;]{0,60}\b(?:not|no|lack|absent|unavailable)\b|"
+                            r"no (?:publicly )?available[^.;]{0,60}(?:comparative|versus)")
+
+def has_head_to_head(claim_map: dict):
+    """Claim із результатом прямого порівняння цільового препарату з іншим (числа + head-to-head)."""
+    for c in claim_map.values():
+        t = c.get("claim", "")
+        if re.search(r"(?i)head[- ]to[- ]head", t) and re.search(r"\d", t) \
+                and mentions_drug(c) and other_drugs_in(t):
+            return c
+    return None
+
+def drop_false_h2h_absence(sections: dict, rationale: list, claim_map: dict, issues: list):
+    """Якщо в досьє є результат head-to-head, прибираємо твердження «head-to-head даних немає».
+    Повертає rationale без таких тверджень."""
+    h = has_head_to_head(claim_map)
+    if not h:
+        return rationale
+    def bad(text):
+        return bool(H2H_ABSENCE_RE.search(text or ""))
+    for sec in sections.values():
+        kept = []
+        for st in sec["statements"]:
+            if bad(st["text"]):
+                issues.append(f"{sec['title']}: твердження прибрано — каже, що head-to-head даних "
+                              f"немає, але в досьє є {h['id']}: {st['text'][:70]}")
+            else:
+                kept.append(st)
+        sec["statements"] = kept
+        sec["gaps"] = [g for g in sec["gaps"] if not bad(g)]
+    out = []
+    for st in rationale:
+        if bad(st["text"]):
+            issues.append(f"Recommendation: твердження прибрано — каже, що head-to-head даних "
+                          f"немає, але в досьє є {h['id']}: {st['text'][:70]}")
+        else:
+            out.append(st)
+    return out
+
+
+# ---------------------------------------------------------------- тріаж тяжкості (модель)
+
+class Severity(BaseModel):
+    claim_id: str
+    level: Literal["critical", "major"]
+    category: Literal["death_or_life_threatening_harm", "regulatory_halt_or_refusal",
+                      "programme_terminated", "failed_pivotal_trial",
+                      "invalid_key_result", "other_equivalent_weight", "not_critical"] = Field(
+        description="Why it is critical. Use not_critical when level is major.")
+    reason: str = Field(description="One short sentence: why this level.")
+
+class TriageDraft(BaseModel):
+    items: list[Severity]
+
+def validate_triage(draft: TriageDraft, claim_map: dict, issues: list) -> list:
+    """Лишає тільки перевірювані оцінки моделі: id існує, claim про цільовий препарат,
+    не умови включення. «critical» з low-confidence claim знижуємо до «major»."""
+    out = []
+    for it in draft.items:
+        c = claim_map.get(it.claim_id)
+        if not c:
+            issues.append(f"Тріаж: id {it.claim_id} не існує — оцінку відкинуто")
+            continue
+        if c.get("source_type") == "nct_aact_population" or c.get("drug_not_in_quote") \
+                or not mentions_drug(c):
+            issues.append(f"Тріаж: {it.claim_id} не про цільовий препарат — оцінку відкинуто")
+            continue
+        level = it.level
+        if level == "critical" and c.get("confidence") == "low":
+            level = "major"
+            issues.append(f"Тріаж: {it.claim_id} «critical» знижено до «major» — low-confidence claim")
+        if level == "critical" and it.category == "not_critical":
+            level = "major"
+            issues.append(f"Тріаж: {it.claim_id} «critical» без категорії — знижено до «major»")
+        out.append({"id": c["id"], "level": level, "category": it.category,
+                    "reason": it.reason.strip()})
+    return out
+
+def merge_flags(triage: list, claim_map: dict) -> list:
+    """Критичні знахідки = (модель оцінила critical) ∪ (запасний ключовий фільтр).
+    Модель ловить невідомі типи подій; фільтр страхує від її нестабільності."""
+    by_id = {}
+    for t in triage:
+        if t["level"] == "critical":
+            c = claim_map[t["id"]]
+            by_id[t["id"]] = {"id": t["id"], "kind": "critical finding", "claim": c["claim"],
+                              "reason": t["reason"], "category": t.get("category"),
+                              "found_by": ["model"],
+                              "is_extra": bool(c.get("is_extra"))}
+    for f in red_flags(claim_map):
+        if f["id"] in by_id:
+            by_id[f["id"]]["found_by"].append("keywords")
+            by_id[f["id"]]["kind"] = f["kind"]
+        else:
+            f = dict(f)
+            f["reason"] = "matched the backstop keyword rule"
+            f["found_by"] = ["keywords"]
+            by_id[f["id"]] = f
+    return sorted(by_id.values(), key=lambda x: x["id"])
