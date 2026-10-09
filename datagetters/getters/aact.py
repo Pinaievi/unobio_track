@@ -24,6 +24,7 @@ getters/aact.py — AACT (Aggregate Analysis of ClinicalTrials.gov), PostgreSQL-
 
 import os
 import re
+import time
 
 import psycopg
 from dotenv import load_dotenv
@@ -589,17 +590,35 @@ class AACTGetter(DataGetter):
             LIMIT %(limit)s
         """
 
-        with _connect() as conn:
-            rows = conn.execute(studies_sql, params).fetchall()
-            ncts = [r["nct_id"] for r in rows]
-            if not ncts:
-                return []
+        def load_all():
+            """Усі запити до AACT в одному з'єднанні."""
+            with _connect() as conn:
+                rows = conn.execute(studies_sql, params).fetchall()
+                ncts = [r["nct_id"] for r in rows]
+                if not ncts:
+                    return rows, None
+                return rows, (load_primary_results(conn, ncts),
+                              load_eligibility(conn, ncts),
+                              *load_baseline(conn, ncts),
+                              *load_flow(conn, ncts),
+                              *load_pk(conn, ncts))
 
-            primary = load_primary_results(conn, ncts)
-            eligibility = load_eligibility(conn, ncts)
-            baseline, group_n = load_baseline(conn, ncts)
-            milestones, drops = load_flow(conn, ncts)
-            pk_outcomes, pk_values = load_pk(conn, ncts)
+        # публічна база AACT інколи розриває з'єднання: повторюємо до 3 разів
+        last_err = None
+        for attempt in range(3):
+            try:
+                rows, loaded = load_all()
+                break
+            except psycopg.OperationalError as e:
+                last_err = e
+                print(f"[aact] з'єднання перервано (спроба {attempt + 1}/3): {e}")
+                time.sleep(3 * (attempt + 1))
+        else:
+            raise last_err
+        if loaded is None:
+            return []
+        (primary, eligibility, baseline, group_n,
+         milestones, drops, pk_outcomes, pk_values) = loaded
 
         records: list[dict] = []
         for r in rows:
