@@ -33,16 +33,13 @@ from google import genai
 from pydantic import BaseModel, Field
 import prompts
 
+from config import PRICE_OUT_PER_M, PRICE_IN_PER_M
+
 # ---------------------------------------------------------------- налаштування
 
 MODEL = "gemini-3.1-flash-lite"
 MAX_RETRIES = 3
 DEFAULT_WORKERS = 4
-
-# Ціна за 1 млн токенів (USD). ЗАГЛУШКИ — ті самі, що в build_report.py;
-# впиши актуальні ціни Gemini API в обох файлах.
-PRICE_IN_PER_M = 0.10
-PRICE_OUT_PER_M = 0.40
 
 ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "results"
