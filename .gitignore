@@ -1,4 +1,5 @@
 .vscode
+results/
 .env
 .cache/
 datagetters/getters/__pycache__/

@@ -8,12 +8,19 @@ main.py — запускає весь конвеєр від запиту до ф
   4. report  — build_report.py               (звіт -> results/report.md, report.json)
   5. ui      — app.py (Streamlit)             (drill-down сайт зі звітом; відкривається сам)
 
+Якщо --drug — це КЛАС ("BTK inhibitor", "GLP-1 receptor agonist"), main.py знаходить препарати
+класу (datagetters/class_resolver.py), проганяє повний конвеєр для кожного (results/report_<препарат>.*,
+дані кожного лежать в results/drugs/<препарат>/) і збирає звіт класу results/class_<клас>.*.
 Препарат ніколи не вгадується: для збору даних потрібен --drug; кроки без збору
 беруть препарат із results/evidence_raw.json і зупиняються, якщо --drug не збігається.
 
 Приклади (з кореня проєкту):
   python main.py --drug retatrutide --indication obesity
   python main.py --drug tolebrutinib --indication "multiple sclerosis"
+  python main.py --drug "BTK inhibitor" --indication "multiple sclerosis"   # клас: сам знаходить препарати
+  python main.py --drug "BTK inhibitor" --indication "multiple sclerosis" --drugs "tolebrutinib,fenebrutinib"
+  python main.py --drug "BTK inhibitor" --indication "multiple sclerosis" --only report   # клас з архіву, ~$0.02 за препарат
+  python main.py --drug "BTK inhibitor" --indication "multiple sclerosis" --drugs "a,b,c" --rollup-only   # лише перезібрати звіт класу з готових report_<препарат>.json (безкоштовно)
   python main.py --from claims                       # зібрані докази вже є, почати з витягу фактів
   python main.py --only report                       # лише перебудувати звіт (для зібраного препарату)
   python main.py --only report --extra extra_claims.json --out-prefix report_new \
@@ -28,6 +35,7 @@ main.py — запускає весь конвеєр від запиту до ф
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -35,7 +43,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
-from core.config import fetched_target, same_name
+from core.config import fetched_target, looks_like_class, same_name, slug
 
 RESULTS = ROOT / "results"
 STEPS = ["fetch", "split", "claims", "report"]
@@ -187,11 +195,123 @@ def print_summary(out_prefix: str, timings: dict, start_ts: str):
     print(f"  Logs:   results/run_log.jsonl")
 
 
+ARCHIVE = RESULTS / "drugs"
+ARCHIVED = ["evidence_raw.json", "claims.json"]
+
+
+def archive_drug(name: str) -> None:
+    """Save this drug's collected data so the class can be rebuilt later (report only)."""
+    dest = ARCHIVE / slug(name)
+    dest.mkdir(parents=True, exist_ok=True)
+    for f in ARCHIVED:
+        if (RESULTS / f).exists():
+            shutil.copy2(RESULTS / f, dest / f)
+    if (RESULTS / "evidence").exists():
+        shutil.rmtree(dest / "evidence", ignore_errors=True)
+        shutil.copytree(RESULTS / "evidence", dest / "evidence")
+
+
+def restore_drug(name: str) -> bool:
+    src = ARCHIVE / slug(name)
+    if not (src / "evidence_raw.json").exists():
+        return False
+    for f in ARCHIVED:
+        if (src / f).exists():
+            shutil.copy2(src / f, RESULTS / f)
+    if (src / "evidence").exists():
+        shutil.rmtree(RESULTS / "evidence", ignore_errors=True)
+        shutil.copytree(src / "evidence", RESULTS / "evidence")
+    return True
+
+
+def class_members(args, steps) -> list:
+    """Drugs of the class: from --drugs, or found by class_resolver.py (or, when data is
+    not re-collected, the list saved by the last resolver run)."""
+    if args.drugs:
+        return [d.strip().lower() for d in args.drugs.split(",") if d.strip()]
+    saved = RESULTS / "class_members.json"
+    if "fetch" not in steps:
+        try:
+            data = json.loads(saved.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            data = {}
+        if data and same_name(data.get("class"), args.drug):
+            return [m["name"] for m in data.get("members", [])]
+        sys.exit("No saved member list for this class. Run the full pipeline first, or pass "
+                 "--drugs \"a,b,c\".")
+    cmd = [sys.executable, str(ROOT / "datagetters" / "class_resolver.py"),
+           args.drug, args.indication, "--max", str(args.max_drugs)]
+    run_step("resolve class members", cmd, args.dry_run)
+    if args.dry_run:
+        return []
+    data = json.loads(saved.read_text(encoding="utf-8"))
+    return [m["name"] for m in data.get("members", [])]
+
+
+def run_class(args, steps):
+    """Class mode: the pipeline runs once per member drug; then the class report is built."""
+    if not args.indication:
+        sys.exit('A class needs an indication: --indication "multiple sclerosis"')
+    if args.extra or args.compare:
+        sys.exit("--extra / --compare work on one drug's report. Run them with --drug <drug>.")
+    if steps[0] not in ("fetch", "report"):
+        sys.exit("Class mode runs the full pipeline, or only the report step (--only report).")
+
+    if args.rollup_only and not args.drugs:
+        sys.exit('--rollup-only needs the member list: --drugs "a,b,c"')
+    members = class_members(args, steps)
+    if args.dry_run and not members:
+        return None
+    if not members:
+        sys.exit("No drugs found for this class. Pass them yourself: --drugs \"a,b,c\"")
+    print(f"\nClass '{args.drug}' in '{args.indication}' -> {len(members)} drug(s): "
+          + ", ".join(members))
+
+    failed = []
+    for name in ([] if args.rollup_only else members):
+        print("\n" + "#" * 70 + f"\n# DRUG: {name}\n" + "#" * 70)
+        sub = argparse.Namespace(**vars(args))
+        sub.drug, sub.out_prefix = name, f"report_{slug(name)}"
+        cmds = build_commands(sub)
+        try:
+            if "fetch" not in steps and not args.dry_run and not restore_drug(name):
+                sys.exit(f"No saved data for '{name}' in results/drugs/. Run the full pipeline first.")
+            for s in steps:
+                if s == "split" and not args.dry_run:
+                    clean_old_parts()
+                run_step(f"{s} [{name}]", cmds[s], args.dry_run)
+            if "fetch" in steps and not args.dry_run:
+                archive_drug(name)
+        except SystemExit as e:
+            failed.append(name)
+            print(f"\n!! {name} failed: {e}\n   continuing with the next drug", flush=True)
+
+    ok = [m for m in members if m not in failed]
+    cmd = [sys.executable, str(ROOT / "pipeline" / "class_report.py"), "--class", args.drug,
+           "--indication", args.indication, "--members", ",".join(members)]
+    if failed:
+        cmd += ["--failed", ",".join(failed)]
+    run_step("class report", cmd, args.dry_run)
+    if not ok and not args.dry_run:
+        sys.exit("All drugs failed.")
+    return f"class_{slug(args.drug)}.json"
+
+
 def main():
     ap = argparse.ArgumentParser(description="Run the whole underwriting pipeline")
     ap.add_argument("--drug", default=None,
                     help="drug to underwrite (required when data is collected; otherwise "
                          "taken from results/evidence_raw.json)")
+    ap.add_argument("--drugs", default=None,
+                    help="class mode: comma-separated drugs of the class (skips automatic "
+                         "discovery), e.g. \"tolebrutinib,fenebrutinib\"")
+    ap.add_argument("--max-drugs", type=int, default=5,
+                    help="class mode: how many drugs of the class to underwrite (default 5)")
+    ap.add_argument("--rollup-only", action="store_true",
+                    help="class mode: do not run any drug, only rebuild the class report from "
+                         "the existing results/report_<drug>.json files (free)")
+    ap.add_argument("--single", action="store_true",
+                    help="treat --drug as one drug even if it reads like a class")
     ap.add_argument("--indication", default=None,
                     help="indication, e.g. \"multiple sclerosis\" (default: the one the "
                          "collected data was gathered for)")
@@ -220,6 +340,15 @@ def main():
         steps = [args.only]
     else:
         steps = STEPS[STEPS.index(args.start):]
+
+    if looks_like_class(args.drug) and not args.single:
+        print(f"'{args.drug}' reads like a drug class: underwriting its member drugs.")
+        name = run_class(args, steps)
+        if name and not args.dry_run:
+            print(f"\n  Class report: results/{name[:-5]}.md")
+            if not args.no_ui:
+                launch_ui(name, False)
+        return
 
     # The target drug is never assumed. Collecting data needs --drug. Steps that reuse
     # collected data take the drug from results/evidence_raw.json and refuse a different

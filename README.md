@@ -33,6 +33,36 @@ reuse collected data (`--from claims`, `--only report`) read the drug from
 `results/claims.json` mentions the drug. `results/` holds one drug at a time: copy the project
 folder (or the `results/` folder) before collecting a second drug.
 
+### Drug classes ("BTK inhibitor")
+
+`--drug` can also be a **class**. The class pair of the finals is run like this:
+
+```bash
+python main.py --drug "BTK inhibitor" --indication "multiple sclerosis"
+python main.py --drug "BTK inhibitor" --indication "multiple sclerosis" --drugs "tolebrutinib,fenebrutinib"   # choose the drugs yourself
+python main.py --drug "BTK inhibitor" --indication "multiple sclerosis" --only report   # rebuild from saved data (~$0.02 per drug)
+```
+
+A name ending in inhibitor / antagonist / agonist / blocker / modulator / degrader / antibody is
+treated as a class (`--single` turns this off). `datagetters/class_resolver.py` finds the member
+drugs without any per-class table: the class word is stripped (`BTK`), the target is looked up in
+Open Targets, and the candidates come from two sources, the drugs Open Targets lists for that
+target and the ClinicalTrials.gov trials in the indication that mention the target. Each
+candidate must have a mechanism of action on that target in Open Targets (this is how comparators
+such as teriflunomide are rejected) and at least one registered trial in the indication. The
+members are ranked by highest trial phase, then trial count; `--max-drugs` (default 4) limits
+how many are underwritten. The list is saved in `results/class_members.json`. If discovery
+finds nothing, pass `--drugs`.
+
+Each member goes through the full pipeline (`results/report_<drug>.*`, its data is archived in
+`results/drugs/<drug>/`). A member that fails does not stop the others; the class verdict is
+then marked partial. `pipeline/class_report.py` builds `results/class_<class>.md/.json`. The class verdict is a
+fixed rule over the member verdicts, not a model judgement: all Do Not Invest gives Do Not
+Invest, all Invest gives Invest, anything else gives Conditional. A critical-finding category
+that appears in 2+ members is listed as a class-wide (mechanism-level) signal. In the site,
+the class report is a page with one card per drug and an "Open report" button that jumps to the
+drug's own drill-down.
+
 When the pipeline finishes, a Streamlit site with the drill-down report opens on its own
 (stop with Ctrl+C). Use `--no-ui` to skip it.
 
@@ -344,10 +374,13 @@ core/
 pipeline/
   claim_collector.py    LLM claim extraction
   build_report.py       claim verification, section writing, conflicts, triage, final recommendation
+  class_report.py       class roll-up of per-drug reports (class verdict rule, class-wide signals)
 datagetters/
   delegator.py          runs all getters in parallel, de-duplicates, second "refine" phase
+  class_resolver.py     drug class ("BTK inhibitor") -> member drugs in the indication
   getters/              clinicaltrials, aact, europepmc, opentargets, openfda, edgar, competitors
 extra_claims_demo*.json synthetic evidence for the demo (hold = safety/regulatory scenario)
 results/                report*.json/.md, report*_claims.md, *_dropped_claims.json,
+                        class_*.json/.md, class_members.json, drugs/<drug>/ (archived data),
                         run_log.jsonl, evidence/, claims.json
 ```

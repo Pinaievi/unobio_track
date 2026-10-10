@@ -35,6 +35,20 @@ def list_reports() -> list:
     return found
 
 
+def list_class_reports() -> list:
+    """Class roll-ups (made by pipeline/class_report.py): results/class_*.json."""
+    found = []
+    for p in sorted(RESULTS.glob("class_*.json"), key=lambda x: x.stat().st_mtime,
+                    reverse=True):
+        try:
+            data = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(data, dict) and data.get("kind") == "class":
+            found.append(p)
+    return found
+
+
 @st.cache_data(show_spinner=False)
 def load_report(path_str: str, mtime: float) -> dict:
     return json.loads(Path(path_str).read_text(encoding="utf-8"))
@@ -300,23 +314,75 @@ def tab_run(rep: dict):
                     f" — claims: {', '.join(s['claim_ids']) or '—'}")
 
 
+def open_report(name: str):
+    st.session_state["file"] = name
+
+
+def render_class(c: dict):
+    """Class roll-up: one row per member drug, class-wide signals, link to each report."""
+    color = REC_COLORS.get(c["recommendation"], "#57606a")
+    st.markdown(f"## {c['class']} in {c['indication']}  "
+                + badge(c["recommendation"] or "no verdict", color), unsafe_allow_html=True)
+    st.caption(f"Class verdict rule: {c['rule']}. Generated {c['generated']}")
+    cols = st.columns(3)
+    for col, lvl in zip(cols, ["Invest", "Conditional", "Do Not Invest"]):
+        col.metric(lvl, c["counts"].get(lvl, 0))
+
+    st.subheader("Member drugs")
+    for r in c["members"]:
+        with st.container(border=True):
+            left, right = st.columns([5, 1])
+            left.markdown(f"**{r['drug']}** "
+                          + badge(r["recommendation"], REC_COLORS.get(r["recommendation"], "#57606a")),
+                          unsafe_allow_html=True)
+            left.caption(f"{r['claims']} claims · {r['sources']} sources · "
+                         f"{r['conflicts']} contradictions")
+            for f in r["critical_findings"]:
+                left.markdown(f"🚩 **{f['id']}** ({f['category']}): {f['reason']}")
+            for g in r["invest_gate_reasons"]:
+                left.markdown(f"⚖ Invest gate: {g}")
+            for s in r["top_statements"]:
+                tag = "[E]" if s.get("kind") == "evidence" else "[AI]"
+                left.markdown(f"- {tag} {s['text']}")
+            right.button("Open report", key=f"open_{r['report']}",
+                         on_click=open_report, args=(r["report"],))
+    if c.get("failed"):
+        st.warning("No report for: " + ", ".join(c["failed"])
+                   + f". The class verdict is based on {len(c['members'])} of "
+                   f"{c.get('members_total', len(c['members']))} members.")
+
+    st.subheader("Class-wide signals")
+    if c["class_wide_signals"]:
+        for s in c["class_wide_signals"]:
+            st.markdown(f"**{s['category']}** appears in {len(s['drugs'])} members "
+                        f"({', '.join(s['drugs'])}) — a mechanism-level signal.")
+            for e in s["examples"]:
+                st.markdown(f"- {e['drug']} {e['id']}: {e['reason']}")
+    else:
+        st.info("No critical-finding category repeats across 2+ members.")
+
+
 # ---------------------------------------------------------------- головна
 
 def main():
     paths = list_reports()
+    class_paths = list_class_reports()
     st.title("Investment Underwriting: drill-down")
-    if not paths:
+    if not paths and not class_paths:
         st.error(f"No reports (*.json) in {RESULTS}. First run "
                  "python main.py --drug ... --indication ...")
         return
 
     with st.sidebar:
         st.header("Report")
-        names = [p.name for p in paths]
+        names = [p.name for p in class_paths] + [p.name for p in paths]
         # main.py передає ім'я щойно створеного звіту через змінну середовища
         wanted = os.environ.get("UNDERWRITING_REPORT")
         default_idx = names.index(wanted) if wanted in names else 0
-        choice = st.selectbox("File", names, index=default_idx)
+        if st.session_state.get("file") not in names:
+            st.session_state.pop("file", None)
+        pick = {} if "file" in st.session_state else {"index": default_idx}
+        choice = st.selectbox("File", names, key="file", **pick)
         only_evidence = st.checkbox("Show only [E] (facts from sources)")
         st.markdown("**Legend**")
         st.markdown(kind_badge("evidence") + " statement restates a single claim "
@@ -327,6 +393,9 @@ def main():
                    "Expand any statement.")
 
     path = RESULTS / choice
+    if path in class_paths or path.name.startswith("class_"):
+        render_class(load_report(str(path), path.stat().st_mtime))
+        return
     rep = load_report(str(path), path.stat().st_mtime)
     claims = {c["id"]: c for c in rep["claims"]}
     sources = {s["evidence_id"]: s for s in rep["sources"]}

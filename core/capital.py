@@ -96,12 +96,21 @@ def capital_from_registry(evidence: dict, claims: list, claim_map: dict,
     def short(t):
         return (t["title"] or t["nct"])[:90]
 
-    if done:
+    stopped = [t for t in done if t["status"] in ("TERMINATED", "WITHDRAWN")]
+    all_stopped = bool(done) and not counted and not closed and len(stopped) == len(done)
+    if all_stopped:
+        milestone = ("none: every Phase 3 trial in the registry was terminated or withdrawn "
+                     "(" + ", ".join(t["nct"] for t in stopped) + "), so there is no "
+                     "running programme to fund towards a filing; any new Phase 3 would be "
+                     "a new programme")
+    elif done:
         milestone = "regulatory submission (some Phase 3 trials have already finished"\
                     " or reported)"
     else:
         milestone = "completion of the Phase 3 programme"
-    if counted:
+    if all_stopped:
+        pass
+    elif counted:
         milestone += "; remaining capital goes to Phase 3 trials that are still enrolling"
     else:
         milestone += ("; no Phase 3 trial is enrolling any more, so remaining spend is "
