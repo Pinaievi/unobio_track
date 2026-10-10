@@ -1,0 +1,115 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 15,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_AACT_NCT04881760",
+      "source_type": "nct_aact",
+      "source_id": "NCT04881760",
+      "url": "https://clinicaltrials.gov/study/NCT04881760",
+      "title": "A Phase 2 Study of Once-Weekly LY3437943 Compared With Placebo in Participants Who Have Obesity or Are Overweight With Weight-Related Comorbidities",
+      "text": "This is a study of LY3437943 in participants who have obesity or are overweight. The main purpose is to learn more about how LY3437943 affects body weight loss. The study will last about 18 months and may include up to 18 visits.\n\nPrimary outcome results: Outcome: Mean Percent Change From Baseline in Body Weight (time frame: Baseline, Week 24). Values by group: Placebo: LEAST_SQUARES_MEAN -1.55 percent change (Standard Error 0.54); 1 mg LY3437943: LEAST_SQUARES_MEAN -7.18 percent change (Standard Error 0.67); 4 mg LY3437943 (2 mg): LEAST_SQUARES_MEAN -12.00 percent change (Standard Error 0.71); 4 mg LY3437943: LEAST_SQUARES_MEAN -13.80 percent change (Standard Error 0.97); 8 mg LY3437943 (2 mg): LEAST_SQUARES_MEAN -16.64 percent change (Standard Error 0.74); 8 mg LY3437943 (4 mg): LEAST_SQUARES_MEAN -18.26 percent change (Standard Error 0.95); 12 mg LY3437943 (2 mg): LEAST_SQUARES_MEAN -17.39 percent change (Standard Error 0.69). Comparisons: Placebo vs 1 mg LY3437943: LS Mean difference (Final Values) -5.64 (95% CI -7.34 to -3.94), p < 0.001; Placebo vs 4 mg LY3437943 (2 mg): LS Mean difference (Final Values) -10.45 (95% CI -12.21 to -8.7), p < 0.001; Placebo vs 4 mg LY3437943: LS Mean difference (Final Values) -12.25 (95% CI -14.42 to -10.08), p < 0.001; Placebo vs 8 mg LY3437943 (2 mg): LS Mean difference (Final Values) -15.1 (95% CI -16.9 to -13.3), p < 0.001; Placebo vs 8 mg LY3437943 (4 mg): LS Mean difference (Final Values) -16.72 (95% CI -18.86 to -14.58), p < 0.001; Placebo vs 12 mg LY3437943 (2 mg): LS Mean difference (Final Values) -15.85 (95% CI -17.57 to -14.13), p < 0.001.",
+      "meta": {
+        "brief_title": "A Study of LY3437943 in Participants Who Have Obesity or Are Overweight",
+        "status": "COMPLETED",
+        "why_stopped": null,
+        "phase": "PHASE2",
+        "study_type": "INTERVENTIONAL",
+        "enrollment": 338,
+        "start_date": "2021-05-20",
+        "primary_completion": "2022-05-16",
+        "completion": "2022-11-22",
+        "results_submitted": "2023-08-23",
+        "has_results": true,
+        "has_primary_results_in_text": true,
+        "conditions": [
+          "Obesity",
+          "Overweight"
+        ],
+        "interventions": [
+          "LY3437943",
+          "Placebo"
+        ],
+        "lead_sponsor": "Eli Lilly and Company",
+        "primary_outcomes": [
+          "Mean Percent Change From Baseline in Body Weight"
+        ],
+        "primary_analyses": [
+          {
+            "outcome": "Mean Percent Change From Baseline in Body Weight",
+            "time_frame": "Baseline, Week 24",
+            "compared_groups": "Placebo vs 1 mg LY3437943",
+            "param_type": "LS Mean difference (Final Values)",
+            "param_value": "-5.64",
+            "p_value": "0.001",
+            "ci": [
+              "-7.34",
+              "-3.94"
+            ],
+            "method": "Mixed Models Analysis"
+          },
+          {
+            "outcome": "Mean Percent Change From Baseline in Body Weight",
+            "time_frame": "Baseline, Week 24",
+            "compared_groups": "Placebo vs 4 mg LY3437943 (2 mg)",
+            "param_type": "LS Mean difference (Final Values)",
+            "param_value": "-10.45",
+            "p_value": "0.001",
+            "ci": [
+              "-12.21",
+              "-8.7"
+            ],
+            "method": "Mixed Models Analysis"
+          },
+          {
+            "outcome": "Mean Percent Change From Baseline in Body Weight",
+            "time_frame": "Baseline, Week 24",
+            "compared_groups": "Placebo vs 4 mg LY3437943",
+            "param_type": "LS Mean difference (Final Values)",
+            "param_value": "-12.25",
+            "p_value": "0.001",
+            "ci": [
+              "-14.42",
+              "-10.08"
+            ],
+            "method": "Mixed Models Analysis"
+          },
+          {
+            "outcome": "Mean Percent Change From Baseline in Body Weight",
+            "time_frame": "Baseline, Week 24",
+            "compared_groups": "Placebo vs 8 mg LY3437943 (2 mg)",
+            "param_type": "LS Mean difference (Final Values)",
+            "param_value": "-15.1",
+            "p_value": "0.001",
+            "ci": [
+              "-16.9",
+              "-13.3"
+            ],
+            "method": "Mixed Models Analysis"
+          },
+          {
+            "outcome": "Mean Percent Change From Baseline in Body Weight",
+            "time_frame": "Baseline, Week 24",
+            "compared_groups": "Placebo vs 8 mg LY3437943 (4 mg)",
+            "param_type": "LS Mean difference (Final Values)",
+            "param_value": "-16.72",
+            "p_value": "0.001",
+            "ci": [
+              "-18.86",
+              "-14.58"
+            ],
+            "method": "Mixed Models Analysis"
+          }
+        ],
+        "getter": "aact",
+        "also_found_in": [
+          "nct"
+        ]
+      }
+    }
+  ]
+}

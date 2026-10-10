@@ -2,7 +2,6 @@
 .env
 .cache/
 datagetters/getters/__pycache__/
-results/
 extra_claims_demo.json
 extra_claims_demo_hold.json
 __pycache__/

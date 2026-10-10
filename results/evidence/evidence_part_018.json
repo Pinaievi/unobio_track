@@ -1,0 +1,98 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 18,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_AACT_NCT07629401",
+      "source_type": "nct_aact",
+      "source_id": "NCT07629401",
+      "url": "https://clinicaltrials.gov/study/NCT07629401",
+      "title": "Pre-approval Expanded Access of Retatrutide (LY3437943)",
+      "text": "Provide pre-approval single-patient expanded access of retatrutide (LY3437943), an investigational GLP-1/GIP/glucagon triple receptor agonist being studied for chronic weight management, for adults with severe obesity (body mass index \\[BMI\\] greater than or equal to \\[≥\\]35 kilogram per square meter \\[kg/m²\\] and at least two serious or life-threatening obesity-related complications who are refractory to the best approved therapy and are unable to participate in an ongoing clinical trial of retatrutide or a comparable investigational medicine.",
+      "meta": {
+        "brief_title": "Pre-approval Expanded Access of Retatrutide (LY3437943)",
+        "status": "AVAILABLE",
+        "why_stopped": null,
+        "phase": null,
+        "study_type": "EXPANDED_ACCESS",
+        "enrollment": null,
+        "start_date": null,
+        "primary_completion": null,
+        "completion": null,
+        "results_submitted": null,
+        "has_results": false,
+        "has_primary_results_in_text": false,
+        "conditions": [
+          "Obesity",
+          "Obesity-related Complications"
+        ],
+        "interventions": [
+          "Retatrutide"
+        ],
+        "lead_sponsor": "Eli Lilly and Company",
+        "primary_outcomes": [],
+        "primary_analyses": [],
+        "getter": "aact",
+        "also_found_in": [
+          "nct"
+        ]
+      }
+    },
+    {
+      "id": "E_AACT_NCT07629401_population",
+      "source_type": "nct_aact_population",
+      "source_id": "NCT07629401",
+      "url": "https://clinicaltrials.gov/study/NCT07629401",
+      "title": "Population and eligibility: Pre-approval Expanded Access of Retatrutide (LY3437943)",
+      "text": "Population and eligibility for trial NCT07629401 (Pre-approval Expanded Access of Retatrutide (LY3437943)). Eligible population: not stated. Sex: ALL; age: 18 Years to not stated; healthy volunteers: not stated. Inclusion criteria: All of the following criteria must be met: Inclusion Criteria: * Age 18 years or older. * Refractory obesity, defined as BMI \\>= 35 kg/m2 despite adherence to and tolerance of treatment with highest available dose of chronic weight management therapy. * Two or more serious or life-threatening obesity-related complications for which the patient is currently receiving standard of care * Unable to participate in an ongoing clinical trial of retatrutide or a similar/comparable investigational medicine (due to trial eligibility criteria or lack of a reasonably accessible enrolling site). Exclusion criteria: * Medical contraindication to retatrutide therapy",
+      "meta": {
+        "record_kind": "population",
+        "nct_id": "NCT07629401",
+        "sex": "ALL",
+        "min_age": "18 Years",
+        "max_age": null,
+        "healthy_volunteers": null,
+        "has_baseline_data": false,
+        "getter": "aact"
+      }
+    },
+    {
+      "id": "E_NCT06383390",
+      "source_type": "nct",
+      "source_id": "NCT06383390",
+      "url": "https://clinicaltrials.gov/study/NCT06383390",
+      "title": "A Phase 3, Randomized, Double-Blind, Placebo-Controlled, Event-Driven Study to Investigate the Effect of Retatrutide on the Incidence of Major Adverse Cardiovascular Events and Major Adverse Kidney Events in Participants With Body Mass Index ≥27 kg/m2 and Atherosclerotic Cardiovascular Disease and/or Chronic Kidney Disease",
+      "text": "The main purpose of this study is to determine if retatrutide can significantly lower the incidence of serious heart-related complications or prevent the worsening of kidney function. The trial will enroll adults with body mass index 27 kg/m\\^2 or higher and Atherosclerotic Cardiovascular Disease and/or chronic kidney disease. The study will last for about 5 years. Participants will have up to 27 clinic visits with the study doctor.",
+      "meta": {
+        "status": "ACTIVE_NOT_RECRUITING",
+        "why_stopped": null,
+        "start_date": "2024-04-30",
+        "primary_completion": "2029-02",
+        "completion": "2029-02",
+        "phases": [
+          "PHASE3"
+        ],
+        "enrollment": 10000,
+        "conditions": [
+          "Atherosclerotic Cardiovascular Disease (ASCVD)",
+          "Chronic Kidney Disease (CKD)"
+        ],
+        "interventions": [
+          "Retatrutide",
+          "Placebo"
+        ],
+        "primary_outcomes": [
+          "Time to First Occurrence of Composite Endpoints",
+          "Time to First Occurrence of Composite Endpoint of End Stage Kidney Disease (ESKD), ≥ 40% Sustained Decline in Estimated Glomerular Filtration Rate (eGFR), CV Death or Renal Death"
+        ],
+        "lead_sponsor": "Eli Lilly and Company",
+        "has_results": false,
+        "getter": "clinicaltrials"
+      }
+    }
+  ]
+}

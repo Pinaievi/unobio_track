@@ -1,0 +1,71 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 11,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_AACT_NCT05929066",
+      "source_type": "nct_aact",
+      "source_id": "NCT05929066",
+      "url": "https://clinicaltrials.gov/study/NCT05929066",
+      "title": "A Master Protocol to Investigate the Efficacy and Safety of LY3437943 Once Weekly in Participants Without Type 2 Diabetes Who Have Obesity or Overweight: A Randomized, Double-Blind, Placebo-Controlled Trial (TRIUMPH-1)",
+      "text": "The purpose of this study is to evaluate the efficacy and safety of retatrutide in participants who have obesity or overweight (J1I-MC-GZBJ master protocol) including subsets of participants who have knee osteoarthritis (OA) (J1I-MC-GOA1) or who have obstructive sleep apnea (OSA) (J1I-MC-GSA1). This study will last about 89 weeks and will include up to 24 visits. Addendum (2) is optional and available to approximately 500 participants to continue treatment with retatrutide for up to an additional 24 weeks.",
+      "meta": {
+        "brief_title": "A Study of Retatrutide (LY3437943) in Participants Who Have Obesity or Overweight",
+        "status": "COMPLETED",
+        "why_stopped": null,
+        "phase": "PHASE3",
+        "study_type": "INTERVENTIONAL",
+        "enrollment": 2335,
+        "start_date": "2023-07-10",
+        "primary_completion": "2026-04-06",
+        "completion": "2026-04-30",
+        "results_submitted": null,
+        "has_results": false,
+        "has_primary_results_in_text": false,
+        "conditions": [
+          "Obesity",
+          "Obstructive Sleep Apnea",
+          "Osteoarthritis, Knee",
+          "Overweight"
+        ],
+        "interventions": [
+          "Placebo",
+          "Retatrutide"
+        ],
+        "lead_sponsor": "Eli Lilly and Company",
+        "primary_outcomes": [
+          "Percent Change From Baseline in Body Weight",
+          "Change from Baseline in Apnea-Hypopnea Index (AHI) Events Per Hour for GSA1 Subset",
+          "Change from Baseline in the Western Ontario and McMaster Universities Osteoarthritis Index (WOMAC) Pain Subscale Score for GOA1 Subset"
+        ],
+        "primary_analyses": [],
+        "getter": "aact",
+        "also_found_in": [
+          "nct"
+        ]
+      }
+    },
+    {
+      "id": "E_AACT_NCT05929066_population",
+      "source_type": "nct_aact_population",
+      "source_id": "NCT05929066",
+      "url": "https://clinicaltrials.gov/study/NCT05929066",
+      "title": "Population and eligibility: A Study of Retatrutide (LY3437943) in Participants Who Have Obesity or Overweight",
+      "text": "Population and eligibility for trial NCT05929066 (A Study of Retatrutide (LY3437943) in Participants Who Have Obesity or Overweight). Eligible population: not stated. Sex: ALL; age: 18 Years to not stated; healthy volunteers: not stated. Inclusion criteria: * Have body mass index (BMI) ≥30.0 kilograms per square meter (kg/m²), or ≥27.0 kg/m² with at least one of the following: * hypertension * dyslipidemia * obstructive sleep apnea, or * cardiovascular disease * History of at least one unsuccessful dietary effort to reduce body weight GOA1 Inclusion Criteria: * Have index knee pain for \\>12 weeks prior to screening, and presence of index knee pain for \\>15 days over the previous month * Have knee X-ray with moderate radiographic changes (Kellgren-Lawrence Grade 2 or 3) per central reading at screening * Currently meets American College of Rheumatology (ACR) Criteria (clinical and radiological) for OA. Exclusion criteria: * Have a self-reported or documented change in body weight \\>5 kg (11 pounds) within 90 days. * Have taken weight loss drugs, including over-the-counter medications, within 90 days prior to screening. * Have a prior or planned surgical treatment for obesity. * Have diabetes mellitus. * Have family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2) * Have had pancreatitis. GOA1 exclusion criteria * Have had steroid joint injections within 90 days of screening. * Have had other joint injections and procedures within 6 months of screening. * Have joint disease other than osteoarthritis.",
+      "meta": {
+        "record_kind": "population",
+        "nct_id": "NCT05929066",
+        "sex": "ALL",
+        "min_age": "18 Years",
+        "max_age": null,
+        "healthy_volunteers": false,
+        "has_baseline_data": false,
+        "getter": "aact"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1236 @@
+{
+  "claims": [
+    {
+      "claim": "The phase 2 trial NCT07467447 evaluates once-weekly subcutaneous retatrutide compared to placebo in adults with obesity or overweight and weight-related comorbidities.",
+      "evidence_id": "E_AACT_NCT07467447",
+      "quote": "Phase 2, multicenter, randomized, double-blind, placebo-controlled study evaluating once-weekly subcutaneous retatrutide (LY3437943) at multiple maintenance dose levels versus placebo in adults with obesity or overweight with weight-related comorbidities (without type 2 diabetes), alongside standardized diet and physical activity counseling.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial NCT07467447 enrolls adults aged 18 to 75 years with obesity or overweight.",
+      "evidence_id": "E_AACT_NCT07467447_population",
+      "quote": "Age 18 to 75 years (inclusive) at time of informed consent.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial NCT07467447 requires a BMI of ≥30 and ≤50 kg/m² or a BMI of ≥27 and <30 kg/m² with at least one weight-related comorbidity for enrollment.",
+      "evidence_id": "E_AACT_NCT07467447_population",
+      "quote": "BMI ≥30 and ≤50 kg/m², OR BMI ≥27 and <30 kg/m² with at least 1 weight-related comorbidity (hypertension; dyslipidemia; or cardiovascular disease such as ischemic CVD or NYHA Class I-II heart failure).",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial NCT07467447 excludes participants with a history of diabetes mellitus.",
+      "evidence_id": "E_AACT_NCT07467447_population",
+      "quote": "History of diabetes mellitus (type 1 or type 2), ketoacidosis, or hyperosmolar state/coma.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT07357415 is a Phase 3b trial investigating the efficacy and safety of retatrutide dose escalation in 600 participants with obesity or overweight without type 2 diabetes and is ongoing, enrollment closed.",
+      "evidence_id": "E_AACT_NCT07357415",
+      "quote": "The purpose of this study is to investigate the efficacy and safety of different retatrutide dose escalation schemes in participants without type 2 diabetes who have obesity or overweight.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial enrolls adults aged 18 and older with obesity or overweight and a history of unsuccessful weight loss attempts.",
+      "evidence_id": "E_AACT_NCT07357415_population",
+      "quote": "Have at least one unsuccessful attempt to lose weight by dieting",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial requires a BMI of at least 30 kg/m2 or at least 27 kg/m2 with a weight-related condition for inclusion.",
+      "evidence_id": "E_AACT_NCT07357415_population",
+      "quote": "≥ 30 kilogram per square meter (kg/m2) OR",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Participants with a history of type 1 or type 2 diabetes are excluded from the trial.",
+      "evidence_id": "E_AACT_NCT07357415_population",
+      "quote": "Have type 1 diabetes or type 2 diabetes",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT07232719 is a phase 3b, randomized, double-blind, placebo-controlled trial evaluating the efficacy and safety of once-weekly retatrutide in 250 participants with obesity or overweight.",
+      "evidence_id": "E_AACT_NCT07232719",
+      "quote": "A Phase 3b Study to Investigate the Efficacy and Safety of Retatrutide Once Weekly in Participants Without Type 2 Diabetes Who Have Obesity or Overweight: A Randomized, Double-Blind, Placebo-Controlled Trial",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The study population for NCT07232719 consists of adults aged 18 and older who have obesity or overweight.",
+      "evidence_id": "E_AACT_NCT07232719_population",
+      "quote": "Age: 18 Years to not stated",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Patients are eligible for the study if they have a BMI of ≥30 kg/m2 or a BMI of ≥27 kg/m2 with at least one weight-related condition.",
+      "evidence_id": "E_AACT_NCT07232719_population",
+      "quote": "Have a body mass index (BMI) of: * ≥30 kilogram per square meter (kg/m2) OR * ≥27 kg/m2 with at least one of the following weight-related conditions: high blood pressure, abnormal levels of lipid, obstructive sleep apnea, heart disease",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Patients with a personal or family history of medullary thyroid carcinoma or multiple endocrine neoplasia syndrome type 2 are excluded from the study.",
+      "evidence_id": "E_AACT_NCT07232719_population",
+      "quote": "Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2)",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT07035093 is a phase 3 interventional study of retatrutide in 586 participants with obesity or overweight and chronic low back pain, and it is currently ongoing with enrollment closed.",
+      "evidence_id": "E_AACT_NCT07035093",
+      "quote": "A Phase 3, Randomized, Double-Blind, Placebo-Controlled Study to Investigate the Efficacy and Safety of Retatrutide Once Weekly in Participants Who Have Obesity or Overweight and Chronic Low Back Pain",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Participants are required to have a body mass index (BMI) ≥27 kilograms per square meter at screening to be included in trial NCT07035093.",
+      "evidence_id": "E_AACT_NCT07035093_population",
+      "quote": "* Have a body mass index (BMI) ≥27 kilograms per square meter (kg/m2) at screening",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Participants with Type 1 or Type 2 diabetes are excluded from trial NCT07035093.",
+      "evidence_id": "E_AACT_NCT07035093_population",
+      "quote": "* Have Type 1 Diabetes, Type 2 Diabetes, or any other type of diabetes",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT06859268 is a Phase 3b trial evaluating retatrutide for maintenance of weight reduction in 643 participants with obesity.",
+      "evidence_id": "E_AACT_NCT06859268",
+      "quote": "This is a study of retatrutide in participants with obesity. The main purpose is to learn more about how retatrutide maintains body weight loss.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial NCT06859268 is currently ongoing with enrollment closed.",
+      "evidence_id": "E_AACT_NCT06859268",
+      "quote": "This is a study of retatrutide in participants with obesity.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial NCT06859268 enrolls adults aged 18 years and older with obesity.",
+      "evidence_id": "E_AACT_NCT06859268_population",
+      "quote": "Have obesity and a history of at least one self-reported unsuccessful dietary effort to reduce body weight",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Patients with a history of obesity-related surgical treatment are excluded from NCT06859268.",
+      "evidence_id": "E_AACT_NCT06859268_population",
+      "quote": "Have a prior or planned surgical treatment for obesity",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT06662383 is a Phase 3 study comparing the efficacy and safety of retatrutide to tirzepatide in 800 adults with obesity.",
+      "evidence_id": "E_AACT_NCT06662383",
+      "quote": "A Phase 3, Randomized, Double-Blind Study to Evaluate the Efficacy and Safety of Retatrutide Compared to Tirzepatide in Adults Who Have Obesity",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial NCT06662383 uses tirzepatide as a comparator to retatrutide.",
+      "evidence_id": "E_AACT_NCT06662383",
+      "quote": "A Study of Retatrutide (LY3437943) Compared to Tirzepatide (LY3298176) in Adults Who Have Obesity",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Participants in NCT06662383 must be at least 18 years old and have a history of unsuccessful dietary efforts to lose weight.",
+      "evidence_id": "E_AACT_NCT06662383_population",
+      "quote": "* Have obesity and a history of at least one self-reported unsuccessful dietary effort to reduce body weight.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Patients who have had recent significant weight changes are excluded from NCT06662383.",
+      "evidence_id": "E_AACT_NCT06662383_population",
+      "quote": "* Have a self-reported change in body weight >5 kilograms (kg) (11 pounds) within 90 days before screening.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Patients with a personal or family history of medullary thyroid carcinoma or MEN-2 are excluded from NCT06662383.",
+      "evidence_id": "E_AACT_NCT06662383_population",
+      "quote": "* Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2).",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The Phase 1 trial NCT06313528 investigates the effect of LY3437943 on calorie intake and energy metabolism in 85 participants with obesity, compared to placebo.",
+      "evidence_id": "E_AACT_NCT06313528",
+      "quote": "The main purpose of the study is to look at the effect of the study drug compared to placebo on calorie intake, energy metabolism, and appetite.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial NCT06313528 enrolls participants with obesity aged 18 to 60 years.",
+      "evidence_id": "E_AACT_NCT06313528_population",
+      "quote": "Sex: ALL; age: 18 Years to 60 Years; healthy volunteers: not stated.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Inclusion criteria for trial NCT06313528 requires a BMI greater than 30 kg/m2.",
+      "evidence_id": "E_AACT_NCT06313528_population",
+      "quote": "* BMI greater than 30 kg/m2",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Exclusion criteria for trial NCT06313528 includes a history of Type 1 or Type 2 Diabetes.",
+      "evidence_id": "E_AACT_NCT06313528_population",
+      "quote": "* Type 1 or Type 2 Diabetes, history of ketoacidosis, or hyperosmolar state",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT05931367 is a phase 3 interventional study evaluating the efficacy and safety of retatrutide in 445 participants with obesity or overweight and osteoarthritis of the knee.",
+      "evidence_id": "E_AACT_NCT05931367",
+      "quote": "The main purpose of this study is to evaluate the safety and efficacy of retatrutide once-weekly in participants who have obesity or are overweight and have osteoarthritis (OA) of the knee.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The study population for NCT05931367 includes individuals aged 18 years and older with obesity or overweight and knee osteoarthritis.",
+      "evidence_id": "E_AACT_NCT05931367_population",
+      "quote": "Sex: ALL; age: 18 Years to not stated; healthy volunteers: not stated.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Participants are required to have a body mass index of at least 27 kg/m² at screening for trial NCT05931367.",
+      "evidence_id": "E_AACT_NCT05931367_population",
+      "quote": "* Have a body mass index (BMI) ≥27 kilogram/kg/m² at screening.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Participants with diabetes mellitus are excluded from trial NCT05931367.",
+      "evidence_id": "E_AACT_NCT05931367_population",
+      "quote": "* Have diabetes mellitus.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT05936151 is a phase 2b, interventional, 31-week study evaluating the effect of retatrutide compared to placebo on renal function in 146 participants with obesity or overweight and chronic kidney disease.",
+      "evidence_id": "E_AACT_NCT05936151",
+      "quote": "The main purpose of this study is to investigate the effect of retatrutide on renal function in participants with overweight or obesity and chronic kidney disease (CKD), with or without Type 2 Diabetes (T2D). The study will last around 31 weeks.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The study NCT05936151 is testing retatrutide in adults aged 18 and older with obesity or overweight and chronic kidney disease.",
+      "evidence_id": "E_AACT_NCT05936151_population",
+      "quote": "Sex: ALL; age: 18 Years to not stated; healthy volunteers: not stated.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Inclusion criteria for NCT05936151 require participants to have a BMI of at least 27 kg/m².",
+      "evidence_id": "E_AACT_NCT05936151_population",
+      "quote": "* Have a body mass index (BMI) ≥27 kilogram/square meter (kg/m²)",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Exclusion criteria for NCT05936151 include participants with a history of malignant disease within 5 years before screening.",
+      "evidence_id": "E_AACT_NCT05936151_population",
+      "quote": "* Have a history of malignant disease within 5 years before screening.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT05929079 is a Phase 3 study evaluating the efficacy and safety of retatrutide in 1152 participants with Type 2 diabetes and obesity or overweight.",
+      "evidence_id": "E_AACT_NCT05929079",
+      "quote": "The purpose of this study is to is to evaluate the efficacy and safety of retatrutide in participants with type 2 diabetes in participants who have obesity or overweight",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The study population includes adults 18 years or older with obesity or overweight and Type 2 diabetes.",
+      "evidence_id": "E_AACT_NCT05929079_population",
+      "quote": "sex: ALL; age: 18 Years to not stated; healthy volunteers: not stated.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Inclusion criteria for the study include having a BMI of 27.0 kg/m² or greater.",
+      "evidence_id": "E_AACT_NCT05929079_population",
+      "quote": "* Have a body mass index (BMI) greater than or equal to 27.0 kilogram/square meter (kg/m ²)",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Patients who have had a prior or planned surgical treatment for obesity are excluded from the study.",
+      "evidence_id": "E_AACT_NCT05929079_population",
+      "quote": "* Have a prior or planned surgical treatment for obesity.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The TRIUMPH-1 Phase 3 study evaluates the efficacy and safety of retatrutide in 2335 participants with obesity or overweight.",
+      "evidence_id": "E_AACT_NCT05929066",
+      "quote": "The purpose of this study is to evaluate the efficacy and safety of retatrutide in participants who have obesity or overweight (J1I-MC-GZBJ master protocol)",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The study population for the TRIUMPH-1 trial includes adults aged 18 years and older.",
+      "evidence_id": "E_AACT_NCT05929066_population",
+      "quote": "Sex: ALL; age: 18 Years to not stated",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "A key inclusion criterion for the TRIUMPH-1 trial is a BMI ≥30.0 kg/m², or ≥27.0 kg/m² with at least one weight-related condition.",
+      "evidence_id": "E_AACT_NCT05929066_population",
+      "quote": "* Have body mass index (BMI) ≥30.0 kilograms per square meter (kg/m²), or ≥27.0 kg/m² with at least one of the following:",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "A key exclusion criterion for the TRIUMPH-1 trial is a history of diabetes mellitus.",
+      "evidence_id": "E_AACT_NCT05929066_population",
+      "quote": "* Have diabetes mellitus.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT05882045 is a phase 3 interventional study investigating the efficacy and safety of retatrutide once weekly in 1,946 participants with obesity and cardiovascular disease.",
+      "evidence_id": "E_AACT_NCT05882045",
+      "quote": "The main purpose of this study is to evaluate the efficacy and safety of retatrutide once weekly in participants with obesity and established cardiovascular disease (CVD).",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial enrolls adults aged 18 years and older.",
+      "evidence_id": "E_AACT_NCT05882045_population",
+      "quote": "Sex: ALL; age: 18 Years to not stated",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "A key inclusion criterion is having a body mass index of at least 35 kg/m².",
+      "evidence_id": "E_AACT_NCT05882045_population",
+      "quote": "Have a body mass index (BMI) ≥35.0 kilogram/square meter (kg/m²).",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Individuals with type 1 diabetes are excluded from the study.",
+      "evidence_id": "E_AACT_NCT05882045_population",
+      "quote": "Have Type 1 diabetes.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Trial NCT05548231 is a Phase 1 study investigating the safety, tolerability, pharmacokinetics, and pharmacodynamics of LY3437943 in 32 Chinese participants with overweight or obesity.",
+      "evidence_id": "E_AACT_NCT05548231",
+      "quote": "The main purpose of this study is to learn about the safety and tolerability of LY3437943 when given to Chinese participants with overweight body mass index (BMI) or obesity.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Participants in trial NCT05548231 are native Chinese males or females aged 20 to 65 years with a BMI between 27 and 40 kg/m².",
+      "evidence_id": "E_AACT_NCT05548231_population",
+      "quote": "Are native Chinese males or females",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Trial NCT05548231 requires participants to have a body mass index of at least 27 kg/m² and at most 40 kg/m² for inclusion.",
+      "evidence_id": "E_AACT_NCT05548231_population",
+      "quote": "Have a body mass index of ≥27 and ≤40 kilograms per square meter (kg/m²)",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Trial NCT05548231 excludes participants with a history of liver disease.",
+      "evidence_id": "E_AACT_NCT05548231_population",
+      "quote": "Current or chronic history of liver disease.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT05445232 is a Phase 1 drug-drug interaction study of LY3437943 in 32 obese participants.",
+      "evidence_id": "E_AACT_NCT05445232",
+      "quote": "The main purpose of this study is to determine the effect of LY3437943 when administered subcutaneously on the levels of midazolam, warfarin and caffeine in the blood stream when administered orally as a drug cocktail in obese participants.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial enrolls participants between 18 and 70 years of age.",
+      "evidence_id": "E_AACT_NCT05445232_population",
+      "quote": "age: 18 Years to 70 Years",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Participants are required to have a body mass index (BMI) of 27.0 to 40.0 kg/m².",
+      "evidence_id": "E_AACT_NCT05445232_population",
+      "quote": "* Body mass index (BMI) within the range 27.0 to 40.0 kilograms per meter squared (kg/m²)",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The study excludes participants with a history or current diagnosis of diabetes.",
+      "evidence_id": "E_AACT_NCT05445232_population",
+      "quote": "* Have a history of diabetes or current diagnosis of diabetes",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "This Phase 2 trial evaluated the efficacy of once-weekly LY3437943 compared to placebo in 338 participants with obesity or who are overweight.",
+      "evidence_id": "E_AACT_NCT04881760",
+      "quote": "This is a study of LY3437943 in participants who have obesity or are overweight. The main purpose is to learn more about how LY3437943 affects body weight loss.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "In the 24-week analysis, 1 mg LY3437943 demonstrated a statistically significant mean percent body weight reduction compared to placebo with a difference of -5.64% (95% CI -7.34 to -3.94, p < 0.001).",
+      "evidence_id": "E_AACT_NCT04881760",
+      "quote": "Placebo vs 1 mg LY3437943: LS Mean difference (Final Values) -5.64 (95% CI -7.34 to -3.94), p < 0.001",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "In the 24-week analysis, 4 mg LY3437943 (2 mg titration) demonstrated a statistically significant mean percent body weight reduction compared to placebo with a difference of -10.45% (95% CI -12.21 to -8.7, p < 0.001).",
+      "evidence_id": "E_AACT_NCT04881760",
+      "quote": "Placebo vs 4 mg LY3437943 (2 mg): LS Mean difference (Final Values) -10.45 (95% CI -12.21 to -8.7), p < 0.001",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "In the 24-week analysis, 4 mg LY3437943 demonstrated a statistically significant mean percent body weight reduction compared to placebo with a difference of -12.25% (95% CI -14.42 to -10.08, p < 0.001).",
+      "evidence_id": "E_AACT_NCT04881760",
+      "quote": "Placebo vs 4 mg LY3437943: LS Mean difference (Final Values) -12.25 (95% CI -14.42 to -10.08), p < 0.001",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "The trial enrolled 338 participants with a mean age of 48 years and mean baseline BMI of 37.34 kg/m².",
+      "evidence_id": "E_AACT_NCT04881760_population",
+      "quote": "Total (N=338): ... Baseline Body Mass Index (BMI): MEAN 37.34 kilograms per meter squared (kg/m^2), STANDARD_DEVIATION 5.71 ... Age, Continuous: MEAN 48.00 years, STANDARD_DEVIATION 12.54",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Participants are required to have a BMI ≥30 and ≤50 kg/m² or ≥27 and <30 kg/m² with at least one obesity-related comorbidity.",
+      "evidence_id": "E_AACT_NCT04881760_population",
+      "quote": "* Participants must have a Body Mass Index (BMI) ) ≥30 and ≤50 kilograms per square meter (kg/m²), or ≥27 kg/m² and <30 kg/m², with at least one of the following comorbidities: hypertension, dyslipidemia, cardiovascular disease",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Participants with type 1 or type 2 diabetes mellitus are excluded from the trial.",
+      "evidence_id": "E_AACT_NCT04881760_population",
+      "quote": "* Participants must not have type 1 or type 2 diabetes mellitus",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "In the 12 mg LY3437943 (2 mg) group, 62 participants started the study and 54 completed it.",
+      "evidence_id": "E_AACT_NCT04881760_flow",
+      "quote": "12 mg LY3437943 (2 mg): started 62, completed 54",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Two participants in the 12 mg LY3437943 (2 mg) group discontinued the study due to an adverse event.",
+      "evidence_id": "E_AACT_NCT04881760_flow",
+      "quote": "12 mg LY3437943 (2 mg): Lost to Follow-up (4), Adverse Event (2), Withdrawal by Subject (2), Site Closure (0), Death (0), Inadvertent Enrollment (0)",
+      "stage": "safety_or_failure",
+      "direction": "contradicts",
+      "confidence": "high"
+    },
+    {
+      "claim": "The pre-approval expanded access program for retatrutide is available for adults with severe obesity and serious obesity-related complications.",
+      "evidence_id": "E_AACT_NCT07629401",
+      "quote": "Provide pre-approval single-patient expanded access of retatrutide (LY3437943), an investigational GLP-1/GIP/glucagon triple receptor agonist being studied for chronic weight management, for adults with severe obesity",
+      "stage": "regulatory",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Patients aged 18 years or older are eligible for the retatrutide expanded access program.",
+      "evidence_id": "E_AACT_NCT07629401_population",
+      "quote": "* Age 18 years or older.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Inclusion criteria for the expanded access program require patients to have a BMI of at least 35 kg/m2.",
+      "evidence_id": "E_AACT_NCT07629401_population",
+      "quote": "* Refractory obesity, defined as BMI >= 35 kg/m2 despite adherence to and tolerance of treatment with highest available dose of chronic weight management therapy.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Exclusion criteria for the expanded access program include any medical contraindication to retatrutide therapy.",
+      "evidence_id": "E_AACT_NCT07629401_population",
+      "quote": "* Medical contraindication to retatrutide therapy",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "A Phase 3, 5-year, randomized, double-blind, placebo-controlled study is ongoing to investigate the effect of retatrutide on MACE and kidney events in 10,000 participants with obesity and ASCVD or CKD.",
+      "evidence_id": "E_NCT06383390",
+      "quote": "A Phase 3, Randomized, Double-Blind, Placebo-Controlled, Event-Driven Study to Investigate the Effect of Retatrutide on the Incidence of Major Adverse Cardiovascular Events and Major Adverse Kidney Events in Participants With Body Mass Index ≥27 kg/m2 and Atherosclerotic Cardiovascular Disease and/or Chronic Kidney Disease",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NCT06039826 is a Phase 1 study evaluating the effect of subcutaneous LY3437943 on the pharmacokinetics of oral contraceptive ethinyl estradiol and drospirenone in 46 overweight or obese postmenopausal participants.",
+      "evidence_id": "E_NCT06039826",
+      "quote": "The main purpose of this study is to determine the effect of LY3437943 when administered subcutaneously on the levels of combined oral contraceptive (COC) ethinyl estradiol and drospirenone in the blood stream in postmenopausal female participants who are overweight or obese.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Semaglutide is being developed by Novo Nordisk A/S, Kailera, and Gan & Lee Pharmaceuticals with 25 active or planned Phase 3 obesity trials and a total planned enrollment of 16,073 participants.",
+      "evidence_id": "E_COMP_semaglutide",
+      "quote": "Competitor program in obesity: semaglutide has 25 registered Phase 3 trial(s) in obesity that are active or planned.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Tirzepatide has 17 registered Phase 3 trials in obesity that are active or planned, sponsored by Eli Lilly and Company, University of Virginia, and Woolcock Institute of Medical Research, with 22,178 planned participants.",
+      "evidence_id": "E_COMP_tirzepatide",
+      "quote": "Competitor program in obesity: tirzepatide has 17 registered Phase 3 trial(s) in obesity that are active or planned.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Orforglipron has 13 registered Phase 3 trials in obesity that are active or planned, sponsored by Eli Lilly and Company, with 12,143 planned participants.",
+      "evidence_id": "E_COMP_orforglipron",
+      "quote": "Competitor program in obesity: orforglipron has 13 registered Phase 3 trial(s) in obesity that are active or planned.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Maridebart cafraglutide has 11 registered Phase 3 trials in obesity that are active or planned, sponsored by Amgen, with a planned enrollment of 29,343 participants.",
+      "evidence_id": "E_COMP_maridebart_cafraglutide",
+      "quote": "Competitor program in obesity: maridebart cafraglutide has 11 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Amgen. Planned enrollment across these trials: 29343 participants.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "NNC0487-0111 has 10 registered Phase 3 trials in obesity that are active or planned, sponsored by Novo Nordisk A/S, with a planned enrollment of 10,796 participants.",
+      "evidence_id": "E_COMP_nnc0487_0111",
+      "quote": "Competitor program in obesity: nnc0487-0111 has 10 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Novo Nordisk A/S. Planned enrollment across these trials: 10796 participants.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Cagrilintide, sponsored by Novo Nordisk A/S, has 6 registered Phase 3 trials in obesity with a total planned enrollment of 5175 participants.",
+      "evidence_id": "E_COMP_cagrilintide",
+      "quote": "Competitor program in obesity: cagrilintide has 6 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Novo Nordisk A/S. Planned enrollment across these trials: 5175 participants.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Eloralintide, sponsored by Eli Lilly and Company, has 5 registered Phase 3 trials in obesity with a total planned enrollment of 5615 participants.",
+      "evidence_id": "E_COMP_eloralintide",
+      "quote": "Competitor program in obesity: eloralintide has 5 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Eli Lilly and Company. Planned enrollment across these trials: 5615 participants.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Gzr18 has 5 registered Phase 3 trials in obesity that are active or planned, with a lead sponsor of Gan & Lee Pharmaceuticals and a planned enrollment of 1830 participants.",
+      "evidence_id": "E_COMP_gzr18",
+      "quote": "Competitor program in obesity: gzr18 has 5 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Gan & Lee Pharmaceuticals.. Planned enrollment across these trials: 1830 participants.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Berobenatide has 5 registered Phase 3 trials in obesity that are active or planned, with a lead sponsor of Pfizer and a planned enrollment of 1595 participants.",
+      "evidence_id": "E_COMP_berobenatide",
+      "quote": "Competitor program in obesity: berobenatide has 5 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Pfizer. Planned enrollment across these trials: 1595 participants.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Zenagamtide, developed by Novo Nordisk A/S, has 4 registered Phase 3 trials in obesity with a total planned enrollment of 10,500 participants.",
+      "evidence_id": "E_COMP_zenagamtide",
+      "quote": "Competitor program in obesity: zenagamtide has 4 registered Phase 3 trial(s) in obesity that are active or planned.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Vk2735, developed by Viking Therapeutics, Inc., has 4 registered Phase 3 trials in obesity with a total planned enrollment of 6,720 participants.",
+      "evidence_id": "E_COMP_vk2735",
+      "quote": "Competitor program in obesity: vk2735 has 4 registered Phase 3 trial(s) in obesity that are active or planned.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Ribupatide, developed by Kailera and Fujian Shengdi Pharmaceutical Co., Ltd., has 4 registered Phase 3 trials in obesity with a total planned enrollment of 5,452 participants.",
+      "evidence_id": "E_COMP_ribupatide",
+      "quote": "Competitor program in obesity: ribupatide has 4 registered Phase 3 trial(s) in obesity that are active or planned.",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide has an extended plasma detection window of approximately 56 days after the first 2 mg dose in self-administering human users.",
+      "evidence_id": "E_MED_42745421",
+      "quote": "The extended plasma detection window, approximately 56 days after the first dose, supports plasma-based testing as a suitable analytical strategy for this and related long-acting therapeutic peptides",
+      "stage": "translation",
+      "direction": "neutral",
+      "confidence": "low"
+    },
+    {
+      "claim": "In subjects with obesity, retatrutide treatment resulted in weight loss of up to 26.56%.",
+      "evidence_id": "E_MED_41785010",
+      "quote": "Subjects with overweight or obesity experienced a greater weight loss by up to 26.56% (24.15 kg).",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Increased frequency of mild-to-moderate gastrointestinal adverse events such as nausea, vomiting, constipation, and diarrhea has been reported in patients on the highest retatrutide doses.",
+      "evidence_id": "E_MED_41785010",
+      "quote": "Increased frequency of mild-to-moderate gastrointestinal adverse events (mainly nausea, vomiting, constipation, and diarrhea) was reported in participants on the highest retatrutide doses",
+      "stage": "safety_or_failure",
+      "direction": "contradicts",
+      "confidence": "high"
+    },
+    {
+      "claim": "A Phase 2 obesity trial of retatrutide demonstrated a mean body-weight reduction of 24.2% at 48 weeks.",
+      "evidence_id": "E_MED_42792699",
+      "quote": "Retatrutide (LY3437943) is a once-weekly triple agonist of the GLP-1, glucose-dependent insulinotropic polypeptide (GIP), and glucagon receptors that produced a mean body-weight reduction of 24.2% at 48 weeks",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide has been associated with reports of dysesthesia in clinical trials.",
+      "evidence_id": "E_MED_42792699",
+      "quote": "Future studies should therefore characterize gastrointestinal tolerability, potential interaction with clozapine-associated gastrointestinal hypomotility, possible effects on clozapine and olanzapine exposure, adherence and feasibility, and the dysesthesia observed in retatrutide trials",
+      "stage": "safety_or_failure",
+      "direction": "contradicts",
+      "confidence": "medium"
+    },
+    {
+      "claim": "A man in his mid-30s with type 1 diabetes experienced severe gastrointestinal symptoms and metabolic distress after self-administering an online-purchased product marketed as retatrutide.",
+      "evidence_id": "E_MED_42669023",
+      "quote": "We report a man in his mid-30s with longstanding type 1 diabetes mellitus who presented with severe vomiting, diarrhoea, hyperglycaemia, ketonaemia and acute kidney injury shortly after self-administering an online-purchased product marketed as retatrutide for weight loss.",
+      "stage": "safety_or_failure",
+      "direction": "contradicts",
+      "confidence": "low"
+    },
+    {
+      "claim": "Retatrutide is a triple agonist of the GIP, GLP-1, and glucagon receptors currently being investigated for obesity and type 2 diabetes.",
+      "evidence_id": "E_MED_42669023",
+      "quote": "Retatrutide is a novel triple agonist of the glucose-dependent insulinotropic polypeptide, glucagon-like peptide-1 and glucagon receptors currently being investigated for obesity and type 2 diabetes mellitus",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Pediatric data for retatrutide in adolescent obesity remain limited or unavailable.",
+      "evidence_id": "E_MED_42318576",
+      "quote": "Dual agonists such as tirzepatide and emerging triple agonists, including retatrutide, have shown superior weight-loss efficacy in adult populations; however, pediatric data for these agents remain limited or unavailable.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "In phase 2 trials of adults with obesity and/or T2D, retatrutide was associated with significant reductions in various atherogenic lipoproteins.",
+      "evidence_id": "E_MED_42608321",
+      "quote": "In both studies, retatrutide was associated with significant reductions in non-high-density lipoprotein cholesterol (Study 1: up to -21.0%, Study 2: up to -26.9%), apolipoprotein B (-21.4%, -24.2%)",
+      "stage": "translation",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "A meta-analysis indicated that retatrutide treatment was linked to a weight loss reaching up to -24.2% in patients with diabetes, obesity, and CKD.",
+      "evidence_id": "E_MED_41537067",
+      "quote": "A significant mean reduction in HbA1c of -1.04% (95% CI -1.42 to -0.67) and a noticeable loss in weight, reaching up to -24.2%, were both linked with retatrutide treatment.",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Gastrointestinal adverse events are the most commonly reported side effects associated with retatrutide.",
+      "evidence_id": "E_MED_41537067",
+      "quote": "The safety profile is primarily characterized by gastrointestinal adverse events, which is anticipated for this drug class.",
+      "stage": "safety_or_failure",
+      "direction": "contradicts",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide 9 mg and 12 mg demonstrated superior bodyweight reduction compared to placebo in adults with obesity and type 2 diabetes in the TRIUMPH-2 phase 3 trial.",
+      "evidence_id": "E_MED_42810372",
+      "quote": "The primary endpoint was the percentage change from baseline to week 80 in bodyweight for the retatrutide 9 mg and 12 mg doses versus placebo",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Permanent treatment discontinuation due to adverse events was more frequent with retatrutide 9 mg (12%) and 12 mg (8%) compared to placebo (5%) in the TRIUMPH-2 trial.",
+      "evidence_id": "E_MED_42810372",
+      "quote": "Permanent treatment discontinuation due to adverse events or death was more frequent in participants treated with retatrutide 9 mg (33 [12%]) and 12 mg (22 [8%]) compared with retatrutide 4 mg (11 [4%]) and placebo (14 [5%])",
+      "stage": "safety_or_failure",
+      "direction": "contradicts",
+      "confidence": "high"
+    },
+    {
+      "claim": "In the TRIUMPH-1 trial, retatrutide achieved a mean body weight reduction of -25.0% at the 12 mg dose versus -3.9% in the placebo group.",
+      "evidence_id": "E_MED_42814954",
+      "quote": "The mean percent change in body weight in the retatrutide groups was -17.6% (4-mg dose), -23.7% (9-mg dose), and -25.0% (12-mg dose) versus -3.9% in the placebo group",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide reduced pain scores in obese participants with knee osteoarthritis in the TRIUMPH-1 trial.",
+      "evidence_id": "E_MED_42814954",
+      "quote": "Among the participants with knee osteoarthritis, the corresponding changes in the pain score in the retatrutide groups for the hybrid estimand were -3.2, -3.5, and -3.6 versus -1.9 with placebo",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide is a triple agonist targeting GIP, GLP-1, and glucagon receptors.",
+      "evidence_id": "E_MED_42814954",
+      "quote": "Retatrutide is a triple-receptor agonist of glucose-dependent insulinotropic polypeptide, glucagon-like peptide-1, and glucagon receptors.",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide is being developed as a potential treatment for obesity and associated metabolic conditions.",
+      "evidence_id": "E_MED_42165732",
+      "quote": "Dual GIP/GLP-1 agonist tirzepatide and triple agonist retatrutide have shown unprecedented efficacy, with up to 24% body weight reduction and improvement in hepatic and inflammatory markers.",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide is a triple agonist targeting GIP, GLP-1, and glucagon receptors designed to achieve weight loss.",
+      "evidence_id": "E_MED_42530676",
+      "quote": "synergistic targeting of a third G protein-coupled receptor (GPCR), namely the gastric inhibitory polypeptide receptor (GIPR), may achieve optimal control of blood glucose levels and weight loss",
+      "stage": "mechanism",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "A single case report describes a patient with Prader-Willi syndrome who achieved 58.8% weight loss after 18 months of sequential treatment including retatrutide.",
+      "evidence_id": "E_MED_42751099",
+      "quote": "At 18 months, total weight loss reached 58.8% (-108.7 kg), with HbA1c of 4.9% (SI: 30 mmol/mol), consistent with diabetes remission",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "low"
+    },
+    {
+      "claim": "In a mouse model, weight loss intervention using the triple agonist LY3437943 significantly attenuated atrial fibrillation inducibility.",
+      "evidence_id": "E_MED_42156758",
+      "quote": "Therapeutic interventions promoting lymphangiogenesis, either through VEGFC administration or weight loss intervention by LY3437943 (the novel triple GIP, GLP-1, and glucagon receptor agonist), significantly attenuate atrial fibrillation inducibility.",
+      "stage": "mechanism",
+      "direction": "supports",
+      "confidence": "medium"
+    },
+    {
+      "claim": "In a network meta-analysis of adults without diabetes, retatrutide showed the greatest weight loss at -22.10% compared to placebo.",
+      "evidence_id": "E_MED_42688617",
+      "quote": "Compared with placebo, weight loss was greatest with retatrutide (-22.10%, 95% confidence interval -25.60% to -18.60%)",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Low certainty evidence suggests higher rates of treatment discontinuation with retatrutide compared to other treatments in a network meta-analysis.",
+      "evidence_id": "E_MED_42688617",
+      "quote": "Low certainty evidence suggested higher rates for discontinuing treatment with danuglipron and retatrutide",
+      "stage": "safety_or_failure",
+      "direction": "contradicts",
+      "confidence": "medium"
+    },
+    {
+      "claim": "Retatrutide significantly increased MASH resolution or histological improvement compared to placebo in a meta-analysis of clinical trials.",
+      "evidence_id": "E_MED_42529769",
+      "quote": "The included GLP-1-based polyagonists-tirzepatide, survodutide, pemvidutide, retatrutide, and cotadutide-significantly increased MASH resolution or histological improvement without worsening of fibrosis",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "In a meta-analysis, polyagonist treatments including retatrutide showed no statistically significant difference in serious adverse events versus placebo.",
+      "evidence_id": "E_MED_42529769",
+      "quote": "Nausea, diarrhea, and vomiting were more frequent with polyagonists, but no statistically significant differences were observed in serious adverse events or adverse events leading to treatment discontinuation.",
+      "stage": "safety_or_failure",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide is a triple hormone receptor agonist that demonstrated weight loss efficacy in obesity trials compared to placebo.",
+      "evidence_id": "E_MED_39817343",
+      "quote": "Retatrutide is a novel triple hormone receptor agonist which has shown great promise in tackling obesity in preliminary trials.",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide safety profile in analyzed clinical trials was comparable to the placebo control group.",
+      "evidence_id": "E_MED_39817343",
+      "quote": "The safety profile of retatrutide was found to be comparable to the control group.",
+      "stage": "safety_or_failure",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "In diet-induced obese male rats, co-administration of retatrutide and cagrilintide produces dose-dependent reductions in body weight and food intake.",
+      "evidence_id": "E_MED_42744908",
+      "quote": "Daily co-administration produces dose-dependent reductions in body weight and food intake that exceed both equimolar monotherapies and matched-dose comparator combinations",
+      "stage": "mechanism",
+      "direction": "supports",
+      "confidence": "medium"
+    },
+    {
+      "claim": "The combination of retatrutide and cagrilintide in obese rats improves circulating markers of metabolic health.",
+      "evidence_id": "E_MED_42744908",
+      "quote": "The combination therapy also improves circulating markers of metabolic health, including cholesterol, triglycerides and insulin levels.",
+      "stage": "mechanism",
+      "direction": "supports",
+      "confidence": "medium"
+    },
+    {
+      "claim": "Retatrutide is a triple agonist targeting GLP-1, GIP, and glucagon pathways.",
+      "evidence_id": "E_MED_41297910",
+      "quote": "retatrutide (GLP-1/GIP/glucagon triple agonist) have achieved unprecedented levels of weight loss and glycemic improvement",
+      "stage": "mechanism",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "In a phase 2 trial, retatrutide was compared against dulaglutide in participants with obesity and type 2 diabetes.",
+      "evidence_id": "E_MED_42135195",
+      "quote": "T2D trial: retatrutide (0.5, 4, 8, 12 mg) or placebo or dulaglutide (1.5 mg).",
+      "stage": "competition",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide treatment was associated with improvements in metabolic health-related lipid and metabolite clusters in phase 2 trials.",
+      "evidence_id": "E_MED_42135195",
+      "quote": "Retatrutide was associated with changes in two metabolic clusters related to fatty acid oxidation and insulin resistance in a direction associated with improved metabolic health and reduced cardiovascular risk.",
+      "stage": "translation",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide is a triple hormone receptor agonist targeting glucagon, GLP-1, and GIP receptors.",
+      "evidence_id": "E_MED_39507873",
+      "quote": "Retatrutide, a hormone receptor agonist targeting glucagon, glucagon-like peptide 1, and glucose-dependent insulinotropic polypeptide, is being developed to treat obesity.",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Phase II trials of retatrutide in obesity have shown up to 24% body weight reduction.",
+      "evidence_id": "E_MED_39507873",
+      "quote": "Phase I proof-of-concept studies led to phase II trials showing up to 24% body weight reduction and nearly 20 cm waist circumference reduction.",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Gastrointestinal adverse effects are the most common adverse effects associated with retatrutide.",
+      "evidence_id": "E_MED_39507873",
+      "quote": "The most common adverse effects were gastrointestinal.",
+      "stage": "safety_or_failure",
+      "direction": "contradicts",
+      "confidence": "medium"
+    },
+    {
+      "claim": "In pre-clinical cancer models, retatrutide reduced pancreatic cancer engraftment and tumor volume.",
+      "evidence_id": "E_MED_40094000",
+      "quote": "In pre-clinical models with significant retatrutide (RETA, LY3437943)-induced weight loss, pancreatic cancer engraftment was reduced, tumor onset was delayed, and progression was attenuated resulting in a 14-fold reduction in tumor volume compared to only 4-fold reduction in single agonist semaglutide-treated mice.",
+      "stage": "mechanism",
+      "direction": "supports",
+      "confidence": "medium"
+    },
+    {
+      "claim": "Retatrutide treatment in pre-clinical lung cancer models reduced tumor engraftment and volume.",
+      "evidence_id": "E_MED_40094000",
+      "quote": "RETA-induced protection extends to a lung cancer model with 50% reduced tumor engraftment, significantly delayed tumor onset, and mitigated tumor progression, with a 17-fold reduction in tumor volume compared to controls.",
+      "stage": "mechanism",
+      "direction": "supports",
+      "confidence": "medium"
+    },
+    {
+      "claim": "In murine models, retatrutide inhibited PI3K-AKT and NF-κB pathways in non-diabetic renal fibrosis.",
+      "evidence_id": "E_MED_42630988",
+      "quote": "In the UUO model, semaglutide effects were associated with PI3K-AKT inhibition, tirzepatide effects with PI3K-AKT inhibition and PPAR pathway activation, and retatrutide effects with concurrent inhibition of both PI3K-AKT and NF-κB pathways.",
+      "stage": "mechanism",
+      "direction": "supports",
+      "confidence": "medium"
+    },
+    {
+      "claim": "Retatrutide increased force of contraction in isolated human atrial preparations in a concentration-dependent manner.",
+      "evidence_id": "E_MED_40613938",
+      "quote": "We noted that cumulatively applied retatrutide starting at 10 nM (up to 100 nM the highest concentration tested) elevated FOC in HAP in a concentration- and time-dependent manner.",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "medium"
+    },
+    {
+      "claim": "The TRANSCEND-CKD study evaluates the efficacy of retatrutide on glomerular filtration rate in adults with overweight/obesity and chronic kidney disease.",
+      "evidence_id": "E_MED_41160422",
+      "quote": "TRANSCEND-CKD is a double-blind, placebo-controlled, Phase 2b mechanistic study evaluating the efficacy of retatrutide in adults with overweight/obesity and CKD [estimated glomerular filtration rate (eGFR) 25-75 mL/min/1.73 m2], with and without T2D.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide is a novel triple receptor agonist targeting GLP-1, GIP, and glucagon receptors for the treatment of obesity and type 2 diabetes.",
+      "evidence_id": "E_MED_40563436",
+      "quote": "Retatrutide, a novel triple receptor agonist targeting glucagon-like peptide-1 (GLP-1), Glucose-Dependent Insulinotropic Polypeptide (GIP), and glucagon receptors, represents a groundbreaking advancement in obesity and T2DM pharmacotherapy.",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide demonstrates dose-dependent weight loss and improvements in glycemic control in Phase 1 and 2 clinical trials.",
+      "evidence_id": "E_MED_40563436",
+      "quote": "Phase I and II clinical trials corroborate these findings, showing dose-dependent weight loss, reductions in Glycated Hemoglobin (HbA1c) levels, and improvements in liver steatosis and diabetic kidney disease.",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide has a mean half-life of approximately 6 days, supporting once-weekly dosing.",
+      "evidence_id": "E_MED_39724554",
+      "quote": "The pharmacokinetics of retatrutide were dose proportional and its mean half-life of approximately 6 days supported a once-weekly dosing.",
+      "stage": "translation",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Clinical trials for retatrutide have shown that gastrointestinal disorders are the most common adverse effects.",
+      "evidence_id": "E_MED_39724554",
+      "quote": "The safety profile was similar to GLP-1R agonists and glucose-dependent insulinotropic polypeptide receptor/GLP-1R co-agonists, with gastrointestinal disorders being the most common adverse effects reported.",
+      "stage": "safety_or_failure",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide displays a robust intrinsic receptor activity hierarchy of GIPR > GLP-1R > GCGR.",
+      "evidence_id": "E_PPR_PPR1310001",
+      "quote": "Retatrutide showed a highly robust intrinsic GIPR>GLP-1R>GCGR hierarchy, while its quantitative human activation vector remained underidentified.",
+      "stage": "translation",
+      "direction": "neutral",
+      "confidence": "medium"
+    },
+    {
+      "claim": "Early clinical data for retatrutide indicate potential hepatoprotective effects in patients with MASLD.",
+      "evidence_id": "E_MED_42195239",
+      "quote": "Emerging agents like cotadutide (a GLP-1/glucagon receptor agonist) and retatrutide (a GLP-1/GIP/glucagon triagonist) represent a novel therapeutic frontier, with early clinical data indicating potent hepatoprotective effects and favorable metabolic remodeling.",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "medium"
+    },
+    {
+      "claim": "In US adults, overall obesity prevalence increased from 46.7% to 61.7% between 1999 and 2018.",
+      "evidence_id": "E_MED_42056948",
+      "quote": "Overall obesity prevalence rose from 46.7% to 61.7%",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Clinical obesity in US adults was associated with a 1.46 hazard ratio for all-cause mortality compared to preclinical obesity.",
+      "evidence_id": "E_MED_42056948",
+      "quote": "Clinical obesity was associated with significantly higher risks of all-cause (HR 1.46, 95% CI 1.29–1.66) and cardiovascular (HR 1.65, 95% CI 1.29–2.10) mortality versus preclinical obesity.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Combined overweight and obesity prevalence among US midlife women aged 40-64 years increased from 49.2% in 1990 to 74.2% in 2021.",
+      "evidence_id": "E_MED_41805450",
+      "quote": "Combined overweight/obesity prevalence increased from 49.2% (95% uncertainty interval (UI) 45.8-52.2; 17.7 million (95% UI 16.5-18.8 million)) in 1990 to 74.2% (95% UI 68.8-79.1; 33.4 million (95% UI 31.0-35.6 million)) in 2021",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Among US antiobesity medication users, 38.1% were classified as having pre-clinical obesity.",
+      "evidence_id": "E_MED_42159196",
+      "quote": "Of AOM users, 38.1% (n = 53,633) had pre-clinical obesity.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Clinical obesity in patients receiving bariatric surgery or antiobesity medications was associated with higher odds of post-treatment complications compared to pre-clinical obesity.",
+      "evidence_id": "E_MED_42159196",
+      "quote": "Clinical obesity was associated with higher odds of post-treatment complications (AOM: aOR 1.10, BS: aOR 1.39, both p < 0.001).",
+      "stage": "safety_or_failure",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The age-standardized prevalence of clinical obesity in US adults nearly doubled from 14.3% in 1999-2000 to 26.6% in 2021-2023.",
+      "evidence_id": "E_MED_41734890",
+      "quote": "age-standardized prevalence of clinical obesity nearly doubled (14.3% to 26.6%; p < 0.001)",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "In the United States, the prevalence of adult obesity was 40.3% in 2021-2023.",
+      "evidence_id": "E_MED_41927053",
+      "quote": "prevalence falling to 40.3% in 2021-2023",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "In 2021, the prevalence of overweight and obesity in the United States ranged from 55.4% to 73.6% across jurisdictions.",
+      "evidence_id": "E_MED_42611392",
+      "quote": "mean O/OV prevalence was 67.72%, ranging from 55.4% in DC to 73.6% in WV",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "In a cross-sectional analysis of US adults from 2003-2004 and 2011-2014, higher serum DHA levels were associated with lower odds of central obesity.",
+      "evidence_id": "E_MED_42548312",
+      "quote": "DHA was significantly associated with lower odds of central obesity (OR: 0·83, 95 % CI: 0·73-0·95)",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Network pharmacology analysis suggests DHA may act through TNF and IL-17 signaling pathways in the context of obesity-associated comorbidities.",
+      "evidence_id": "E_MED_42548312",
+      "quote": "Mechanistic exploration implicated DHA in TNF and IL-17 signalling pathways",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "medium"
+    },
+    {
+      "claim": "In 2021, high BMI globally contributed to 5255 thyroid cancer-related deaths.",
+      "evidence_id": "E_MED_41986900",
+      "quote": "In 2021, high BMI contributed to 5255 thyroid cancer-related deaths (age-standardised mortality rate: 0.06 per 100 000) and 144 955 DALYs (age-standardised rate: 1.68 per 100 000)",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The overall prevalence of clinical obesity among US adults from 2017 to 2020 was 9.7%.",
+      "evidence_id": "E_MED_40660751",
+      "quote": "Among 8037 participants, the overall prevalence of clinical obesity was 9.7% (95% CI, 8.9%-10.5%), with comparable prevalence in males (9.8%) and in females (9.6%).",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "No drug label records for retatrutide were found in the openFDA database.",
+      "evidence_id": "E_FDA_absent_retatrutide",
+      "quote": "No drug label records matching 'retatrutide' were found in the openFDA drug label database (search by generic name, brand name and substance name).",
+      "stage": "regulatory",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The FDA label for Orforglipron mentions the term obesity or weight management, but this does not confirm it is indicated for obesity.",
+      "evidence_id": "E_FDA_indication_obesity",
+      "quote": "Drug names (openFDA generic name) whose FDA label text in the indications section contains any of these phrases: 'obesity', 'weight management', 'excess body weight'. Drugs found: AMPHETAMINE; AMPHETAMINE SULFATE; AMPHETAMINE SULFATE TABLETS; ASTHMA DROPS; BENZPHETAMINE HYDROCHLORIDE; CHOLESTYRAMINE; CHOLESTYRAMINE FOR ORAL SUSPENSION; CHOLESTYRAMINE LIGHT; CHOLESTYRAMINE POWDER FOR SUSPENSION; CHOLEYSTYRAMINE LIGHT; CHORIOGONADOTROPIN ALFA; CHORIONIC GONADOTROPIN; DIETHYLPROPION HYDROCHLORIDE; DIETHYLPROPION HYDROCHLORIDE ER; FENOFIBRATE; GEMFIBROZIL; ISONIAZID; LIRAGLUTIDE; LISDEXAMFETAMINE; LISDEXAMFETAMINE DIMESYLATE; LISDEXAMFETAMINE DIMESYLATE CAPSULES; LISDEXAMFETAMINE DIMESYLATE ORAL; NALTREXONE HYDROCHLORIDE AND BUPROPION HYDROCHLORIDE; ORFORGLIPRON; ORLISTAT; PHENDIMETRAZINE TARTRATE; PHENTERMINE AND TOPIRAMATE; PHENTERMINE AND TOPIRAMATE EXTENDED-RELEASE; PHENTERMINE HCL C-IV; PHENTERMINE HYDROCHLORIDE; RAUWOLFIA COMBINATION; SEMAGLUTIDE; SETMELANOTIDE; TIRZEPATIDE.",
+      "stage": "regulatory",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide is a glucagon receptor agonist.",
+      "evidence_id": "E_OT_drug_CHEMBL5095485",
+      "quote": "Glucagon receptor agonist (action type: AGONIST; target: Glucagon receptor)",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide is a glucagon-like peptide 1 receptor agonist.",
+      "evidence_id": "E_OT_drug_CHEMBL5095485",
+      "quote": "Glucagon-like peptide 1 receptor agonist (action type: AGONIST; target: Glucagon-like peptide 1 receptor)",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "Retatrutide is a gastric inhibitory polypeptide receptor agonist.",
+      "evidence_id": "E_OT_drug_CHEMBL5095485",
+      "quote": "Gastric inhibitory polypeptide receptor agonist (action type: AGONIST; target: Gastric inhibitory polypeptide receptor)",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The GCGR receptor plays a role in blood glucose regulation and glucose homeostasis.",
+      "evidence_id": "E_OT_target_ENSG00000215644",
+      "quote": "G protein-coupled receptor for glucagon that plays a central role in the regulation of blood glucose levels and glucose homeostasis",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The GCGR target is associated with obesity disorder with an overall association score of 0.419.",
+      "evidence_id": "E_OT_assoc_ENSG00000215644_MONDO_0011122",
+      "quote": "Open Targets association between target GCGR (glucagon receptor) and disease obesity disorder: overall association score 0.419 (scale 0 to 1)",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "GLP1R functions as a G protein-coupled receptor that triggers a signaling cascade to increase intracellular cAMP levels upon ligand binding.",
+      "evidence_id": "E_OT_target_ENSG00000112164",
+      "quote": "Ligand binding triggers activation of a signaling cascade that leads to the activation of adenylyl cyclase and increased intracellular cAMP levels",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The GLP1R target has an overall association score of 0.717 with obesity disorder, with a clinical evidence score of 0.994.",
+      "evidence_id": "E_OT_assoc_ENSG00000112164_MONDO_0011122",
+      "quote": "Open Targets association between target GLP1R (glucagon like peptide 1 receptor) and disease obesity disorder: overall association score 0.717 (scale 0 to 1). Scores by evidence type: clinical 0.994",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The GLP1R target has an overall association score of 0.489 with morbid obesity.",
+      "evidence_id": "E_OT_assoc_ENSG00000112164_MONDO_0005139",
+      "quote": "Open Targets association between target GLP1R (glucagon like peptide 1 receptor) and disease morbid obesity: overall association score 0.489 (scale 0 to 1).",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "GIPR functions as a receptor for GIP, activating adenylyl cyclase through G proteins.",
+      "evidence_id": "E_OT_target_ENSG00000010310",
+      "quote": "The activity of this receptor is mediated by G proteins which activate adenylyl cyclase.",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "The GIPR target is associated with obesity disorder with a score of 0.736.",
+      "evidence_id": "E_OT_target_ENSG00000010310",
+      "quote": "Top associated diseases: obesity disorder (score 0.736); type 2 diabetes mellitus (score 0.696); Overweight (score 0.516); morbid obesity (score 0.493)",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "GIPR has an overall association score of 0.736 with obesity disorder.",
+      "evidence_id": "E_OT_assoc_ENSG00000010310_MONDO_0011122",
+      "quote": "Open Targets association between target GIPR (gastric inhibitory polypeptide receptor) and disease obesity disorder: overall association score 0.736 (scale 0 to 1).",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    },
+    {
+      "claim": "GIPR has an overall association score of 0.493 with morbid obesity.",
+      "evidence_id": "E_OT_assoc_ENSG00000010310_MONDO_0005139",
+      "quote": "Open Targets association between target GIPR (gastric inhibitory polypeptide receptor) and disease morbid obesity: overall association score 0.493 (scale 0 to 1).",
+      "stage": "mechanism",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  ]
+}

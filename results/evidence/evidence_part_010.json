@@ -1,0 +1,70 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 10,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_AACT_NCT05929079",
+      "source_type": "nct_aact",
+      "source_id": "NCT05929079",
+      "url": "https://clinicaltrials.gov/study/NCT05929079",
+      "title": "A Master Protocol to Investigate the Efficacy and Safety of LY3437943 Once Weekly in Participants With Type 2 Diabetes Mellitus Who Have Obesity or Overweight: A Randomized Double-Blind, Placebo-Controlled Trial",
+      "text": "The purpose of this study is to is to evaluate the efficacy and safety of retatrutide in participants with type 2 diabetes in participants who have obesity or overweight (J1I-MC-GZBK master protocol) including a subset of participants who have obstructive sleep apnea (OSA) (J1I-MC-GSA2). The study will last about 89 weeks and will include up to 24 visits.",
+      "meta": {
+        "brief_title": "A Study of Retatrutide (LY3437943) in Participants With Type 2 Diabetes Mellitus Who Have Obesity or Overweight",
+        "status": "COMPLETED",
+        "why_stopped": null,
+        "phase": "PHASE3",
+        "study_type": "INTERVENTIONAL",
+        "enrollment": 1152,
+        "start_date": "2023-07-11",
+        "primary_completion": "2026-06-16",
+        "completion": "2026-06-16",
+        "results_submitted": null,
+        "has_results": false,
+        "has_primary_results_in_text": false,
+        "conditions": [
+          "Obesity",
+          "Obstructive Sleep Apnea",
+          "Overweight",
+          "Type 2 Diabetes"
+        ],
+        "interventions": [
+          "Placebo",
+          "Retatrutide"
+        ],
+        "lead_sponsor": "Eli Lilly and Company",
+        "primary_outcomes": [
+          "Percent Change from Baseline in Body Weight",
+          "Change from Baseline in Apnea-Hypopnea Index (AHI) for GSA2 Subset"
+        ],
+        "primary_analyses": [],
+        "getter": "aact",
+        "also_found_in": [
+          "nct"
+        ]
+      }
+    },
+    {
+      "id": "E_AACT_NCT05929079_population",
+      "source_type": "nct_aact_population",
+      "source_id": "NCT05929079",
+      "url": "https://clinicaltrials.gov/study/NCT05929079",
+      "title": "Population and eligibility: A Study of Retatrutide (LY3437943) in Participants With Type 2 Diabetes Mellitus Who Have Obesity or Overweight",
+      "text": "Population and eligibility for trial NCT05929079 (A Study of Retatrutide (LY3437943) in Participants With Type 2 Diabetes Mellitus Who Have Obesity or Overweight). Eligible population: not stated. Sex: ALL; age: 18 Years to not stated; healthy volunteers: not stated. Inclusion criteria: * Have a body mass index (BMI) greater than or equal to 27.0 kilogram/square meter (kg/m ²) * Have Type 2 Diabetes (T2D) * Are on stable treatment for T2D for at least 90 days * Have a history of at least one unsuccessful dietary effort to lose body weight. GSA2 Inclusion Criteria * Previously diagnosed with OSA * Have AHI ≥15 on polysomnography at screening (definition of moderate-to-severe OSA) * For participants not on positive airway pressure (PAP) therapy: unable or unwilling to use PAP therapy and have not used PAP for at least 4 weeks prior to screening. Exclusion criteria: * Have a self-reported or documented change in body weight \\>5 kg (11 pounds) within 90 days. * Have taken weight loss drugs, including over-the-counter medications, within 90 days prior to screening. * Have a prior or planned surgical treatment for obesity. * Have Type 1 diabetes * Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2) * Have had pancreatitis GSA2 Exclusion Criteria * Use stimulants (for example, modafinil, armodafinil, solriamfetol, pitolisant, amphetamine) less than 3 months prior to screening. * Use hypnotics, mirtazapine, opioids, trazodone, and zonisamide less than 3 months prior to screening.",
+      "meta": {
+        "record_kind": "population",
+        "nct_id": "NCT05929079",
+        "sex": "ALL",
+        "min_age": "18 Years",
+        "max_age": null,
+        "healthy_volunteers": false,
+        "has_baseline_data": false,
+        "getter": "aact"
+      }
+    }
+  ]
+}

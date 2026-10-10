@@ -1,0 +1,146 @@
+[
+  {
+    "reason": "numbers ['27'] are in the record, but not in the claim quote or in meta",
+    "claim": {
+      "claim": "The trial requires a BMI of at least 30 kg/m2 or at least 27 kg/m2 with a weight-related condition for inclusion.",
+      "evidence_id": "E_AACT_NCT07357415_population",
+      "quote": "≥ 30 kilogram per square meter (kg/m2) OR",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "Patients with a personal or family history of medullary thyroid carcinoma or multiple endocrine neoplasia syndrome type 2 are excluded from the study.",
+      "evidence_id": "E_AACT_NCT07232719_population",
+      "quote": "Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2)",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "Patients with a personal or family history of medullary thyroid carcinoma or MEN-2 are excluded from NCT06662383.",
+      "evidence_id": "E_AACT_NCT06662383_population",
+      "quote": "* Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2).",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "numbers ['27'] are in the record, but not in the claim quote or in meta",
+    "claim": {
+      "claim": "A key inclusion criterion for the TRIUMPH-1 trial is a BMI ≥30.0 kg/m², or ≥27.0 kg/m² with at least one weight-related condition.",
+      "evidence_id": "E_AACT_NCT05929066_population",
+      "quote": "* Have body mass index (BMI) ≥30.0 kilograms per square meter (kg/m²)",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high",
+      "quote_trimmed": true
+    }
+  },
+  {
+    "reason": "numbers ['27', '40'] are in the record, but not in the claim quote or in meta",
+    "claim": {
+      "claim": "Participants in trial NCT05548231 are native Chinese males or females aged 20 to 65 years with a BMI between 27 and 40 kg/m².",
+      "evidence_id": "E_AACT_NCT05548231_population",
+      "quote": "Are native Chinese males or females",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: single case in a cohort without comparison to a control",
+    "claim": {
+      "claim": "Two participants in the 12 mg LY3437943 (2 mg) group discontinued the study due to an adverse event.",
+      "evidence_id": "E_AACT_NCT04881760_flow",
+      "quote": "12 mg LY3437943 (2 mg): Lost to Follow-up (4), Adverse Event (2), Withdrawal by Subject (2), Site Closure (0), Death (0), Inadvertent Enrollment (0)",
+      "stage": "safety_or_failure",
+      "direction": "contradicts",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "Retatrutide has an extended plasma detection window of approximately 56 days after the first 2 mg dose in self-administering human users.",
+      "evidence_id": "E_MED_42745421",
+      "quote": "The extended plasma detection window, approximately 56 days after the first dose, supports plasma-based testing as a suitable analytical strategy for this and related long-acting therapeutic peptides",
+      "stage": "translation",
+      "direction": "neutral",
+      "confidence": "low"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "Clinical obesity in US adults was associated with a 1.46 hazard ratio for all-cause mortality compared to preclinical obesity.",
+      "evidence_id": "E_MED_42056948",
+      "quote": "Clinical obesity was associated with significantly higher risks of all-cause (HR 1.46, 95% CI 1.29–1.66) and cardiovascular (HR 1.65, 95% CI 1.29–2.10) mortality versus preclinical obesity.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "numbers ['40', '64'] are in the record, but not in the claim quote or in meta",
+    "claim": {
+      "claim": "Combined overweight and obesity prevalence among US midlife women aged 40-64 years increased from 49.2% in 1990 to 74.2% in 2021.",
+      "evidence_id": "E_MED_41805450",
+      "quote": "Combined overweight/obesity prevalence increased from 49.2% (95% uncertainty interval (UI) 45.8-52.2; 17.7 million (95% UI 16.5-18.8 million)) in 1990 to 74.2% (95% UI 68.8-79.1; 33.4 million (95% UI 31.0-35.6 million)) in 2021",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "quote not found in the record",
+    "claim": {
+      "claim": "The age-standardized prevalence of clinical obesity in US adults nearly doubled from 14.3% in 1999-2000 to 26.6% in 2021-2023.",
+      "evidence_id": "E_MED_41734890",
+      "quote": "age-standardized prevalence of clinical obesity nearly doubled (14.3% to 26.6%; p < 0.001)",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "In a cross-sectional analysis of US adults from 2003-2004 and 2011-2014, higher serum DHA levels were associated with lower odds of central obesity.",
+      "evidence_id": "E_MED_42548312",
+      "quote": "DHA was significantly associated with lower odds of central obesity (OR: 0·83, 95 % CI: 0·73-0·95)",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "In 2021, high BMI globally contributed to 5255 thyroid cancer-related deaths.",
+      "evidence_id": "E_MED_41986900",
+      "quote": "In 2021, high BMI contributed to 5255 thyroid cancer-related deaths (age-standardised mortality rate: 0.06 per 100 000) and 144 955 DALYs (age-standardised rate: 1.68 per 100 000)",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: quote is a long list of names, not a statement",
+    "claim": {
+      "claim": "The FDA label for Orforglipron mentions the term obesity or weight management, but this does not confirm it is indicated for obesity.",
+      "evidence_id": "E_FDA_indication_obesity",
+      "quote": "Drug names (openFDA generic name) whose FDA label text in the indications section contains any of these phrases: 'obesity', 'weight management', 'excess body weight'. Drugs found: AMPHETAMINE; AMPHETAMINE SULFATE; AMPHETAMINE SULFATE TABLETS; ASTHMA DROPS; BENZPHETAMINE HYDROCHLORIDE; CHOLESTYRAMINE; CHOLESTYRAMINE FOR ORAL SUSPENSION; CHOLESTYRAMINE LIGHT; CHOLESTYRAMINE POWDER FOR SUSPENSION; CHOLEYSTYRAMINE LIGHT; CHORIOGONADOTROPIN ALFA; CHORIONIC GONADOTROPIN; DIETHYLPROPION HYDROCHLORIDE; DIETHYLPROPION HYDROCHLORIDE ER; FENOFIBRATE; GEMFIBROZIL; ISONIAZID; LIRAGLUTIDE; LISDEXAMFETAMINE; LISDEXAMFETAMINE DIMESYLATE; LISDEXAMFETAMINE DIMESYLATE CAPSULES; LISDEXAMFETAMINE DIMESYLATE ORAL; NALTREXONE HYDROCHLORIDE AND BUPROPION HYDROCHLORIDE; ORFORGLIPRON; ORLISTAT; PHENDIMETRAZINE TARTRATE; PHENTERMINE AND TOPIRAMATE; PHENTERMINE AND TOPIRAMATE EXTENDED-RELEASE; PHENTERMINE HCL C-IV; PHENTERMINE HYDROCHLORIDE; RAUWOLFIA COMBINATION; SEMAGLUTIDE; SETMELANOTIDE; TIRZEPATIDE.",
+      "stage": "regulatory",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  }
+]
