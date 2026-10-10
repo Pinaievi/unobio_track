@@ -11,6 +11,8 @@ from typing import Literal
 import dotenv
 from google import genai
 from pydantic import BaseModel, Field
+# Корінь проєкту = тека над pipeline/. Python за замовчуванням бачить лише теку скрипта
+# (pipeline/), тому додаємо корінь і core/ у шлях імпорту вручну.
 ROOT = Path(__file__).resolve().parent.parent
 for _p in (ROOT, ROOT / "core"):
     if str(_p) not in sys.path:
@@ -21,6 +23,7 @@ from core.validation import *
 from core.md_rendering import *
 from core.evidence import *
 from core.capital import *
+from core.outlook import *
 
 MODEL = "gemini-3.1-flash-lite"      
 FINAL_MODEL = "gemini-3.1-flash-lite"
@@ -325,6 +328,7 @@ def main():
     drop_false_absence(sections, claim_map, issues)
     drop_false_h2h_absence(sections, [], claim_map, issues)
 
+    # ключові результати ефективності, яких не взяв жоден розділ, код додає в клінічний план
     cited_now = {i for sec in sections.values() for st in sec["statements"]
                  for i in st["claim_ids"]}
     extra_eff = key_efficacy_items(claim_map, cited_now)
@@ -387,6 +391,7 @@ def main():
         or "none identified"
     capital_text = "\n".join(f"- {s['text']}" for s in capital_stmts)
     contra = [c for c in claims if c["direction"] == "contradicts"]
+    # тріаж тяжкості: модель сама оцінює, що критичне (без списку подій у коді)
     tri_pool = [c for c in claims if c["direction"] == "contradicts"
                 or c["stage"] in ("safety_or_failure", "regulatory")]
     triage = []
@@ -435,6 +440,7 @@ def main():
                       f"{lead['claim_ids'][0]} (модель його не процитувала)")
     rationale = drop_false_h2h_absence({}, rationale, claim_map, issues)
 
+    # червоні прапори й найважливіші нові докази мають бути в Recommendation як [E]
     have_e = {i for x in rationale if x["kind"] == "evidence" for i in x["claim_ids"]}
     for f in flags:
         if f["id"] not in have_e:
@@ -450,6 +456,9 @@ def main():
 
     recommendation = final.recommendation
     model_recommendation = recommendation
+    # Invest не блокується лише за те, що невідомі існують (вони є завжди). Блокують: (1) немає
+    # жодного high-confidence клінічного claim про ефективність у людей; (2) модель сама назвала
+    # невідомі, які ламають тезу інвестування (blocking_unknowns). Обидві причини видно у звіті.
     invest_gate = {"checked": recommendation == "Invest", "passed": True, "reasons": []}
     if recommendation == "Invest":
         if not any(c.get("stage") == "clinical" and c.get("direction") == "supports"
@@ -464,6 +473,9 @@ def main():
             issues.append("Рекомендацію «Invest» знижено до «Conditional»: "
                           + " | ".join(invest_gate["reasons"]))
 
+    # правило наслідку: підтверджена критична знахідка знижує вивід на один рівень відносно
+    # того, що модель сказала б БЕЗ неї. Що критичне — вирішує модель-тріаж (+ запасний
+    # фільтр), не список у коді. Код лише перевіряє узгодженість двох відповідей моделі.
     rule_by = "none"
     if flags:
         who = "; ".join(f"{f['id']} ({'+'.join(f['found_by'])})" for f in flags)
@@ -480,10 +492,16 @@ def main():
                           f"«{final.recommendation_without_critical_findings}», з ними — "
                           f"«{recommendation}» (правило виконано моделлю).")
 
+    # календар катализаторів і PoS: рахує код з реєстру й опублікованого еталону (без LLM)
+    reported = reported_trials(claims, evidence)
+    cal = catalyst_calendar(evidence, INDICATION_WORDS, reported)
+    pos = pos_benchmark(evidence, INDICATION_WORDS, args.indication, flags, reported)
+    cal_stmts, pos_stmts = outlook_statements(cal, pos)
+
     print("5/5 Збираю джерела та зберігаю...")
     used = {}
     all_stmts = ([s for sec in sections.values() for s in sec["statements"]]
-                 + rationale + capital_stmts)
+                 + rationale + capital_stmts + cal_stmts + pos_stmts)
     for s in all_stmts:
         for cid in s["claim_ids"]:
             used.setdefault(claim_map[cid]["evidence_id"], set()).add(cid)
@@ -514,6 +532,8 @@ def main():
         "sections": sections,
         "capital_to_next_milestone": capital_stmts,
         "capital_calc": capital_calc,
+        "catalyst_calendar": cal, "catalyst_statements": cal_stmts,
+        "pos": pos, "pos_statements": pos_stmts,
         "conflicts": conflicts,
         "critical_unknowns": final.critical_unknowns,
         "diligence_questions": final.diligence_questions,

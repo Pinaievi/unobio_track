@@ -32,8 +32,10 @@ from .base import DataGetter, Query, get_json
 
 URL = "https://www.ebi.ac.uk/europepmc/webservices/rest/search"
 
+# Інші назви препарату (код компанії тощо): шукаємо за ними теж.
 SYNONYMS = {"retatrutide": ["LY3437943"]}
 
+# Скільки статей беремо за кожним запитом.
 LIMITS = {
     "base_search": 25,
     "contradiction_search": 15,
@@ -42,8 +44,10 @@ LIMITS = {
     "epidemiology_search": 10,
 }
 
-MIN_RESULTS = 3
+# Якщо суворий запит епідеміології дав менше статей, ніж це число, пробуємо м'якший.
+MIN_RESULTS = 3  # (зараз не використовується: доповнюємо до LIMITS)
 
+# Якщо статтю знайшло кілька запитів, у meta.found_by лишається найважливіша мітка.
 TAG_PRIORITY = [
     "contradiction_search",
     "pk_search",
@@ -52,35 +56,43 @@ TAG_PRIORITY = [
     "base_search",
 ]
 
+# слова, за якими шукаємо докази проти препарату
 CONTRA_TERMS = (
     '(failure OR "failed" OR "no benefit" OR discontinued OR toxicity '
     'OR "adverse events" OR futility)'
 )
 
+# фармакокінетика: період напіввиведення, експозиція, залежність ефекту від дози
 PK_TERMS = (
     '(pharmacokinetics OR pharmacokinetic OR "half-life" OR "exposure-response" '
     'OR "dose-response" OR Cmax OR "drug exposure")'
 )
 
+# розподіл у тканинах і залучення мішені
 TISSUE_TERMS = (
     '("tissue distribution" OR biodistribution OR "receptor occupancy" '
     'OR "target engagement" OR "tissue penetration")'
 )
 
+# епідеміологія: три рівні запиту від найточнішого до найм'якшого.
+# Нам потрібні ЗАГАЛЬНІ цифри для дорослих (світ, США), а не діти, окремі регіони
+# чи «тягар іншої хвороби, зумовлений хворобою».
 EPI_TITLE_TERMS = ('(TITLE:prevalence OR TITLE:epidemiology OR TITLE:incidence '
                    'OR TITLE:"global burden" OR TITLE:trends)')
 EPI_LOOSE_TERMS = '(prevalence OR incidence OR epidemiology OR "burden of disease")'
+# широкий охоплення: світ / країна / дорослі
 EPI_SCOPE_TERMS = ('(TITLE:global OR TITLE:worldwide OR TITLE:"United States" '
                    'OR TITLE:"US adults" OR TITLE:national OR TITLE:adults '
                    'OR TITLE:"adult population")')
+# що відкидаємо: діти, підлітки, «зумовлено», інші хвороби як предмет статті
 EPI_EXCLUDE = ('NOT (TITLE:children OR TITLE:childhood OR TITLE:adolescents '
                'OR TITLE:adolescent OR TITLE:pediatric OR TITLE:paediatric '
                'OR TITLE:youth OR TITLE:infants OR TITLE:attributable '
                'OR TITLE:"Latin America" OR TITLE:Africa OR TITLE:"Mendelian" '
                'OR TITLE:mortality OR TITLE:"among adults with" OR TITLE:"among patients" '
                'OR TITLE:"among women" OR TITLE:"among men" OR TITLE:"among individuals with")')
-EPI_PUBLISHED = "SRC:MED"
-EPI_YEARS_BACK = 8
+EPI_PUBLISHED = "SRC:MED"   # лише журнальні статті, без препринтів і шуму
+EPI_YEARS_BACK = 8      # беремо публікації лише за останні роки
 
 
 def clean_html(text: str) -> str:
@@ -114,7 +126,10 @@ class EuropePMCGetter(DataGetter):
         if query.mechanism:
             names = [query.mechanism] + SYNONYMS.get(query.mechanism.lower(), [])
 
+        # препарат у будь-якому місці тексту (для основних запитів)
         drug_expr = "(" + " OR ".join(quote(n) for n in names) + ")" if names else ""
+        # препарат саме в заголовку або анотації (для PK і тканин: відсікає статті,
+        # де він згаданий побіжно)
         drug_ta_expr = (
             "(" + " OR ".join(f"TITLE:{quote(n)} OR ABSTRACT:{quote(n)}" for n in names) + ")"
             if names else ""
@@ -124,31 +139,36 @@ class EuropePMCGetter(DataGetter):
 
         base_q = " AND ".join(p for p in (drug_expr, disease_expr) if p)
 
+        # план запитів: (мітка, суворий запит, запасний запит або None)
         plan = [
             ("base_search", base_q, None),
             ("contradiction_search", f"{base_q} AND {CONTRA_TERMS}", None),
         ]
-        if drug_ta_expr:
+        if drug_ta_expr:        # PK і тканини стосуються препарату, хвороба не потрібна
             plan.append(("pk_search", f"{drug_ta_expr} AND {PK_TERMS}", None))
             plan.append(("tissue_search", f"{drug_ta_expr} AND {TISSUE_TERMS}", None))
-        if disease_title:
+        if disease_title:       # епідеміологія стосується хвороби, препарат не потрібен
             first_year = date.today().year - EPI_YEARS_BACK
             years = f"PUB_YEAR:[{first_year} TO {date.today().year}]"
             base = f"{disease_title} AND {years} AND {EPI_PUBLISHED}"
             plan.append((
                 "epidemiology_search",
+                # рівень 1: заголовок про поширеність + охоплення світ/дорослі, без дітей
                 f"{base} AND {EPI_TITLE_TERMS} AND {EPI_SCOPE_TERMS} {EPI_EXCLUDE}",
+                # рівні 2-3 доповнюють до ліміту, якщо рівень 1 дав мало
                 [f"{base} AND {EPI_TITLE_TERMS} {EPI_EXCLUDE}",
                  f"{base} AND {EPI_LOOSE_TERMS} {EPI_EXCLUDE}"],
             ))
 
-        merged: dict[str, dict] = {}
-        tags: dict[str, list[str]] = {}
+        merged: dict[str, dict] = {}       # id статті -> запис
+        tags: dict[str, list[str]] = {}    # id статті -> мітки запитів, що її знайшли
         counts: dict[str, int] = {}
 
         for tag, strict_q, fallback_q in plan:
             found = self._safe_search(tag, strict_q)
 
+            # суворий запит дав мало: доповнюємо м'якшими (лише де вони передбачені),
+            # зберігаючи порядок: спершу найточніші статті
             if fallback_q:
                 fallbacks = fallback_q if isinstance(fallback_q, list) else [fallback_q]
                 for fq in fallbacks:
@@ -170,6 +190,7 @@ class EuropePMCGetter(DataGetter):
                 if tag not in tags[rid]:
                     tags[rid].append(tag)
 
+        # проставляємо мітки в meta
         for rid, rec in merged.items():
             rec["meta"]["found_by"] = min(tags[rid], key=TAG_PRIORITY.index)
             rec["meta"]["found_by_all"] = tags[rid]

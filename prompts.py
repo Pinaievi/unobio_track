@@ -81,7 +81,8 @@ HOW MANY CLAIMS (by record type):
       target engagement results as separate claims with stage "translation";
     - if it includes "epidemiology_search": extract prevalence, incidence and burden figures
       with the year and the population they refer to, stage "unmet_need", direction
-      "neutral";
+      "neutral". Name the country or region the figure refers to in the claim text (for
+      example "In US adults ...", "Worldwide ...");
     - results from animals or cells must have confidence "medium" or "low", and the claim
       must say that they are not human data;
     - the way an article was found does not decide the stage: use stage "translation" only

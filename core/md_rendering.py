@@ -62,6 +62,35 @@ def render_md(report: dict, claims_file: str) -> str:
     L.append(f"## {n}. Capital to next milestone\n")
     stmts(report["capital_to_next_milestone"])
     n += 1
+    if report.get("catalyst_calendar"):
+        L.append(f"## {n}. Catalyst calendar\n")
+        stmts(report["catalyst_statements"])
+        rows = report["catalyst_calendar"]["rows"]
+        if rows:
+            L.append("| Date | Event | Trial | Phase | Status | Sponsor | Primary endpoint / programme |")
+            L.append("|---|---|---|---|---|---|---|")
+            for r in rows:
+                who = "competitor" if r["scope"] == "competitor" else "this drug"
+                ind = "" if r.get("in_indication", True) else " (other indication)"
+                L.append(f"| {r['date'] or '—'} | {r['kind']}{ind} ({who}) | {r['nct'] or '—'} | "
+                         f"{r['phase']} | {r['status']} | {r['sponsor'] or '—'} | "
+                         f"{(r['primary_outcome'] or '—')[:90]} |")
+            L.append("")
+        n += 1
+    if report.get("pos"):
+        L.append(f"## {n}. Probability of success (benchmark)\n")
+        stmts(report["pos_statements"])
+        pos = report["pos"]
+        if pos["rows"] and pos["stage"] not in ("unknown", "approved_or_phase4"):
+            L.append("| Benchmark | Phase 1→2 | Phase 2→3 | Phase 3→NDA/BLA | NDA/BLA→approval | PoS to approval from current stage |")
+            L.append("|---|---|---|---|---|---|")
+            for r in pos["rows"]:
+                sr = r["stage_rates"]
+                L.append(f"| {r['benchmark']} | {sr['p1']*100:.1f}% | {sr['p2']*100:.1f}% | "
+                         f"{sr['p3']*100:.1f}% | {sr['nda']*100:.1f}% | "
+                         f"**{r['pos_to_approval']*100:.0f}%** |")
+            L.append(f"\nSource: {pos['source']}\n")
+        n += 1
     sec = report["sections"]["key_risks"]
     L.append(f"## {n}. {sec['title']}\n")
     stmts(sec["statements"])
@@ -116,6 +145,7 @@ def render_claims_md(report: dict) -> str:
             mark += " (SYNTHETIC DEMO, NOT REAL DATA)"
         L.append(f"- **{c['id']}**{mark} [{c['stage']} / {c['direction']} / "
                  f"{c['confidence']}] {c['claim']}  \n  record: {c['evidence_id']}"
+                 f"  \n  region: {c.get('region', 'Global')}"
                  f"  \n  quote: \"{c['quote']}\""
                  + (f"  \n  ⚠ numbers not in the quote (found elsewhere in the "
                     f"record): {c['numbers_outside_quote']}"

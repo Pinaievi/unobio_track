@@ -8,9 +8,9 @@ traced down to a source quote:
 Recommendation → Claims → Evidence record → Source (link)
 ```
 
-The report has 13 sections: recommendation, scientific thesis, human translation thesis,
+The report has 15 sections: recommendation, scientific thesis, human translation thesis,
 clinical development plan, competitive landscape, commercial opportunity, capital to next
-milestone, key risks, contradictory evidence, critical unknowns, diligence questions,
+milestone, catalyst calendar, probability of success (benchmark), key risks, contradictory evidence, critical unknowns, diligence questions,
 what would change the conclusion, and sources.
 
 Team: huhwuh.
@@ -137,11 +137,23 @@ because any list would miss the next kind of event. Instead:
 3. **Keyword backstop.** A short regex list (FDA clinical hold, drug-related death, programme
    halted for safety) can only *add* critical findings if the model missed them. It never
    removes one. Every flag records who found it (`model`, `keywords`).
-4. **Policy.** A verified critical finding lowers the recommendation by one level
-   (Invest → Conditional → Do Not Invest). The final model call is told the policy and must
-   also state what it would recommend *without* the critical findings; the code computes the
-   expected level from that answer and lowers the recommendation if the model did not. The
-   report says who applied the rule (`critical_rule_applied_by`: `model`, `code`, `none`).
+4. **Policy.** A verified critical finding in a category that stops a programme (death or
+   life-threatening harm caused by the drug, regulatory halt or refusal, programme terminated,
+   failed pivotal trial, invalid key result) gives **Do Not Invest**; any other critical
+   finding lowers the recommendation by one level. The final model call is told the policy and
+   must also state what it would recommend *without* the critical findings; the code computes
+   the highest level allowed and lowers the recommendation if the model did not. The report
+   says who applied the rule (`critical_rule_applied_by`: `model`, `code`, `none`).
+
+### 3.2 Why Invest is reachable, and when it is blocked
+
+Open questions exist in every real dossier, so their mere existence does not block Invest. The
+final prompt asks the model to split unknowns into *blocking* ones (an unfavourable answer
+would break the thesis, for example efficacy in humans not shown, or a material unresolved
+contradiction) and ordinary diligence items (long-term follow-up, head-to-head data, pricing).
+The code lowers a proposed Invest to Conditional only if (a) the dossier has no
+high-confidence clinical claim supporting efficacy, or (b) the model itself lists blocking
+unknowns. The reason is stored in `invest_gate` and printed in the report.
 
 Because the model writes both the answer and the explanation under the same policy, the text
 of the report stays consistent with the final level.
@@ -167,6 +179,30 @@ Computed **by code** from registry data, not by the LLM:
    are reported honestly as "not an SEC filer"; no guess is made.
 
 All numbers in this section are labelled as assumptions or inferences.
+
+---
+
+## 4b. Catalyst calendar and probability of success
+
+Both sections are computed **by code** (`core/outlook.py`), with no LLM call.
+
+* **Catalyst calendar.** From the registry records of the drug: the primary-completion date of
+  each trial (when the main data are expected), stopped/suspended trials, and the first and last
+  primary completion of each competitor's Phase 3 programme. Past events are shown only for
+  Phase 2+ trials in the indication; a trial whose primary completion has passed gets one of
+  three labels (results in the registry, results reported in the literature, or no results in
+  our sources, which is raised as a diligence question). Dates are the sponsor's own estimates.
+  Filing and approval dates are **not** predicted.
+* **Probability of success.** The current stage is the highest phase among the drug's trials in
+  the indication. PoS to approval is the product of published phase-transition rates from that
+  stage (BIO / Informa / QLS, *Clinical Development Success Rates 2011-2020*: Phase I→II 52.0%,
+  II→III 28.9%, III→NDA/BLA 57.8%, NDA/BLA→approval 90.6%; Metabolic: 61.8%, 45.0%, 63.6%,
+  87.5%). For a cardiometabolic indication both the all-indication and the Metabolic benchmark
+  are shown. For a drug in Phase 3 the report also shows the NDA/BLA→approval rate as the
+  scenario "pivotal Phase 3 is positive".
+  The number is labelled **ASSUMPTION**: it is an average over many programmes and is not
+  adjusted for this asset. If critical findings exist, the report says to read it as an upper
+  bound. Rates are constants in `BENCH` in `core/outlook.py`; change them there.
 
 ---
 
@@ -223,8 +259,8 @@ Observed results (retatrutide in obesity):
 
 | Run | Recommendation | What happened |
 |---|---|---|
-| `report_baseline` | **Conditional** | strong phase 2/3 efficacy, open safety and evidence gaps; no critical findings |
-| `report_hold` | **Do Not Invest** | triage rated the liver-injury death, the FDA clinical hold and the probable causality as *critical*; the model applied the one-level downgrade itself, the code verified it |
+| `report_baseline` | **Invest** or **Conditional** (model judgement) | strong phase 2/3 efficacy versus placebo; Invest if no blocking unknown is named, otherwise Conditional with the blocking unknowns and the Invest gate reason printed; no critical findings |
+| `report_hold` | **Do Not Invest** | triage rated the liver-injury death, the FDA clinical hold and the probable causality as *critical*; a stop-category finding gives Do Not Invest, the model applied it itself or the code lowered it |
 | `report_new` | **Conditional** | the new head-to-head result (no superiority vs tirzepatide) appears as [E] evidence in the Recommendation and the "no head-to-head data" statements disappear; triage rated it *major*, not critical, so the level does not move |
 
 The point of the two scenarios: the system does not flip on any new input (B), but it reacts
@@ -240,8 +276,10 @@ the status of each conflict.
 * **Sources.** We use registries, PubMed/Europe PMC, Open Targets, openFDA and SEC. Conference
   abstracts, company press releases and investor decks are **not** included, so very recent
   human data is missing. "No human efficacy data" in a report means "none in our sources".
-* **Commercial side.** There is no price, payer or sales data and no market model;
+* **Commercial side.** There is no price, payer or sales data and no market model; the report is not split by region: sources are international (ClinicalTrials.gov, PubMed/Europe PMC), only openFDA labels and SEC filings are US-specific, and EMA documents and the EU Clinical Trials Register are not used;
   epidemiology comes from a handful of papers found by title search.
+* **PoS** is a published average by stage and area, not an estimate for this asset; there is
+  no rNPV, price or sales model, and the calendar uses registry dates that sponsors can move.
 * **Cross-study comparisons** (for example retatrutide vs tirzepatide from different trials)
   are inference and are labelled [AI]; only a head-to-head trial counts as direct evidence.
 * **Capital.** Phase 3 only; no manufacturing, filing or launch costs. Cost per participant
@@ -270,6 +308,8 @@ app.py                  Streamlit drill-down site (Report / Contradictions / Cla
 prompts.py              all LLM prompts (extraction, sections, conflicts, triage, final)
 core/
   config.py             model name, prices, paths
+  outlook.py            catalyst calendar and benchmark probability of success (code only)
+  regions.py            region tag of a claim (metadata for audit; the report is not split by region)
   validation.py         claim/statement checks, absence rules, triage validation, critical-finding policy
   evidence.py           evidence records and claim preparation helpers
   capital.py            capital-to-milestone estimate and SEC figures

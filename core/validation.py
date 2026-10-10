@@ -193,6 +193,7 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                     issues.append(f"{section}: числа {missing} відсутні в цитованих "
                                   f"claims: {s.text[:70]}")
         if single_evidence and item["kind"] == "inference" and ids:
+            # висновок моделі в рекомендації теж не має містити чисел, яких нема в цитованих claims
             have = set()
             for i in ids:
                 have |= claim_numbers(claim_map[i])
@@ -287,6 +288,8 @@ def drop_false_absence(sections: dict, claim_map: dict, issues: list):
                 gaps.append(g)
         sec["gaps"] = gaps
    
+# Твердження про відсутність ПОРІВНЯЛЬНИХ даних («немає head-to-head») — не те саме, що
+# «немає клінічних даних у людей». Їх не чіпаємо цим правилом.
 COMPARATIVE_RE = re.compile(r"(?i)head[- ]to[- ]head|comparative|comparison|\bversus\b|\bvs\.?\b|"
                             r"direct(?:ly)? compar|active comparator|other agents|competitor")
 
@@ -389,7 +392,7 @@ def key_efficacy_items(claim_map: dict, cited: set, n: int = 3) -> list:
                 or c.get("stage") != "clinical" or c.get("confidence") != "high" \
                 or c.get("drug_not_in_quote"):
             continue
-        t = c.get("claim", "") + " " + c.get("quote", "")
+        t = c.get("claim", "") + " " + c.get("quote", "")   # % і плацебо можуть бути лише в цитаті
         t_nci = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", t)
         if not (re.search(r"(?i)placebo", t) and re.search(r"\d\s*%", t_nci)):
             continue
@@ -434,6 +437,7 @@ def other_drugs_in(text: str) -> list:
                   - {n.lower() for n in DRUG_NAMES})
 
 
+# ---------------------------------------------------------------- червоні прапори
 
 HOLD_RE = re.compile(r"(?i)clinical hold")
 HOLD_LIFTED_RE = re.compile(r"(?i)\b(?:lifted|released|removed|resolved)\b|no clinical hold|not (?:been )?placed")
@@ -550,6 +554,7 @@ def drop_false_h2h_absence(sections: dict, rationale: list, claim_map: dict, iss
     return out
 
 
+# ---------------------------------------------------------------- тріаж тяжкості (модель)
 
 class Severity(BaseModel):
     claim_id: str

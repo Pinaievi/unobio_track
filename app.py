@@ -19,6 +19,7 @@ STAGES_ORDER = ["mechanism", "translation", "clinical", "safety_or_failure",
                 "competition", "unmet_need", "regulatory"]
 
 
+# ---------------------------------------------------------------- дані
 
 def list_reports() -> list:
     """Файли звітів: results/*.json, у яких є ключ recommendation."""
@@ -43,6 +44,7 @@ def is_synthetic(claim: dict) -> bool:
     return claim.get("source_type") == "demo_synthetic"
 
 
+# ---------------------------------------------------------------- відображення
 
 def badge(text: str, color: str) -> str:
     return (f"<span style='background:{color};color:white;padding:2px 9px;"
@@ -120,6 +122,7 @@ def render_statements(items: list, claims: dict, sources: dict, key: str,
                            "або обмеження оцінки).")
 
 
+# ---------------------------------------------------------------- вкладки
 
 def tab_report(rep: dict, claims: dict, sources: dict, only_evidence: bool):
     st.subheader("1. Recommendation")
@@ -139,6 +142,33 @@ def tab_report(rep: dict, claims: dict, sources: dict, only_evidence: bool):
     if calc:
         with st.expander("Розрахунок капіталу (код, без LLM)"):
             st.json(calc)
+    if rep.get("catalyst_calendar"):
+        st.subheader("Catalyst calendar")
+        render_statements(rep["catalyst_statements"], claims, sources, "cal", only_evidence)
+        rows = rep["catalyst_calendar"]["rows"]
+        if rows:
+            st.dataframe([{"Date": r["date"] or "—",
+                           "Event": r["kind"] + ("" if r.get("in_indication", True)
+                                                 else " (other indication)"),
+                           "Whose": "competitor" if r["scope"] == "competitor" else "this drug",
+                           "Trial": r["nct"] or "—", "Phase": r["phase"],
+                           "Status": r["status"], "Sponsor": r["sponsor"] or "—",
+                           "Primary endpoint / programme": (r["primary_outcome"] or "—")[:100]}
+                          for r in rows], use_container_width=True)
+    if rep.get("pos"):
+        st.subheader("Probability of success (benchmark)")
+        render_statements(rep["pos_statements"], claims, sources, "pos", only_evidence)
+        pos = rep["pos"]
+        if pos["rows"] and pos["stage"] not in ("unknown", "approved_or_phase4"):
+            st.dataframe([{"Benchmark": r["benchmark"],
+                           "Phase 1→2": f"{r['stage_rates']['p1']*100:.1f}%",
+                           "Phase 2→3": f"{r['stage_rates']['p2']*100:.1f}%",
+                           "Phase 3→NDA/BLA": f"{r['stage_rates']['p3']*100:.1f}%",
+                           "NDA/BLA→approval": f"{r['stage_rates']['nda']*100:.1f}%",
+                           "PoS to approval from current stage":
+                               f"{r['pos_to_approval']*100:.0f}%"} for r in pos["rows"]],
+                         use_container_width=True)
+            st.caption("Source: " + pos["source"])
     sec = rep["sections"]["key_risks"]
     st.subheader(sec["title"])
     render_statements(sec["statements"], claims, sources, "risks", only_evidence)
@@ -182,7 +212,9 @@ def tab_conflicts(rep: dict, claims: dict, sources: dict):
 
 def tab_claims(rep: dict, sources: dict):
     cl = rep["claims"]
-    c1, c2, c3 = st.columns(3)
+    c1, c2, c3, c4 = st.columns(4)
+    regions = sorted({c.get("region", "Global") for c in cl})
+    f_reg = c4.multiselect("Region", regions, default=regions)
     stages = sorted({c["stage"] for c in cl})
     f_stage = c1.multiselect("Stage", stages, default=stages)
     f_dir = c2.multiselect("Direction", ["supports", "contradicts", "neutral"],
@@ -194,6 +226,7 @@ def tab_claims(rep: dict, sources: dict):
     shown = [c for c in cl
              if c["stage"] in f_stage and c["direction"] in f_dir
              and c["confidence"] in f_conf
+             and c.get("region", "Global") in f_reg
              and (not only_new or c.get("is_extra"))
              and (not q or q.lower() in (c["claim"] + c["quote"]).lower())]
     st.caption(f"Показано {len(shown)} з {len(cl)} claims")
@@ -215,6 +248,7 @@ def tab_compare(rep: dict, paths: list):
         color = REC_COLORS.get(r["recommendation"], "#57606a")
         col.markdown(f"**{title}**<br>" + badge(r["recommendation"], color),
                      unsafe_allow_html=True)
+    # id перенумеровуються між прогонами, тому claims порівнюємо за записом і цитатою
     def ckey(c):
         return (c.get("evidence_id"), " ".join((c.get("quote") or "").split()))
     old_keys = {ckey(c) for c in other["claims"]}
@@ -266,6 +300,7 @@ def tab_run(rep: dict):
                     f" — claims: {', '.join(s['claim_ids']) or '—'}")
 
 
+# ---------------------------------------------------------------- головна
 
 def main():
     paths = list_reports()
@@ -278,6 +313,7 @@ def main():
     with st.sidebar:
         st.header("Звіт")
         names = [p.name for p in paths]
+        # main.py передає ім'я щойно створеного звіту через змінну середовища
         wanted = os.environ.get("UNDERWRITING_REPORT")
         default_idx = names.index(wanted) if wanted in names else 0
         choice = st.selectbox("Файл", names, index=default_idx)
