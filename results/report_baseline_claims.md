@@ -2,579 +2,499 @@
 
 Each claim with its exact quote from the source record.
 
-- **C001** [clinical / neutral / high] The phase 2 trial NCT07467447 evaluates once-weekly subcutaneous retatrutide compared to placebo in adults with obesity or overweight and weight-related comorbidities.  
-  record: E_AACT_NCT07467447  
-  region: Global  
-  quote: "Phase 2, multicenter, randomized, double-blind, placebo-controlled study evaluating once-weekly subcutaneous retatrutide (LY3437943) at multiple maintenance dose levels versus placebo in adults with obesity or overweight with weight-related comorbidities (without type 2 diabetes), alongside standardized diet and physical activity counseling."
-- **C002** [unmet_need / neutral / high] The trial NCT07467447 enrolls adults aged 18 to 75 years with obesity or overweight.  
-  record: E_AACT_NCT07467447_population  
-  region: Global  
-  quote: "Age 18 to 75 years (inclusive) at time of informed consent."
-- **C003** [clinical / neutral / high] The trial NCT07467447 requires a BMI of ≥30 and ≤50 kg/m² or a BMI of ≥27 and <30 kg/m² with at least one weight-related comorbidity for enrollment.  
-  record: E_AACT_NCT07467447_population  
-  region: Global  
-  quote: "BMI ≥30 and ≤50 kg/m², OR BMI ≥27 and <30 kg/m² with at least 1 weight-related comorbidity (hypertension; dyslipidemia; or cardiovascular disease such as ischemic CVD or NYHA Class I-II heart failure)."
-- **C004** [clinical / neutral / high] The trial NCT07467447 excludes participants with a history of diabetes mellitus.  
-  record: E_AACT_NCT07467447_population  
-  region: Global  
-  quote: "History of diabetes mellitus (type 1 or type 2), ketoacidosis, or hyperosmolar state/coma."
-- **C005** [clinical / neutral / high] NCT07357415 is a Phase 3b trial investigating the efficacy and safety of retatrutide dose escalation in 600 participants with obesity or overweight without type 2 diabetes and is ongoing, enrollment closed.  
-  record: E_AACT_NCT07357415  
-  region: Global  
-  quote: "The purpose of this study is to investigate the efficacy and safety of different retatrutide dose escalation schemes in participants without type 2 diabetes who have obesity or overweight."
-- **C006** [unmet_need / neutral / high] The trial enrolls adults aged 18 and older with obesity or overweight and a history of unsuccessful weight loss attempts.  
-  record: E_AACT_NCT07357415_population  
-  region: Global  
-  quote: "Have at least one unsuccessful attempt to lose weight by dieting"
-- **C007** [clinical / neutral / high] Participants with a history of type 1 or type 2 diabetes are excluded from the trial.  
-  record: E_AACT_NCT07357415_population  
-  region: Global  
-  quote: "Have type 1 diabetes or type 2 diabetes"
-- **C008** [clinical / neutral / high] NCT07232719 is a phase 3b, randomized, double-blind, placebo-controlled trial evaluating the efficacy and safety of once-weekly retatrutide in 250 participants with obesity or overweight.  
-  record: E_AACT_NCT07232719  
-  region: Global  
-  quote: "A Phase 3b Study to Investigate the Efficacy and Safety of Retatrutide Once Weekly in Participants Without Type 2 Diabetes Who Have Obesity or Overweight: A Randomized, Double-Blind, Placebo-Controlled Trial"
-- **C009** [unmet_need / neutral / high] The study population for NCT07232719 consists of adults aged 18 and older who have obesity or overweight.  
-  record: E_AACT_NCT07232719_population  
-  region: Global  
-  quote: "Age: 18 Years to not stated"
-- **C010** [clinical / neutral / high] Patients are eligible for the study if they have a BMI of ≥30 kg/m2 or a BMI of ≥27 kg/m2 with at least one weight-related condition.  
-  record: E_AACT_NCT07232719_population  
-  region: Global  
-  quote: "Have a body mass index (BMI) of: * ≥30 kilogram per square meter (kg/m2) OR * ≥27 kg/m2 with at least one of the following weight-related conditions: high blood pressure, abnormal levels of lipid, obstructive sleep apnea, heart disease"
-- **C011** [clinical / neutral / high] NCT07035093 is a phase 3 interventional study of retatrutide in 586 participants with obesity or overweight and chronic low back pain, and it is currently ongoing with enrollment closed.  
-  record: E_AACT_NCT07035093  
-  region: Global  
-  quote: "A Phase 3, Randomized, Double-Blind, Placebo-Controlled Study to Investigate the Efficacy and Safety of Retatrutide Once Weekly in Participants Who Have Obesity or Overweight and Chronic Low Back Pain"
-- **C012** [clinical / neutral / high] Participants are required to have a body mass index (BMI) ≥27 kilograms per square meter at screening to be included in trial NCT07035093.  
-  record: E_AACT_NCT07035093_population  
-  region: Global  
-  quote: "* Have a body mass index (BMI) ≥27 kilograms per square meter (kg/m2) at screening"
-- **C013** [clinical / neutral / high] Participants with Type 1 or Type 2 diabetes are excluded from trial NCT07035093.  
-  record: E_AACT_NCT07035093_population  
-  region: Global  
-  quote: "* Have Type 1 Diabetes, Type 2 Diabetes, or any other type of diabetes"
-- **C014** [clinical / neutral / high] NCT06859268 is a Phase 3b trial evaluating retatrutide for maintenance of weight reduction in 643 participants with obesity.  
-  record: E_AACT_NCT06859268  
-  region: Global  
-  quote: "This is a study of retatrutide in participants with obesity. The main purpose is to learn more about how retatrutide maintains body weight loss."
-- **C015** [clinical / neutral / high] The trial NCT06859268 is currently ongoing with enrollment closed.  
-  record: E_AACT_NCT06859268  
-  region: Global  
-  quote: "This is a study of retatrutide in participants with obesity."
-- **C016** [unmet_need / neutral / high] The trial NCT06859268 enrolls adults aged 18 years and older with obesity.  
-  record: E_AACT_NCT06859268_population  
-  region: Global  
-  quote: "Have obesity and a history of at least one self-reported unsuccessful dietary effort to reduce body weight"
-- **C017** [clinical / neutral / high] Patients with a history of obesity-related surgical treatment are excluded from NCT06859268.  
-  record: E_AACT_NCT06859268_population  
-  region: Global  
-  quote: "Have a prior or planned surgical treatment for obesity"
-- **C018** [clinical / neutral / high] NCT06662383 is a Phase 3 study comparing the efficacy and safety of retatrutide to tirzepatide in 800 adults with obesity.  
-  record: E_AACT_NCT06662383  
-  region: Global  
-  quote: "A Phase 3, Randomized, Double-Blind Study to Evaluate the Efficacy and Safety of Retatrutide Compared to Tirzepatide in Adults Who Have Obesity"
-- **C019** [competition / neutral / high] The trial NCT06662383 uses tirzepatide as a comparator to retatrutide.  
-  record: E_AACT_NCT06662383  
-  region: Global  
-  quote: "A Study of Retatrutide (LY3437943) Compared to Tirzepatide (LY3298176) in Adults Who Have Obesity"
-- **C020** [unmet_need / neutral / high] Participants in NCT06662383 must be at least 18 years old and have a history of unsuccessful dietary efforts to lose weight.  
-  record: E_AACT_NCT06662383_population  
-  region: Global  
-  quote: "* Have obesity and a history of at least one self-reported unsuccessful dietary effort to reduce body weight."
-- **C021** [clinical / neutral / high] Patients who have had recent significant weight changes are excluded from NCT06662383.  
-  record: E_AACT_NCT06662383_population  
-  region: Global  
-  quote: "* Have a self-reported change in body weight >5 kilograms (kg) (11 pounds) within 90 days before screening."
-- **C022** [clinical / neutral / high] The Phase 1 trial NCT06313528 investigates the effect of LY3437943 on calorie intake and energy metabolism in 85 participants with obesity, compared to placebo.  
-  record: E_AACT_NCT06313528  
-  region: Global  
-  quote: "The main purpose of the study is to look at the effect of the study drug compared to placebo on calorie intake, energy metabolism, and appetite."
-- **C023** [unmet_need / neutral / high] The trial NCT06313528 enrolls participants with obesity aged 18 to 60 years.  
-  record: E_AACT_NCT06313528_population  
-  region: Global  
-  quote: "Sex: ALL; age: 18 Years to 60 Years; healthy volunteers: not stated."
-- **C024** [clinical / neutral / high] Inclusion criteria for trial NCT06313528 requires a BMI greater than 30 kg/m2.  
-  record: E_AACT_NCT06313528_population  
-  region: Global  
-  quote: "* BMI greater than 30 kg/m2"
-- **C025** [clinical / neutral / high] Exclusion criteria for trial NCT06313528 includes a history of Type 1 or Type 2 Diabetes.  
-  record: E_AACT_NCT06313528_population  
-  region: Global  
-  quote: "* Type 1 or Type 2 Diabetes, history of ketoacidosis, or hyperosmolar state"
-- **C026** [clinical / neutral / high] NCT05931367 is a phase 3 interventional study evaluating the efficacy and safety of retatrutide in 445 participants with obesity or overweight and osteoarthritis of the knee.  
-  record: E_AACT_NCT05931367  
-  region: Global  
-  quote: "The main purpose of this study is to evaluate the safety and efficacy of retatrutide once-weekly in participants who have obesity or are overweight and have osteoarthritis (OA) of the knee."
-- **C027** [unmet_need / neutral / high] The study population for NCT05931367 includes individuals aged 18 years and older with obesity or overweight and knee osteoarthritis.  
-  record: E_AACT_NCT05931367_population  
-  region: Global  
-  quote: "Sex: ALL; age: 18 Years to not stated; healthy volunteers: not stated."
-- **C028** [clinical / neutral / high] Participants are required to have a body mass index of at least 27 kg/m² at screening for trial NCT05931367.  
-  record: E_AACT_NCT05931367_population  
-  region: Global  
-  quote: "* Have a body mass index (BMI) ≥27 kilogram/kg/m² at screening."
-- **C029** [clinical / neutral / high] Participants with diabetes mellitus are excluded from trial NCT05931367.  
-  record: E_AACT_NCT05931367_population  
-  region: Global  
-  quote: "* Have diabetes mellitus."
-- **C030** [clinical / neutral / high] NCT05936151 is a phase 2b, interventional, 31-week study evaluating the effect of retatrutide compared to placebo on renal function in 146 participants with obesity or overweight and chronic kidney disease.  
-  record: E_AACT_NCT05936151  
-  region: Global  
-  quote: "The main purpose of this study is to investigate the effect of retatrutide on renal function in participants with overweight or obesity and chronic kidney disease (CKD), with or without Type 2 Diabetes (T2D). The study will last around 31 weeks."
-- **C031** [unmet_need / neutral / high] The study NCT05936151 is testing retatrutide in adults aged 18 and older with obesity or overweight and chronic kidney disease.  
-  record: E_AACT_NCT05936151_population  
-  region: Global  
-  quote: "Sex: ALL; age: 18 Years to not stated; healthy volunteers: not stated."
-- **C032** [clinical / neutral / high] Inclusion criteria for NCT05936151 require participants to have a BMI of at least 27 kg/m².  
-  record: E_AACT_NCT05936151_population  
-  region: Global  
-  quote: "* Have a body mass index (BMI) ≥27 kilogram/square meter (kg/m²)"
-- **C033** [clinical / neutral / high] Exclusion criteria for NCT05936151 include participants with a history of malignant disease within 5 years before screening.  
-  record: E_AACT_NCT05936151_population  
-  region: Global  
-  quote: "* Have a history of malignant disease within 5 years before screening."
-- **C034** [clinical / neutral / high] NCT05929079 is a Phase 3 study evaluating the efficacy and safety of retatrutide in 1152 participants with Type 2 diabetes and obesity or overweight.  
-  record: E_AACT_NCT05929079  
-  region: Global  
-  quote: "The purpose of this study is to is to evaluate the efficacy and safety of retatrutide in participants with type 2 diabetes in participants who have obesity or overweight"
-- **C035** [unmet_need / neutral / high] The study population includes adults 18 years or older with obesity or overweight and Type 2 diabetes.  
-  record: E_AACT_NCT05929079_population  
-  region: Global  
-  quote: "sex: ALL; age: 18 Years to not stated; healthy volunteers: not stated."
-- **C036** [clinical / neutral / high] Inclusion criteria for the study include having a BMI of 27.0 kg/m² or greater.  
-  record: E_AACT_NCT05929079_population  
-  region: Global  
-  quote: "* Have a body mass index (BMI) greater than or equal to 27.0 kilogram/square meter (kg/m ²)"
-- **C037** [clinical / neutral / high] Patients who have had a prior or planned surgical treatment for obesity are excluded from the study.  
-  record: E_AACT_NCT05929079_population  
-  region: Global  
-  quote: "* Have a prior or planned surgical treatment for obesity."
-- **C038** [clinical / neutral / high] The TRIUMPH-1 Phase 3 study evaluates the efficacy and safety of retatrutide in 2335 participants with obesity or overweight.  
-  record: E_AACT_NCT05929066  
-  region: Global  
-  quote: "The purpose of this study is to evaluate the efficacy and safety of retatrutide in participants who have obesity or overweight (J1I-MC-GZBJ master protocol)"
-- **C039** [unmet_need / neutral / high] The study population for the TRIUMPH-1 trial includes adults aged 18 years and older.  
-  record: E_AACT_NCT05929066_population  
-  region: Global  
-  quote: "Sex: ALL; age: 18 Years to not stated"
-- **C040** [clinical / neutral / high] A key exclusion criterion for the TRIUMPH-1 trial is a history of diabetes mellitus.  
-  record: E_AACT_NCT05929066_population  
-  region: Global  
-  quote: "* Have diabetes mellitus."
-- **C041** [clinical / neutral / high] NCT05882045 is a phase 3 interventional study investigating the efficacy and safety of retatrutide once weekly in 1,946 participants with obesity and cardiovascular disease.  
-  record: E_AACT_NCT05882045  
-  region: Global  
-  quote: "The main purpose of this study is to evaluate the efficacy and safety of retatrutide once weekly in participants with obesity and established cardiovascular disease (CVD)."
-- **C042** [unmet_need / neutral / high] The trial enrolls adults aged 18 years and older.  
-  record: E_AACT_NCT05882045_population  
-  region: Global  
-  quote: "Sex: ALL; age: 18 Years to not stated"
-- **C043** [clinical / neutral / high] A key inclusion criterion is having a body mass index of at least 35 kg/m².  
-  record: E_AACT_NCT05882045_population  
-  region: Global  
-  quote: "Have a body mass index (BMI) ≥35.0 kilogram/square meter (kg/m²)."
-- **C044** [clinical / neutral / high] Individuals with type 1 diabetes are excluded from the study.  
-  record: E_AACT_NCT05882045_population  
-  region: Global  
-  quote: "Have Type 1 diabetes."
-- **C045** [clinical / neutral / high] Trial NCT05548231 is a Phase 1 study investigating the safety, tolerability, pharmacokinetics, and pharmacodynamics of LY3437943 in 32 Chinese participants with overweight or obesity.  
-  record: E_AACT_NCT05548231  
-  region: Global  
-  quote: "The main purpose of this study is to learn about the safety and tolerability of LY3437943 when given to Chinese participants with overweight body mass index (BMI) or obesity."
-- **C046** [clinical / neutral / high] Trial NCT05548231 requires participants to have a body mass index of at least 27 kg/m² and at most 40 kg/m² for inclusion.  
-  record: E_AACT_NCT05548231_population  
-  region: Global  
-  quote: "Have a body mass index of ≥27 and ≤40 kilograms per square meter (kg/m²)"
-- **C047** [clinical / neutral / high] Trial NCT05548231 excludes participants with a history of liver disease.  
-  record: E_AACT_NCT05548231_population  
-  region: Global  
-  quote: "Current or chronic history of liver disease."
-- **C048** [clinical / neutral / high] NCT05445232 is a Phase 1 drug-drug interaction study of LY3437943 in 32 obese participants.  
-  record: E_AACT_NCT05445232  
-  region: Global  
-  quote: "The main purpose of this study is to determine the effect of LY3437943 when administered subcutaneously on the levels of midazolam, warfarin and caffeine in the blood stream when administered orally as a drug cocktail in obese participants."
-- **C049** [unmet_need / neutral / high] The trial enrolls participants between 18 and 70 years of age.  
-  record: E_AACT_NCT05445232_population  
-  region: Global  
-  quote: "age: 18 Years to 70 Years"
-- **C050** [clinical / neutral / high] Participants are required to have a body mass index (BMI) of 27.0 to 40.0 kg/m².  
-  record: E_AACT_NCT05445232_population  
-  region: Global  
-  quote: "* Body mass index (BMI) within the range 27.0 to 40.0 kilograms per meter squared (kg/m²)"
-- **C051** [clinical / neutral / high] The study excludes participants with a history or current diagnosis of diabetes.  
-  record: E_AACT_NCT05445232_population  
-  region: Global  
-  quote: "* Have a history of diabetes or current diagnosis of diabetes"
-- **C052** [clinical / neutral / high] This Phase 2 trial evaluated the efficacy of once-weekly LY3437943 compared to placebo in 338 participants with obesity or who are overweight.  
-  record: E_AACT_NCT04881760  
-  region: Global  
-  quote: "This is a study of LY3437943 in participants who have obesity or are overweight. The main purpose is to learn more about how LY3437943 affects body weight loss."
-- **C053** [clinical / supports / high] In the 24-week analysis, 1 mg LY3437943 demonstrated a statistically significant mean percent body weight reduction compared to placebo with a difference of -5.64% (95% CI -7.34 to -3.94, p < 0.001).  
-  record: E_AACT_NCT04881760  
-  region: Global  
-  quote: "Placebo vs 1 mg LY3437943: LS Mean difference (Final Values) -5.64 (95% CI -7.34 to -3.94), p < 0.001"
-- **C054** [clinical / supports / high] In the 24-week analysis, 4 mg LY3437943 (2 mg titration) demonstrated a statistically significant mean percent body weight reduction compared to placebo with a difference of -10.45% (95% CI -12.21 to -8.7, p < 0.001).  
-  record: E_AACT_NCT04881760  
-  region: Global  
-  quote: "Placebo vs 4 mg LY3437943 (2 mg): LS Mean difference (Final Values) -10.45 (95% CI -12.21 to -8.7), p < 0.001"
-- **C055** [clinical / supports / high] In the 24-week analysis, 4 mg LY3437943 demonstrated a statistically significant mean percent body weight reduction compared to placebo with a difference of -12.25% (95% CI -14.42 to -10.08, p < 0.001).  
-  record: E_AACT_NCT04881760  
-  region: Global  
-  quote: "Placebo vs 4 mg LY3437943: LS Mean difference (Final Values) -12.25 (95% CI -14.42 to -10.08), p < 0.001"
-- **C056** [unmet_need / neutral / high] The trial enrolled 338 participants with a mean age of 48 years and mean baseline BMI of 37.34 kg/m².  
-  record: E_AACT_NCT04881760_population  
-  region: Global  
-  quote: "Total (N=338): ... Baseline Body Mass Index (BMI): MEAN 37.34 kilograms per meter squared (kg/m^2), STANDARD_DEVIATION 5.71 ... Age, Continuous: MEAN 48.00 years, STANDARD_DEVIATION 12.54"
-- **C057** [clinical / neutral / high] Participants are required to have a BMI ≥30 and ≤50 kg/m² or ≥27 and <30 kg/m² with at least one obesity-related comorbidity.  
-  record: E_AACT_NCT04881760_population  
-  region: Global  
-  quote: "* Participants must have a Body Mass Index (BMI) ) ≥30 and ≤50 kilograms per square meter (kg/m²), or ≥27 kg/m² and <30 kg/m², with at least one of the following comorbidities: hypertension, dyslipidemia, cardiovascular disease"
-- **C058** [clinical / neutral / high] Participants with type 1 or type 2 diabetes mellitus are excluded from the trial.  
-  record: E_AACT_NCT04881760_population  
-  region: Global  
-  quote: "* Participants must not have type 1 or type 2 diabetes mellitus"
-- **C059** [clinical / neutral / high] In the 12 mg LY3437943 (2 mg) group, 62 participants started the study and 54 completed it.  
-  record: E_AACT_NCT04881760_flow  
-  region: Global  
-  quote: "12 mg LY3437943 (2 mg): started 62, completed 54"
-- **C060** [regulatory / neutral / high] The pre-approval expanded access program for retatrutide is available for adults with severe obesity and serious obesity-related complications.  
-  record: E_AACT_NCT07629401  
-  region: Global  
-  quote: "Provide pre-approval single-patient expanded access of retatrutide (LY3437943), an investigational GLP-1/GIP/glucagon triple receptor agonist being studied for chronic weight management, for adults with severe obesity"
-- **C061** [unmet_need / neutral / high] Patients aged 18 years or older are eligible for the retatrutide expanded access program.  
-  record: E_AACT_NCT07629401_population  
-  region: Global  
-  quote: "* Age 18 years or older."
-- **C062** [clinical / neutral / high] Inclusion criteria for the expanded access program require patients to have a BMI of at least 35 kg/m2.  
-  record: E_AACT_NCT07629401_population  
-  region: Global  
-  quote: "* Refractory obesity, defined as BMI >= 35 kg/m2 despite adherence to and tolerance of treatment with highest available dose of chronic weight management therapy."
-- **C063** [clinical / neutral / high] Exclusion criteria for the expanded access program include any medical contraindication to retatrutide therapy.  
-  record: E_AACT_NCT07629401_population  
-  region: Global  
-  quote: "* Medical contraindication to retatrutide therapy"
-- **C064** [clinical / neutral / high] A Phase 3, 5-year, randomized, double-blind, placebo-controlled study is ongoing to investigate the effect of retatrutide on MACE and kidney events in 10,000 participants with obesity and ASCVD or CKD.  
-  record: E_NCT06383390  
-  region: Global  
-  quote: "A Phase 3, Randomized, Double-Blind, Placebo-Controlled, Event-Driven Study to Investigate the Effect of Retatrutide on the Incidence of Major Adverse Cardiovascular Events and Major Adverse Kidney Events in Participants With Body Mass Index ≥27 kg/m2 and Atherosclerotic Cardiovascular Disease and/or Chronic Kidney Disease"
-- **C065** [clinical / neutral / high] NCT06039826 is a Phase 1 study evaluating the effect of subcutaneous LY3437943 on the pharmacokinetics of oral contraceptive ethinyl estradiol and drospirenone in 46 overweight or obese postmenopausal participants.  
-  record: E_NCT06039826  
-  region: Global  
-  quote: "The main purpose of this study is to determine the effect of LY3437943 when administered subcutaneously on the levels of combined oral contraceptive (COC) ethinyl estradiol and drospirenone in the blood stream in postmenopausal female participants who are overweight or obese."
-- **C066** [competition / neutral / high] Semaglutide is being developed by Novo Nordisk A/S, Kailera, and Gan & Lee Pharmaceuticals with 25 active or planned Phase 3 obesity trials and a total planned enrollment of 16,073 participants.  
-  record: E_COMP_semaglutide  
-  region: Global  
-  quote: "Competitor program in obesity: semaglutide has 25 registered Phase 3 trial(s) in obesity that are active or planned."
-- **C067** [competition / neutral / high] Tirzepatide has 17 registered Phase 3 trials in obesity that are active or planned, sponsored by Eli Lilly and Company, University of Virginia, and Woolcock Institute of Medical Research, with 22,178 planned participants.  
-  record: E_COMP_tirzepatide  
-  region: Global  
-  quote: "Competitor program in obesity: tirzepatide has 17 registered Phase 3 trial(s) in obesity that are active or planned."
-- **C068** [competition / neutral / high] Orforglipron has 13 registered Phase 3 trials in obesity that are active or planned, sponsored by Eli Lilly and Company, with 12,143 planned participants.  
-  record: E_COMP_orforglipron  
-  region: Global  
-  quote: "Competitor program in obesity: orforglipron has 13 registered Phase 3 trial(s) in obesity that are active or planned."
-- **C069** [competition / neutral / high] Maridebart cafraglutide has 11 registered Phase 3 trials in obesity that are active or planned, sponsored by Amgen, with a planned enrollment of 29,343 participants.  
-  record: E_COMP_maridebart_cafraglutide  
-  region: Global  
-  quote: "Competitor program in obesity: maridebart cafraglutide has 11 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Amgen. Planned enrollment across these trials: 29343 participants."
-- **C070** [competition / neutral / high] NNC0487-0111 has 10 registered Phase 3 trials in obesity that are active or planned, sponsored by Novo Nordisk A/S, with a planned enrollment of 10,796 participants.  
-  record: E_COMP_nnc0487_0111  
-  region: Global  
-  quote: "Competitor program in obesity: nnc0487-0111 has 10 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Novo Nordisk A/S. Planned enrollment across these trials: 10796 participants."
-- **C071** [competition / neutral / high] Cagrilintide, sponsored by Novo Nordisk A/S, has 6 registered Phase 3 trials in obesity with a total planned enrollment of 5175 participants.  
-  record: E_COMP_cagrilintide  
-  region: Global  
-  quote: "Competitor program in obesity: cagrilintide has 6 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Novo Nordisk A/S. Planned enrollment across these trials: 5175 participants."
-- **C072** [competition / neutral / high] Eloralintide, sponsored by Eli Lilly and Company, has 5 registered Phase 3 trials in obesity with a total planned enrollment of 5615 participants.  
-  record: E_COMP_eloralintide  
-  region: Global  
-  quote: "Competitor program in obesity: eloralintide has 5 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Eli Lilly and Company. Planned enrollment across these trials: 5615 participants."
-- **C073** [competition / neutral / high] Gzr18 has 5 registered Phase 3 trials in obesity that are active or planned, with a lead sponsor of Gan & Lee Pharmaceuticals and a planned enrollment of 1830 participants.  
-  record: E_COMP_gzr18  
-  region: Global  
-  quote: "Competitor program in obesity: gzr18 has 5 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Gan & Lee Pharmaceuticals.. Planned enrollment across these trials: 1830 participants."
-- **C074** [competition / neutral / high] Berobenatide has 5 registered Phase 3 trials in obesity that are active or planned, with a lead sponsor of Pfizer and a planned enrollment of 1595 participants.  
-  record: E_COMP_berobenatide  
-  region: Global  
-  quote: "Competitor program in obesity: berobenatide has 5 registered Phase 3 trial(s) in obesity that are active or planned. Lead sponsor(s): Pfizer. Planned enrollment across these trials: 1595 participants."
-- **C075** [competition / neutral / high] Zenagamtide, developed by Novo Nordisk A/S, has 4 registered Phase 3 trials in obesity with a total planned enrollment of 10,500 participants.  
-  record: E_COMP_zenagamtide  
-  region: Global  
-  quote: "Competitor program in obesity: zenagamtide has 4 registered Phase 3 trial(s) in obesity that are active or planned."
-- **C076** [competition / neutral / high] Vk2735, developed by Viking Therapeutics, Inc., has 4 registered Phase 3 trials in obesity with a total planned enrollment of 6,720 participants.  
-  record: E_COMP_vk2735  
-  region: Global  
-  quote: "Competitor program in obesity: vk2735 has 4 registered Phase 3 trial(s) in obesity that are active or planned."
-- **C077** [competition / neutral / high] Ribupatide, developed by Kailera and Fujian Shengdi Pharmaceutical Co., Ltd., has 4 registered Phase 3 trials in obesity with a total planned enrollment of 5,452 participants.  
-  record: E_COMP_ribupatide  
-  region: Global  
-  quote: "Competitor program in obesity: ribupatide has 4 registered Phase 3 trial(s) in obesity that are active or planned."
-- **C078** [clinical / supports / high] In subjects with obesity, retatrutide treatment resulted in weight loss of up to 26.56%.  
-  record: E_MED_41785010  
-  region: Global  
-  quote: "Subjects with overweight or obesity experienced a greater weight loss by up to 26.56% (24.15 kg)."  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C079** [safety_or_failure / contradicts / high] Increased frequency of mild-to-moderate gastrointestinal adverse events such as nausea, vomiting, constipation, and diarrhea has been reported in patients on the highest retatrutide doses.  
-  record: E_MED_41785010  
-  region: Global  
-  quote: "Increased frequency of mild-to-moderate gastrointestinal adverse events (mainly nausea, vomiting, constipation, and diarrhea) was reported in participants on the highest retatrutide doses"
-- **C080** [clinical / supports / high] A Phase 2 obesity trial of retatrutide demonstrated a mean body-weight reduction of 24.2% at 48 weeks.  
-  record: E_MED_42792699  
-  region: Global  
-  quote: "Retatrutide (LY3437943) is a once-weekly triple agonist of the GLP-1, glucose-dependent insulinotropic polypeptide (GIP), and glucagon receptors that produced a mean body-weight reduction of 24.2% at 48 weeks"
-- **C081** [safety_or_failure / contradicts / medium] Retatrutide has been associated with reports of dysesthesia in clinical trials.  
-  record: E_MED_42792699  
-  region: Global  
-  quote: "Future studies should therefore characterize gastrointestinal tolerability, potential interaction with clozapine-associated gastrointestinal hypomotility, possible effects on clozapine and olanzapine exposure, adherence and feasibility, and the dysesthesia observed in retatrutide trials"
-- **C082** [safety_or_failure / contradicts / low] A man in his mid-30s with type 1 diabetes experienced severe gastrointestinal symptoms and metabolic distress after self-administering an online-purchased product marketed as retatrutide.  
-  record: E_MED_42669023  
-  region: Global  
-  quote: "We report a man in his mid-30s with longstanding type 1 diabetes mellitus who presented with severe vomiting, diarrhoea, hyperglycaemia, ketonaemia and acute kidney injury shortly after self-administering an online-purchased product marketed as retatrutide for weight loss."
-- **C083** [mechanism / neutral / high] Retatrutide is a triple agonist of the GIP, GLP-1, and glucagon receptors currently being investigated for obesity and type 2 diabetes.  
-  record: E_MED_42669023  
-  region: Global  
-  quote: "Retatrutide is a novel triple agonist of the glucose-dependent insulinotropic polypeptide, glucagon-like peptide-1 and glucagon receptors currently being investigated for obesity and type 2 diabetes mellitus"
-- **C084** [clinical / neutral / high] Pediatric data for retatrutide in adolescent obesity remain limited or unavailable.  
-  record: E_MED_42318576  
-  region: Global  
-  quote: "Dual agonists such as tirzepatide and emerging triple agonists, including retatrutide, have shown superior weight-loss efficacy in adult populations; however, pediatric data for these agents remain limited or unavailable."
-- **C085** [translation / supports / high] In phase 2 trials of adults with obesity and/or T2D, retatrutide was associated with significant reductions in various atherogenic lipoproteins.  
-  record: E_MED_42608321  
-  region: Global  
-  quote: "In both studies, retatrutide was associated with significant reductions in non-high-density lipoprotein cholesterol (Study 1: up to -21.0%, Study 2: up to -26.9%), apolipoprotein B (-21.4%, -24.2%)"
-- **C086** [clinical / supports / high] A meta-analysis indicated that retatrutide treatment was linked to a weight loss reaching up to -24.2% in patients with diabetes, obesity, and CKD.  
-  record: E_MED_41537067  
-  region: Global  
-  quote: "A significant mean reduction in HbA1c of -1.04% (95% CI -1.42 to -0.67) and a noticeable loss in weight, reaching up to -24.2%, were both linked with retatrutide treatment."
-- **C087** [safety_or_failure / contradicts / high] Gastrointestinal adverse events are the most commonly reported side effects associated with retatrutide.  
-  record: E_MED_41537067  
-  region: Global  
-  quote: "The safety profile is primarily characterized by gastrointestinal adverse events, which is anticipated for this drug class."  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C088** [clinical / supports / high] Retatrutide 9 mg and 12 mg demonstrated superior bodyweight reduction compared to placebo in adults with obesity and type 2 diabetes in the TRIUMPH-2 phase 3 trial.  
-  record: E_MED_42810372  
-  region: Global  
-  quote: "The primary endpoint was the percentage change from baseline to week 80 in bodyweight for the retatrutide 9 mg and 12 mg doses versus placebo"
-- **C089** [safety_or_failure / contradicts / high] Permanent treatment discontinuation due to adverse events was more frequent with retatrutide 9 mg (12%) and 12 mg (8%) compared to placebo (5%) in the TRIUMPH-2 trial.  
-  record: E_MED_42810372  
-  region: Global  
-  quote: "Permanent treatment discontinuation due to adverse events or death was more frequent in participants treated with retatrutide 9 mg (33 [12%]) and 12 mg (22 [8%]) compared with retatrutide 4 mg (11 [4%]) and placebo (14 [5%])"
-- **C090** [clinical / supports / high] In the TRIUMPH-1 trial, retatrutide achieved a mean body weight reduction of -25.0% at the 12 mg dose versus -3.9% in the placebo group.  
-  record: E_MED_42814954  
-  region: Global  
-  quote: "The mean percent change in body weight in the retatrutide groups was -17.6% (4-mg dose), -23.7% (9-mg dose), and -25.0% (12-mg dose) versus -3.9% in the placebo group"
-- **C091** [clinical / supports / high] Retatrutide reduced pain scores in obese participants with knee osteoarthritis in the TRIUMPH-1 trial.  
-  record: E_MED_42814954  
-  region: Global  
-  quote: "Among the participants with knee osteoarthritis, the corresponding changes in the pain score in the retatrutide groups for the hybrid estimand were -3.2, -3.5, and -3.6 versus -1.9 with placebo"
-- **C092** [mechanism / neutral / high] Retatrutide is a triple agonist targeting GIP, GLP-1, and glucagon receptors.  
-  record: E_MED_42814954  
-  region: Global  
-  quote: "Retatrutide is a triple-receptor agonist of glucose-dependent insulinotropic polypeptide, glucagon-like peptide-1, and glucagon receptors."
-- **C093** [clinical / supports / high] Retatrutide is being developed as a potential treatment for obesity and associated metabolic conditions.  
-  record: E_MED_42165732  
-  region: Global  
-  quote: "Dual GIP/GLP-1 agonist tirzepatide and triple agonist retatrutide have shown unprecedented efficacy, with up to 24% body weight reduction and improvement in hepatic and inflammatory markers."
-- **C094** [mechanism / supports / high] Retatrutide is a triple agonist targeting GIP, GLP-1, and glucagon receptors designed to achieve weight loss.  
-  record: E_MED_42530676  
-  region: Global  
-  quote: "synergistic targeting of a third G protein-coupled receptor (GPCR), namely the gastric inhibitory polypeptide receptor (GIPR), may achieve optimal control of blood glucose levels and weight loss"  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C095** [other / neutral / low] A single case report describes a patient with Prader-Willi syndrome who achieved 58.8% weight loss after 18 months of sequential treatment including retatrutide.  
-  record: E_MED_42751099  
-  region: Global  
-  quote: "At 18 months, total weight loss reached 58.8% (-108.7 kg), with HbA1c of 4.9% (SI: 30 mmol/mol), consistent with diabetes remission"  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C096** [mechanism / supports / medium] In a mouse model, weight loss intervention using the triple agonist LY3437943 significantly attenuated atrial fibrillation inducibility.  
-  record: E_MED_42156758  
-  region: Global  
-  quote: "Therapeutic interventions promoting lymphangiogenesis, either through VEGFC administration or weight loss intervention by LY3437943 (the novel triple GIP, GLP-1, and glucagon receptor agonist), significantly attenuate atrial fibrillation inducibility."
-- **C097** [clinical / supports / high] In a network meta-analysis of adults without diabetes, retatrutide showed the greatest weight loss at -22.10% compared to placebo.  
-  record: E_MED_42688617  
-  region: Global  
-  quote: "Compared with placebo, weight loss was greatest with retatrutide (-22.10%, 95% confidence interval -25.60% to -18.60%)"
-- **C098** [safety_or_failure / contradicts / low] Low certainty evidence suggests higher rates of treatment discontinuation with retatrutide compared to other treatments in a network meta-analysis.  
-  record: E_MED_42688617  
-  region: Global  
-  quote: "Low certainty evidence suggested higher rates for discontinuing treatment with danuglipron and retatrutide"
-- **C099** [clinical / supports / high] Retatrutide significantly increased MASH resolution or histological improvement compared to placebo in a meta-analysis of clinical trials.  
-  record: E_MED_42529769  
-  region: Global  
-  quote: "The included GLP-1-based polyagonists-tirzepatide, survodutide, pemvidutide, retatrutide, and cotadutide-significantly increased MASH resolution or histological improvement without worsening of fibrosis"
-- **C100** [safety_or_failure / neutral / high] In a meta-analysis, polyagonist treatments including retatrutide showed no statistically significant difference in serious adverse events versus placebo.  
-  record: E_MED_42529769  
-  region: Global  
-  quote: "Nausea, diarrhea, and vomiting were more frequent with polyagonists, but no statistically significant differences were observed in serious adverse events or adverse events leading to treatment discontinuation."  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C101** [clinical / supports / high] Retatrutide is a triple hormone receptor agonist that demonstrated weight loss efficacy in obesity trials compared to placebo.  
-  record: E_MED_39817343  
-  region: Global  
-  quote: "Retatrutide is a novel triple hormone receptor agonist which has shown great promise in tackling obesity in preliminary trials."
-- **C102** [safety_or_failure / supports / high] Retatrutide safety profile in analyzed clinical trials was comparable to the placebo control group.  
-  record: E_MED_39817343  
-  region: Global  
-  quote: "The safety profile of retatrutide was found to be comparable to the control group."
-- **C103** [mechanism / supports / medium] In diet-induced obese male rats, co-administration of retatrutide and cagrilintide produces dose-dependent reductions in body weight and food intake.  
-  record: E_MED_42744908  
-  region: Global  
-  quote: "Daily co-administration produces dose-dependent reductions in body weight and food intake that exceed both equimolar monotherapies and matched-dose comparator combinations"  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C104** [mechanism / supports / medium] The combination of retatrutide and cagrilintide in obese rats improves circulating markers of metabolic health.  
-  record: E_MED_42744908  
-  region: Global  
-  quote: "The combination therapy also improves circulating markers of metabolic health, including cholesterol, triglycerides and insulin levels."  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C105** [mechanism / supports / high] Retatrutide is a triple agonist targeting GLP-1, GIP, and glucagon pathways.  
-  record: E_MED_41297910  
-  region: Global  
-  quote: "retatrutide (GLP-1/GIP/glucagon triple agonist) have achieved unprecedented levels of weight loss and glycemic improvement"
-- **C106** [competition / neutral / high] In a phase 2 trial, retatrutide was compared against dulaglutide in participants with obesity and type 2 diabetes.  
-  record: E_MED_42135195  
-  region: Global  
-  quote: "T2D trial: retatrutide (0.5, 4, 8, 12 mg) or placebo or dulaglutide (1.5 mg)."
-- **C107** [translation / supports / high] Retatrutide treatment was associated with improvements in metabolic health-related lipid and metabolite clusters in phase 2 trials.  
-  record: E_MED_42135195  
-  region: Global  
-  quote: "Retatrutide was associated with changes in two metabolic clusters related to fatty acid oxidation and insulin resistance in a direction associated with improved metabolic health and reduced cardiovascular risk."
-- **C108** [mechanism / neutral / high] Retatrutide is a triple hormone receptor agonist targeting glucagon, GLP-1, and GIP receptors.  
-  record: E_MED_39507873  
-  region: Global  
-  quote: "Retatrutide, a hormone receptor agonist targeting glucagon, glucagon-like peptide 1, and glucose-dependent insulinotropic polypeptide, is being developed to treat obesity."
-- **C109** [clinical / supports / high] Phase II trials of retatrutide in obesity have shown up to 24% body weight reduction.  
-  record: E_MED_39507873  
-  region: Global  
-  quote: "Phase I proof-of-concept studies led to phase II trials showing up to 24% body weight reduction and nearly 20 cm waist circumference reduction."  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C110** [safety_or_failure / contradicts / medium] Gastrointestinal adverse effects are the most common adverse effects associated with retatrutide.  
-  record: E_MED_39507873  
-  region: Global  
-  quote: "The most common adverse effects were gastrointestinal."  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C111** [mechanism / supports / medium] In pre-clinical cancer models, retatrutide reduced pancreatic cancer engraftment and tumor volume.  
-  record: E_MED_40094000  
-  region: Global  
-  quote: "In pre-clinical models with significant retatrutide (RETA, LY3437943)-induced weight loss, pancreatic cancer engraftment was reduced, tumor onset was delayed, and progression was attenuated resulting in a 14-fold reduction in tumor volume compared to only 4-fold reduction in single agonist semaglutide-treated mice."
-- **C112** [mechanism / supports / medium] Retatrutide treatment in pre-clinical lung cancer models reduced tumor engraftment and volume.  
-  record: E_MED_40094000  
-  region: Global  
-  quote: "RETA-induced protection extends to a lung cancer model with 50% reduced tumor engraftment, significantly delayed tumor onset, and mitigated tumor progression, with a 17-fold reduction in tumor volume compared to controls."  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C113** [mechanism / supports / medium] In murine models, retatrutide inhibited PI3K-AKT and NF-κB pathways in non-diabetic renal fibrosis.  
-  record: E_MED_42630988  
-  region: Global  
-  quote: "In the UUO model, semaglutide effects were associated with PI3K-AKT inhibition, tirzepatide effects with PI3K-AKT inhibition and PPAR pathway activation, and retatrutide effects with concurrent inhibition of both PI3K-AKT and NF-κB pathways."
-- **C114** [mechanism / neutral / medium] Retatrutide increased force of contraction in isolated human atrial preparations in a concentration-dependent manner.  
-  record: E_MED_40613938  
-  region: Global  
-  quote: "We noted that cumulatively applied retatrutide starting at 10 nM (up to 100 nM the highest concentration tested) elevated FOC in HAP in a concentration- and time-dependent manner."
-- **C115** [clinical / neutral / high] The TRANSCEND-CKD study evaluates the efficacy of retatrutide on glomerular filtration rate in adults with overweight/obesity and chronic kidney disease.  
-  record: E_MED_41160422  
-  region: Global  
-  quote: "TRANSCEND-CKD is a double-blind, placebo-controlled, Phase 2b mechanistic study evaluating the efficacy of retatrutide in adults with overweight/obesity and CKD [estimated glomerular filtration rate (eGFR) 25-75 mL/min/1.73 m2], with and without T2D."
-- **C116** [mechanism / neutral / high] Retatrutide is a novel triple receptor agonist targeting GLP-1, GIP, and glucagon receptors for the treatment of obesity and type 2 diabetes.  
-  record: E_MED_40563436  
-  region: Global  
-  quote: "Retatrutide, a novel triple receptor agonist targeting glucagon-like peptide-1 (GLP-1), Glucose-Dependent Insulinotropic Polypeptide (GIP), and glucagon receptors, represents a groundbreaking advancement in obesity and T2DM pharmacotherapy."
-- **C117** [clinical / supports / high] Retatrutide demonstrates dose-dependent weight loss and improvements in glycemic control in Phase 1 and 2 clinical trials.  
-  record: E_MED_40563436  
-  region: Global  
-  quote: "Phase I and II clinical trials corroborate these findings, showing dose-dependent weight loss, reductions in Glycated Hemoglobin (HbA1c) levels, and improvements in liver steatosis and diabetic kidney disease."  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C118** [translation / neutral / high] Retatrutide has a mean half-life of approximately 6 days, supporting once-weekly dosing.  
-  record: E_MED_39724554  
-  region: Global  
-  quote: "The pharmacokinetics of retatrutide were dose proportional and its mean half-life of approximately 6 days supported a once-weekly dosing."
-- **C119** [safety_or_failure / neutral / high] Clinical trials for retatrutide have shown that gastrointestinal disorders are the most common adverse effects.  
-  record: E_MED_39724554  
-  region: Global  
-  quote: "The safety profile was similar to GLP-1R agonists and glucose-dependent insulinotropic polypeptide receptor/GLP-1R co-agonists, with gastrointestinal disorders being the most common adverse effects reported."  
-  ⚠ drug name is in the claim but not in the quote (attribution not verified)
-- **C120** [translation / neutral / medium] Retatrutide displays a robust intrinsic receptor activity hierarchy of GIPR > GLP-1R > GCGR.  
-  record: E_PPR_PPR1310001  
-  region: Global  
-  quote: "Retatrutide showed a highly robust intrinsic GIPR>GLP-1R>GCGR hierarchy, while its quantitative human activation vector remained underidentified."
-- **C121** [clinical / supports / medium] Early clinical data for retatrutide indicate potential hepatoprotective effects in patients with MASLD.  
-  record: E_MED_42195239  
-  region: Global  
-  quote: "Emerging agents like cotadutide (a GLP-1/glucagon receptor agonist) and retatrutide (a GLP-1/GIP/glucagon triagonist) represent a novel therapeutic frontier, with early clinical data indicating potent hepatoprotective effects and favorable metabolic remodeling."
-- **C122** [unmet_need / neutral / high] In US adults, overall obesity prevalence increased from 46.7% to 61.7% between 1999 and 2018.  
-  record: E_MED_42056948  
-  region: Global  
-  quote: "Overall obesity prevalence rose from 46.7% to 61.7%"
-- **C123** [unmet_need / neutral / high] Among US antiobesity medication users, 38.1% were classified as having pre-clinical obesity.  
-  record: E_MED_42159196  
-  region: Global  
-  quote: "Of AOM users, 38.1% (n = 53,633) had pre-clinical obesity."
-- **C124** [safety_or_failure / neutral / high] Clinical obesity in patients receiving bariatric surgery or antiobesity medications was associated with higher odds of post-treatment complications compared to pre-clinical obesity.  
-  record: E_MED_42159196  
-  region: Global  
-  quote: "Clinical obesity was associated with higher odds of post-treatment complications (AOM: aOR 1.10, BS: aOR 1.39, both p < 0.001)."
-- **C125** [unmet_need / neutral / high] In the United States, the prevalence of adult obesity was 40.3% in 2021-2023.  
-  record: E_MED_41927053  
-  region: Global  
-  quote: "prevalence falling to 40.3% in 2021-2023"
-- **C126** [unmet_need / neutral / high] In 2021, the prevalence of overweight and obesity in the United States ranged from 55.4% to 73.6% across jurisdictions.  
-  record: E_MED_42611392  
-  region: Global  
-  quote: "mean O/OV prevalence was 67.72%, ranging from 55.4% in DC to 73.6% in WV"
-- **C127** [mechanism / neutral / medium] Network pharmacology analysis suggests DHA may act through TNF and IL-17 signaling pathways in the context of obesity-associated comorbidities.  
-  record: E_MED_42548312  
-  region: Global  
-  quote: "Mechanistic exploration implicated DHA in TNF and IL-17 signalling pathways"
-- **C128** [unmet_need / neutral / high] The overall prevalence of clinical obesity among US adults from 2017 to 2020 was 9.7%.  
-  record: E_MED_40660751  
-  region: Global  
-  quote: "Among 8037 participants, the overall prevalence of clinical obesity was 9.7% (95% CI, 8.9%-10.5%), with comparable prevalence in males (9.8%) and in females (9.6%)."
-- **C129** [regulatory / neutral / high] No drug label records for retatrutide were found in the openFDA database.  
-  record: E_FDA_absent_retatrutide  
-  region: Global  
-  quote: "No drug label records matching 'retatrutide' were found in the openFDA drug label database (search by generic name, brand name and substance name)."
-- **C130** [mechanism / neutral / high] Retatrutide is a glucagon receptor agonist.  
-  record: E_OT_drug_CHEMBL5095485  
-  region: Global  
-  quote: "Glucagon receptor agonist (action type: AGONIST; target: Glucagon receptor)"
-- **C131** [mechanism / neutral / high] Retatrutide is a glucagon-like peptide 1 receptor agonist.  
-  record: E_OT_drug_CHEMBL5095485  
-  region: Global  
-  quote: "Glucagon-like peptide 1 receptor agonist (action type: AGONIST; target: Glucagon-like peptide 1 receptor)"
-- **C132** [mechanism / neutral / high] Retatrutide is a gastric inhibitory polypeptide receptor agonist.  
-  record: E_OT_drug_CHEMBL5095485  
-  region: Global  
-  quote: "Gastric inhibitory polypeptide receptor agonist (action type: AGONIST; target: Gastric inhibitory polypeptide receptor)"
-- **C133** [mechanism / neutral / high] The GCGR receptor plays a role in blood glucose regulation and glucose homeostasis.  
-  record: E_OT_target_ENSG00000215644  
-  region: Global  
-  quote: "G protein-coupled receptor for glucagon that plays a central role in the regulation of blood glucose levels and glucose homeostasis"
-- **C134** [mechanism / neutral / high] The GCGR target is associated with obesity disorder with an overall association score of 0.419.  
-  record: E_OT_assoc_ENSG00000215644_MONDO_0011122  
-  region: Global  
-  quote: "Open Targets association between target GCGR (glucagon receptor) and disease obesity disorder: overall association score 0.419 (scale 0 to 1)"
-- **C135** [mechanism / neutral / high] GLP1R functions as a G protein-coupled receptor that triggers a signaling cascade to increase intracellular cAMP levels upon ligand binding.  
-  record: E_OT_target_ENSG00000112164  
-  region: Global  
-  quote: "Ligand binding triggers activation of a signaling cascade that leads to the activation of adenylyl cyclase and increased intracellular cAMP levels"
-- **C136** [mechanism / neutral / high] The GLP1R target has an overall association score of 0.717 with obesity disorder, with a clinical evidence score of 0.994.  
-  record: E_OT_assoc_ENSG00000112164_MONDO_0011122  
-  region: Global  
-  quote: "Open Targets association between target GLP1R (glucagon like peptide 1 receptor) and disease obesity disorder: overall association score 0.717 (scale 0 to 1). Scores by evidence type: clinical 0.994"
-- **C137** [mechanism / neutral / high] The GLP1R target has an overall association score of 0.489 with morbid obesity.  
-  record: E_OT_assoc_ENSG00000112164_MONDO_0005139  
-  region: Global  
-  quote: "Open Targets association between target GLP1R (glucagon like peptide 1 receptor) and disease morbid obesity: overall association score 0.489 (scale 0 to 1)."
-- **C138** [mechanism / neutral / high] GIPR functions as a receptor for GIP, activating adenylyl cyclase through G proteins.  
-  record: E_OT_target_ENSG00000010310  
-  region: Global  
-  quote: "The activity of this receptor is mediated by G proteins which activate adenylyl cyclase."
-- **C139** [mechanism / neutral / high] The GIPR target is associated with obesity disorder with a score of 0.736.  
-  record: E_OT_target_ENSG00000010310  
-  region: Global  
-  quote: "Top associated diseases: obesity disorder (score 0.736); type 2 diabetes mellitus (score 0.696); Overweight (score 0.516); morbid obesity (score 0.493)"
-- **C140** [mechanism / neutral / high] GIPR has an overall association score of 0.736 with obesity disorder.  
-  record: E_OT_assoc_ENSG00000010310_MONDO_0011122  
-  region: Global  
-  quote: "Open Targets association between target GIPR (gastric inhibitory polypeptide receptor) and disease obesity disorder: overall association score 0.736 (scale 0 to 1)."
-- **C141** [mechanism / neutral / high] GIPR has an overall association score of 0.493 with morbid obesity.  
-  record: E_OT_assoc_ENSG00000010310_MONDO_0005139  
-  region: Global  
-  quote: "Open Targets association between target GIPR (gastric inhibitory polypeptide receptor) and disease morbid obesity: overall association score 0.493 (scale 0 to 1)."
+- **C001** [clinical / neutral / high] Tolebrutinib is being studied in a Phase 3, global, multicenter extension trial for long-term safety and tolerability in 2,500 adult participants with RMS, PPMS, or NRSPMS who were previously enrolled in specified Phase 2b or Phase 3 trials.  
+  record: E_AACT_NCT06372145  
+  region: Global  
+  quote: "This is a Phase 3 extension, global, multicenter study to assess the long-term safety and tolerability of tolebrutinib in adult participants (aged ≥18 years) with RMS, PPMS, or NRSPMS"
+- **C002** [clinical / neutral / high] The Phase 3 trial NCT06372145 for tolebrutinib is ongoing and enrollment is closed.  
+  record: E_AACT_NCT06372145  
+  region: Global  
+  quote: "This is a Phase 3 extension, global, multicenter study to assess the long-term safety and tolerability of tolebrutinib in adult participants (aged ≥18 years) with RMS, PPMS, or NRSPMS"
+- **C003** [competition / neutral / high] The trial NCT06372145 compares tolebrutinib to teriflunomide.  
+  record: E_AACT_NCT06372145  
+  region: Global  
+  quote: "Interventions: Placebo, Teriflunomide, Tolebrutinib"
+- **C004** [unmet_need / neutral / high] The trial NCT06372145 includes adults aged 18 years and older with specific types of multiple sclerosis who have participated in prior tolebrutinib studies.  
+  record: E_AACT_NCT06372145_population  
+  region: Global  
+  quote: "Participants with RMS, PPMS, or NRSPMS who completed the Phase 2b LTS (LTS16004) or 1 of the 4 Phase 3 pivotal tolebrutinib trials (EFC16033, EFC16034, EFC16645, EFC16035) on IMP."
+- **C005** [clinical / neutral / high] Participants are excluded from trial NCT06372145 if they have a persistent chronic, active, or recurring systemic infection.  
+  record: E_AACT_NCT06372145_population  
+  region: Global  
+  quote: "The participant is at risk for or has a persistent chronic, active (including fever higher than 38°C and clinically unstable), or recurring systemic infection, as judged by the Investigator"
+- **C006** [unmet_need / neutral / high] In the Tolebrutinib Cohort (n=7), the mean age of participants is 47.7 years.  
+  record: E_AACT_NCT04742400_population  
+  region: Global  
+  quote: "Age, Continuous: MEAN 47.7 Years, STANDARD_DEVIATION 7.8"
+- **C007** [clinical / neutral / high] Patients must be diagnosed with multiple sclerosis according to the 2017 McDonald diagnostic criteria to be eligible for the tolebrutinib cohort.  
+  record: E_AACT_NCT04742400_population  
+  region: Global  
+  quote: "Diagnosed with multiple sclerosis according to the 2017 revision of the McDonald diagnostic criteria, with no new lesion formation by comparison of baseline MRI scan with a historical MRI scan at least 6 months prior"
+- **C008** [clinical / neutral / high] Patients with a multiple sclerosis relapse in the 6 months prior to dosing are excluded from the tolebrutinib study.  
+  record: E_AACT_NCT04742400_population  
+  region: Global  
+  quote: "MS relapse in the 6 months prior to dosing"
+- **C009** [clinical / neutral / high] In trial NCT04742400, 7 participants started and completed the tolebrutinib cohort, while 5 participants started and completed the anti-CD20 cohort.  
+  record: E_AACT_NCT04742400_flow  
+  region: Global  
+  quote: "Anti-CD20 Cohort: started 5, completed 5; Tolebrutinib Cohort: started 7, completed 7."
+- **C010** [competition / neutral / high] The trial is comparing tolebrutinib against an anti-CD20 therapy comparator.  
+  record: E_AACT_NCT04742400  
+  region: Global  
+  quote: "Some participants will not take tolebrutinib. They will stay on their anti-CD20 therapy."
+- **C011** [clinical / neutral / high] The HERCULES trial (NCT04411641) is a completed phase 3 study evaluating tolebrutinib in 1,131 patients with nonrelapsing secondary progressive multiple sclerosis.  
+  record: E_AACT_NCT04411641  
+  region: Global  
+  quote: "A Phase 3, Randomized, Double-blind, Efficacy and Safety Study Comparing SAR442168 to Placebo in Participants With Nonrelapsing Secondary Progressive Multiple Sclerosis"
+- **C012** [competition / neutral / high] Tolebrutinib treatment resulted in a hazard ratio of 0.693 for the time to onset of 6-month confirmed disability progression compared to placebo in the HERCULES trial.  
+  record: E_AACT_NCT04411641  
+  region: Global  
+  quote: "Comparisons: DB: Placebo vs DB: Tolebrutinib 60 mg: Hazard Ratio (HR) 0.693 (95% CI 0.546 to 0.88), p = 0.0026."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C013** [clinical / neutral / high] The HERCULES trial required participants to have a diagnosis of nonrelapsing secondary progressive multiple sclerosis per the 2017 McDonald criteria for inclusion.  
+  record: E_AACT_NCT04411641_population  
+  region: Global  
+  quote: "* Diagnosis of nonrelapsing secondary progressive multiple sclerosis according to the 2017 McDonald criteria"
+- **C014** [clinical / neutral / high] Participants with a history of malignancy within 5 years prior to screening were excluded from the HERCULES trial.  
+  record: E_AACT_NCT04411641_population  
+  region: Global  
+  quote: "* History of malignancy within 5 years prior to screening."
+- **C015** [clinical / neutral / high] In the HERCULES trial, 377 participants were randomized to the placebo group and 192 completed the study.  
+  record: E_AACT_NCT04411641_flow  
+  region: Global  
+  quote: "DB: Placebo: started 377, completed 192"
+- **C016** [clinical / neutral / high] In the HERCULES trial, 754 participants were randomized to the 60 mg tolebrutinib group and 434 completed the study.  
+  record: E_AACT_NCT04411641_flow  
+  region: Global  
+  quote: "DB: Tolebrutinib 60 mg: started 754, completed 434"
+- **C017** [competition / neutral / high] In the HERCULES trial, 29 participants in the 60 mg tolebrutinib group discontinued due to an adverse event.  
+  record: E_AACT_NCT04411641_flow  
+  region: Global  
+  quote: "DB: Tolebrutinib 60 mg: Withdrawal by Subject (122), Progressive disease (116), Adverse Event (29)"
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C018** [translation / neutral / high] In the Tolebrutinib 60 mg group, the mean maximum observed plasma concentration (Cmax) of Tolebrutinib was 9.94 ng/mL.  
+  record: E_AACT_NCT04411641_pk  
+  region: Global  
+  quote: "DB: Tolebrutinib 60 mg: Maximum Observed Plasma Concentration (Cmax) of Tolebrutinib and M2 Metabolite Tolebrutinib: MEAN 9.94 nanogram/milliliter (ng/mL), Standard Deviation 6.18"
+- **C019** [translation / neutral / high] In the Tolebrutinib 60 mg group, the mean maximum observed plasma concentration (Cmax) of the M2 metabolite was 27.5 ng/mL.  
+  record: E_AACT_NCT04411641_pk  
+  region: Global  
+  quote: "DB: Tolebrutinib 60 mg: Maximum Observed Plasma Concentration (Cmax) of Tolebrutinib and M2 Metabolite M2 Metabolite: MEAN 27.5 nanogram/milliliter (ng/mL), Standard Deviation 17.3"
+- **C020** [translation / neutral / high] In the Tolebrutinib 60 mg group, the mean time to maximum observed plasma concentration (Tmax) was 1.42 hours for Tolebrutinib and 1.52 hours for the M2 metabolite.  
+  record: E_AACT_NCT04411641_pk  
+  region: Global  
+  quote: "DB: Tolebrutinib 60 mg: Time to Maximum Observed Plasma Concentration (Tmax) of Tolebrutinib and M2 Metabolite M2 Metabolite: MEAN 1.52 hour (h), Standard Deviation 0.667; DB: Tolebrutinib 60 mg: Time to Maximum Observed Plasma Concentration (Tmax) of Tolebrutinib and M2 Metabolite Tolebrutinib: MEAN 1.42 hour (h), Standard Deviation 0.674"
+- **C021** [clinical / neutral / high] Trial NCT04458051 is a completed Phase 3 study with 767 participants evaluating the efficacy of tolebrutinib compared to placebo in delaying disability progression in primary progressive multiple sclerosis.  
+  record: E_AACT_NCT04458051  
+  region: Global  
+  quote: "A Phase 3, Randomized, Double-blind, Efficacy and Safety Study Comparing SAR442168 to Placebo in Participants With Primary Progressive Multiple Sclerosis (PERSEUS)"
+- **C022** [unmet_need / neutral / high] The PERSEUS trial (NCT04458051) enrolls individuals aged 18 to 55 years.  
+  record: E_AACT_NCT04458051_population  
+  region: Global  
+  quote: "* 18 to 55 years of age inclusive"
+- **C023** [clinical / neutral / high] Inclusion in the PERSEUS trial requires a diagnosis of PPMS according to the 2017 McDonald criteria.  
+  record: E_AACT_NCT04458051_population  
+  region: Global  
+  quote: "* Diagnosis of PPMS according to the 2017 McDonald criteria"
+- **C024** [clinical / neutral / high] Patients with a history of malignancy within 5 years prior to screening are excluded from the PERSEUS trial.  
+  record: E_AACT_NCT04458051_population  
+  region: Global  
+  quote: "* History of malignancy within 5 years prior to screening."
+- **C025** [clinical / neutral / high] NCT06106074 is a completed Phase 1 study in 71 healthy adult participants to evaluate the tolerability and pharmacokinetics of tolebrutinib.  
+  record: E_AACT_NCT06106074  
+  region: Global  
+  quote: "This is a randomized, placebo-controlled, four-part, Phase I, first in human (FIH) study to assess the tolerability and pharmacokinetics (PK) of ascending single and 14-day repeated oral doses of SAR442168 with a food effect investigation in healthy adult participants."
+- **C026** [unmet_need / neutral / high] The population for this trial includes healthy volunteers aged 18 to 45 years.  
+  record: E_AACT_NCT06106074_population  
+  region: Global  
+  quote: "Sex: ALL; age: 18 Years to 45 Years; healthy volunteers: True."
+- **C027** [clinical / neutral / high] The key inclusion criterion is having provided written informed consent.  
+  record: E_AACT_NCT06106074_population  
+  region: Global  
+  quote: "* Having given written informed consent prior to undertaking any study-related procedure."
+- **C028** [clinical / neutral / high] A key exclusion criterion is the investigator's judgment that the participant may be noncompliant or unable to cooperate.  
+  record: E_AACT_NCT06106074_population  
+  region: Global  
+  quote: "* Any subject who, in the judgment of the Investigator, is likely to be noncompliant during the study, or unable to cooperate because of a language problem or poor mental development."
+- **C029** [clinical / neutral / high] The GEMINI 1 trial, a Phase 3 study, compared the efficacy of tolebrutinib 60 mg to teriflunomide 14 mg in 974 participants with relapsing forms of multiple sclerosis.  
+  record: E_AACT_NCT04410978  
+  region: Global  
+  quote: "A Phase 3, Randomized, Double-blind Efficacy and Safety Study Comparing SAR442168 to Teriflunomide (Aubagio®) in Participants With Relapsing Forms of Multiple Sclerosis"
+- **C030** [clinical / neutral / high] In the GEMINI 1 trial, tolebrutinib 60 mg resulted in an annualized relapse rate of 0.130 relapses per participant year compared to 0.122 for teriflunomide 14 mg.  
+  record: E_AACT_NCT04410978  
+  region: Global  
+  quote: "Teriflunomide 14 mg: NUMBER 0.122 relapses per participant year; Tolebrutinib 60 mg: NUMBER 0.130 relapses per participant year."
+- **C031** [clinical / neutral / high] The comparison of tolebrutinib 60 mg to teriflunomide 14 mg in the GEMINI 1 trial showed a relative risk of 1.061 (95% CI 0.808 to 1.393) for annualized relapse rate, p = 0.6691.  
+  record: E_AACT_NCT04410978  
+  region: Global  
+  quote: "Comparisons: Teriflunomide 14 mg vs Tolebrutinib 60 mg: Relative risk 1.061 (95% CI 0.808 to 1.393), p = 0.6691."
+- **C032** [competition / neutral / high] Teriflunomide is the comparator drug used in the Phase 3 GEMINI 1 study.  
+  record: E_AACT_NCT04410978  
+  region: Global  
+  quote: "A Phase 3, Randomized, Double-blind Efficacy and Safety Study Comparing SAR442168 to Teriflunomide (Aubagio®) in Participants With Relapsing Forms of Multiple Sclerosis"
+- **C033** [unmet_need / neutral / high] The GEMINI 1 study enrolled patients with relapsing forms of multiple sclerosis aged 18 to 55 years, with a mean age of 36.7 years.  
+  record: E_AACT_NCT04410978_population  
+  region: Global  
+  quote: "Age, Continuous: MEAN 36.7 years, STANDARD_DEVIATION 9.2"
+- **C034** [clinical / neutral / high] Participants in the GEMINI 1 study were required to have an expanded disability status scale score of 5.5 or less.  
+  record: E_AACT_NCT04410978_population  
+  region: Global  
+  quote: "* The participant has an expanded disability status scale (EDSS) score ≤5.5 at the first Screening Visit"
+- **C035** [clinical / neutral / high] Patients diagnosed with primary progressive multiple sclerosis were excluded from the GEMINI 1 study.  
+  record: E_AACT_NCT04410978_population  
+  region: Global  
+  quote: "* The participant has been diagnosed with primary progressive multiple sclerosis (PPMS) according to the 2017 revision of the McDonald diagnostic criteria or with nonrelapsing secondary progressive multiple sclerosis (SPMS)"
+- **C036** [clinical / neutral / high] In the GEMINI 1 trial, 486 participants started the Tolebrutinib 60 mg group and 409 completed it.  
+  record: E_AACT_NCT04410978_flow  
+  region: Global  
+  quote: "Tolebrutinib 60 mg: started 486, completed 409"
+- **C037** [clinical / neutral / high] In the GEMINI 1 trial, 488 participants started the Teriflunomide 14 mg group and 415 completed it.  
+  record: E_AACT_NCT04410978_flow  
+  region: Global  
+  quote: "Teriflunomide 14 mg: started 488, completed 415"
+- **C038** [translation / neutral / high] In the Tolebrutinib 60 mg group, the mean Cmax of Tolebrutinib was 12.0 ng/mL.  
+  record: E_AACT_NCT04410978_pk  
+  region: Global  
+  quote: "Tolebrutinib 60 mg: Maximum Observed Plasma Concentration (Cmax) of Tolebrutinib and M2 Metabolite Tolebrutinib: MEAN 12.0 nanogram/milliliter (ng/mL), Standard Deviation 7.75"
+- **C039** [translation / neutral / high] In the Tolebrutinib 60 mg group, the mean Tmax of Tolebrutinib was 1.28 hours.  
+  record: E_AACT_NCT04410978_pk  
+  region: Global  
+  quote: "Tolebrutinib 60 mg: Time to Maximum Observed Plasma Concentration (Tmax) of Tolebrutinib and M2 Metabolite Tolebrutinib: MEAN 1.28 hour (h), Standard Deviation 0.513"
+- **C040** [translation / neutral / high] In the Tolebrutinib 60 mg group, the mean AUC0-24 of Tolebrutinib was 30.5 ng*h/mL.  
+  record: E_AACT_NCT04410978_pk  
+  region: Global  
+  quote: "Tolebrutinib 60 mg: Area Under the Plasma Concentration-time Curve Over the Last 24-hours Dosing Interval (AUC0-24) of Tolebrutinib and M2 Metabolite Tolebrutinib: MEAN 30.5 ng*h/mL, Standard Deviation 18.2"
+- **C041** [clinical / neutral / high] The Phase 3 GEMINI 2 trial compared tolebrutinib 60 mg to teriflunomide 14 mg in 899 participants with relapsing forms of multiple sclerosis.  
+  record: E_AACT_NCT04410991  
+  region: Global  
+  quote: "A Phase 3, Randomized, Double-blind Efficacy and Safety Study Comparing SAR442168 to Teriflunomide (Aubagio®) in Participants With Relapsing Forms of Multiple Sclerosis"
+- **C042** [clinical / neutral / high] In the GEMINI 2 trial, the annualized relapse rate was 0.108 for the tolebrutinib 60 mg group and 0.109 for the teriflunomide 14 mg group, with a relative risk of 0.996 (p=0.9758).  
+  record: E_AACT_NCT04410991  
+  region: Global  
+  quote: "Teriflunomide 14 mg: NUMBER 0.109 relapses per participant year; Tolebrutinib 60 mg: NUMBER 0.108 relapses per participant year. Comparisons: Teriflunomide 14 mg vs Tolebrutinib 60 mg: Relative risk 0.996 (95% CI 0.754 to 1.315), p = 0.9758."
+- **C043** [competition / neutral / high] Teriflunomide is used as an active comparator in the GEMINI 2 trial.  
+  record: E_AACT_NCT04410991  
+  region: Global  
+  quote: "A Phase 3, Randomized, Double-blind Efficacy and Safety Study Comparing SAR442168 to Teriflunomide (Aubagio®) in Participants With Relapsing Forms of Multiple Sclerosis"
+- **C044** [unmet_need / neutral / high] The trial enrolled patients with relapsing forms of multiple sclerosis aged 18 to 55 with a mean age of 36.4 years.  
+  record: E_AACT_NCT04410991_population  
+  region: Global  
+  quote: "Age, Continuous: MEAN 36.4 years, STANDARD_DEVIATION 9.3"
+- **C045** [clinical / neutral / high] Eligible participants must have a diagnosis of relapsing forms of multiple sclerosis according to the 2017 McDonald criteria and an EDSS score of 5.5 or lower.  
+  record: E_AACT_NCT04410991_population  
+  region: Global  
+  quote: "* The participant has an expanded disability status scale (EDSS) score ≤5.5 at the first Screening Visit"
+- **C046** [clinical / neutral / high] Patients diagnosed with primary progressive multiple sclerosis or nonrelapsing secondary progressive multiple sclerosis are excluded from the trial.  
+  record: E_AACT_NCT04410991_population  
+  region: Global  
+  quote: "* The participant has been diagnosed with primary progressive multiplesclerosis (PPMS) according to the 2017 revision of the McDonald diagnostic criteria or with nonrelapsing secondary progressive multiplesclerosis (SPMS)"
+- **C047** [clinical / neutral / high] In the GEMINI 2 trial, 447 participants started in the Tolebrutinib 60 mg group and 384 completed the study.  
+  record: E_AACT_NCT04410991_flow  
+  region: Global  
+  quote: "Tolebrutinib 60 mg: started 447, completed 384."
+- **C048** [clinical / neutral / high] In the GEMINI 2 trial, 452 participants started in the Teriflunomide 14 mg group and 378 completed the study.  
+  record: E_AACT_NCT04410991_flow  
+  region: Global  
+  quote: "Teriflunomide 14 mg: started 452, completed 378"
+- **C049** [clinical / neutral / high] NCT06064539 is a completed Phase 1 study assessing the effects of gemfibrozil and rifampicin on the pharmacokinetics of tolebrutinib in 30 healthy male participants.  
+  record: E_AACT_NCT06064539  
+  region: Global  
+  quote: "This is a Phase 1, single-center, open-label, non-randomized study to assess the effects of CYP2C8 inhibition using gemfibrozil, and CYP3A4 and CYP2C8 induction using rifampicin on the pharmacokinetics of SAR442168 in healthy male participants aged 18 to 45 years."
+- **C050** [competition / neutral / high] Teriflunomide is used as a comparator drug in the GEMINI 2 trial of tolebrutinib.  
+  record: E_AACT_NCT04410991_flow  
+  region: Global  
+  quote: "Teriflunomide 14 mg: started 452, completed 378"
+- **C051** [clinical / neutral / high] NCT03996291 is a phase 2 trial evaluating the long-term safety, tolerability, and efficacy of tolebrutinib in 125 participants with relapsing multiple sclerosis.  
+  record: E_AACT_NCT03996291  
+  region: Global  
+  quote: "Long-term Extension Safety and Efficacy Study of SAR442168 in Participants With Relapsing Multiple Sclerosis"
+- **C052** [unmet_need / neutral / high] The trial enrolled 125 participants aged 18 to 55 years with relapsing multiple sclerosis, including 86 females and 39 males.  
+  record: E_AACT_NCT03996291_population  
+  region: Global  
+  quote: "Total (N=125): Race (NIH/OMB) White: COUNT_OF_PARTICIPANTS 115 Participants; Race (NIH/OMB) Native Hawaiian or Other Pacific Islander: COUNT_OF_PARTICIPANTS 0 Participants; Race (NIH/OMB) Asian: COUNT_OF_PARTICIPANTS 1 Participants; Sex: Female, Male Female: COUNT_OF_PARTICIPANTS 86 Participants; Race (NIH/OMB) American Indian or Alaska Native: COUNT_OF_PARTICIPANTS 0 Participants; Race (NIH/OMB) Black or African American: COUNT_OF_PARTICIPANTS 6 Participants; Age, Continuous: MEAN 37.8 years, STANDARD_DEVIATION 9.5; Sex: Female, Male Male: COUNT_OF_PARTICIPANTS 39 Participants"
+- **C053** [clinical / neutral / high] Participants were required to have completed treatment in the previous DRI15928 study to be included in the trial.  
+  record: E_AACT_NCT03996291_population  
+  region: Global  
+  quote: "Participants had to have completed treatment in the DRI15928 study"
+- **C054** [clinical / neutral / high] Participants were excluded if they received a non-study multiple sclerosis disease modifying treatment between the last trial visit and study inclusion.  
+  record: E_AACT_NCT03996291_population  
+  region: Global  
+  quote: "The participant had received a non-study MS disease modifying treatment between the last IMP treatment in Study DRI15928 and inclusion in Study LTS16004, which by judgement of the Investigator may add unjustified risk to switching back and continuing treatment with SAR442168."
+- **C055** [clinical / neutral / high] In the Tolebrutinib 15 mg Part A group, 31 participants started and 31 participants completed the study.  
+  record: E_AACT_NCT03996291_flow  
+  region: Global  
+  quote: "Part A: Tolebrutinib 15 mg: started 31, completed 31"
+- **C056** [competition / neutral / high] Ocrelizumab has 15 registered Phase 3 trials in multiple sclerosis, with Hoffman-La Roche, Haukeland University Hospital, and Novartis Pharmaceuticals as lead sponsors and a planned enrollment of 8,376 participants.  
+  record: E_COMP_ocrelizumab  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: ocrelizumab has 15 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C057** [competition / neutral / high] Fingolimod has 6 registered Phase 3 trials in multiple sclerosis, with Novartis Pharmaceuticals, Biogen, and Hoffmann-La Roche as lead sponsors and a planned enrollment of 1,176 participants.  
+  record: E_COMP_fingolimod  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: fingolimod has 6 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C058** [competition / neutral / high] Teriflunomide has 5 registered Phase 3 trials in multiple sclerosis, led by Hoffmann-La Roche, Novartis Pharmaceuticals, and Sanofi, with a total planned enrollment of 5159 participants.  
+  record: E_COMP_teriflunomide  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: teriflunomide has 5 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C059** [competition / neutral / high] Ublituximab has 4 registered Phase 3 trials in multiple sclerosis, led by TG Therapeutics, Inc., with a total planned enrollment of 2500 participants.  
+  record: E_COMP_ublituximab  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: ublituximab has 4 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C060** [competition / neutral / high] Methylprednisolone has 4 active or planned Phase 3 trials in multiple sclerosis, sponsored by Hoffmann-La Roche, Oculis, and Copenhagen University Hospital, with a planned enrollment of 2443 participants.  
+  record: E_COMP_methylprednisolone  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: methylprednisolone has 4 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C061** [competition / neutral / high] Remibrutinib has 3 active or planned Phase 3 trials in multiple sclerosis, sponsored by Novartis Pharmaceuticals, with a planned enrollment of 3282 participants.  
+  record: E_COMP_remibrutinib  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: remibrutinib has 3 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C062** [competition / neutral / high] Frexalimab has 3 active or planned Phase 3 trials in multiple sclerosis, sponsored by Sanofi, with a planned enrollment of 2758 participants.  
+  record: E_COMP_frexalimab  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: frexalimab has 3 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C063** [competition / neutral / high] Fenebrutinib is a competitor in multiple sclerosis with 3 registered Phase 3 trials and a planned enrollment of 2482 participants sponsored by Hoffmann-La Roche.  
+  record: E_COMP_fenebrutinib  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: fenebrutinib has 3 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C064** [competition / neutral / high] Rituximab is a competitor in multiple sclerosis with 3 registered Phase 3 trials and a planned enrollment of 1014 participants.  
+  record: E_COMP_rituximab  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: rituximab has 3 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C065** [competition / neutral / high] MRI contrast-enhancing agents are competitors in multiple sclerosis with 2 registered Phase 3 trials and a planned enrollment of 2598 participants sponsored by Sanofi.  
+  record: E_COMP_mri_contrast_enhancing_agents  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: mri contrast-enhancing agents has 2 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C066** [competition / neutral / high] Imu-838 is being evaluated in 2 active or planned Phase 3 trials in multiple sclerosis by Immunic AG with a planned enrollment of 2221 participants.  
+  record: E_COMP_imu_838  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: imu-838 has 2 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C067** [competition / neutral / high] Ofatumumab is being evaluated in 2 active or planned Phase 3 trials in multiple sclerosis by Novartis Pharmaceuticals with a planned enrollment of 2011 participants.  
+  record: E_COMP_ofatumumab  
+  region: Global  
+  quote: "Competitor program in multiple sclerosis: ofatumumab has 2 registered Phase 3 trial(s) in multiple sclerosis that are active or planned."
+- **C068** [competition / neutral / high] Tolebrutinib demonstrated a 31% reduction in disability progression in non-relapsing secondary progressive MS and a 29% reduction in relapsing MS, but no meaningful benefit in primary progressive MS.  
+  record: E_MED_42546561  
+  region: Global  
+  quote: "Tolebrutinib reduced disability progression by 31% in nrSPMS and 29% in RMS but showed no meaningful benefit in PERSEUS."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C069** [competition / neutral / high] One tolebrutinib-treated participant experienced a liver transplant and subsequent death due to postoperative complications.  
+  record: E_MED_42546561  
+  region: Global  
+  quote: "All cases occurred within the first 90 days of exposure and resolved without sequelae except one participant who required a liver transplant and died from postoperative complications."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C070** [mechanism / neutral / medium] Mechanistic studies in liver spheroids suggest an idiosyncratic mechanism for tolebrutinib-induced liver injury rather than direct hepatocellular toxicity.  
+  record: E_MED_42546561  
+  region: Global  
+  quote: "Mechanistic studies using liver spheroids showed no evidence of direct hepatocellular toxicity, supporting an idiosyncratic mechanism."
+- **C071** [competition / neutral / high] Tolebrutinib reduced six-month confirmed disability progression compared to placebo in the HERCULES trial.  
+  record: E_PPR_PPR1319404  
+  region: Global  
+  quote: "HERCULES randomized 1,131 participants and demonstrated a reduction in disability progression confirmed for six months using the Expanded Disability Status Scale with tolebrutinib versus placebo"
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C072** [competition / neutral / high] In the HERCULES trial, the hazard ratio for disability progression for tolebrutinib versus placebo was 0.69.  
+  record: E_PPR_PPR1319404  
+  region: Global  
+  quote: "hazard ratio 0.69; 95% confidence interval 0.55–0.88"
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C073** [competition / neutral / high] The PERSEUS trial of tolebrutinib in primary progressive multiple sclerosis did not meet its primary endpoint.  
+  record: E_PPR_PPR1319404  
+  region: Global  
+  quote: "Severe liver injury and the negative PERSEUS trial in primary progressive MS reinforce the need for population-specific interpretation and careful benefit–risk assessment."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C074** [competition / neutral / high] Tolebrutinib is associated with a risk of severe liver injury.  
+  record: E_PPR_PPR1319404  
+  region: Global  
+  quote: "Severe liver injury and the negative PERSEUS trial in primary progressive MS reinforce the need for population-specific interpretation and careful benefit–risk assessment."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C075** [competition / neutral / high] Tolebrutinib targets BTK to modulate immune signaling in multiple sclerosis.  
+  record: E_MED_42126690  
+  region: Global  
+  quote: "Bruton's tyrosine kinase (BTK) inhibitors are an emerging class of oral agents that represent a novel approach to MS treatment. These agents target BTK, an enzyme which plays a pivotal role in both adaptive and innate immune signaling."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C076** [translation / neutral / high] Some BTK inhibitors cross the blood-brain barrier at biologically relevant concentrations.  
+  record: E_MED_42126690  
+  region: Global  
+  quote: "As small molecules, some BTK inhibitors can cross the BBB at biologically relevant concentrations."
+- **C077** [other / neutral / high] BTK inhibitors significantly reduced the annualized relapse rate in multiple sclerosis compared with control therapy.  
+  record: E_MED_42352643  
+  region: Global  
+  quote: "BTK inhibitors significantly reduced ARR compared with control therapy (pooled RR 0.24; 95% CI 0.15-0.39)."
+- **C078** [other / neutral / high] BTK inhibitors reduced MRI lesion activity in multiple sclerosis patients.  
+  record: E_MED_42352643  
+  region: Global  
+  quote: "MRI activity was reduced (mean difference -1.45 new/enlarging T2 lesions; 95% CI -2.08 to -0.82)."
+- **C079** [clinical / neutral / high] Disability progression was unchanged in short-term relapsing multiple sclerosis trials using BTK inhibitors.  
+  record: E_MED_42352643  
+  region: Global  
+  quote: "Disability progression was unchanged in short-term relapsing MS trials."
+- **C080** [other / neutral / high] Hepatotoxicity remains a clinically relevant safety concern for BTK inhibitors in multiple sclerosis.  
+  record: E_MED_42352643  
+  region: Global  
+  quote: "However, increased transaminase elevations were reported in placebo-controlled trials, which indicates that hepatotoxicity remains a clinically relevant safety concern for the class."
+- **C081** [competition / neutral / high] Tolebrutinib is one of several second-generation BTK inhibitors being developed for multiple sclerosis.  
+  record: E_MED_42075951  
+  region: Global  
+  quote: "Second-generation BTK inhibitors, including evobrutinib, tolebrutinib, fenebrutinib, remibrutinib, and orelabrutinib, have advanced through Phase II-III development in MS."
+- **C082** [mechanism / neutral / high] Brain-penetrant Bruton's tyrosine kinase inhibitors are being investigated as a potential approach to target compartmentalized inflammation and smoldering disease biology in multiple sclerosis.  
+  record: E_MED_42482223  
+  region: Global  
+  quote: "Brain-penetrant Bruton's tyrosine kinase inhibitors, CD40 ligand-targeting biologics, refined B-cell-depleting strategies and emerging chimeric antigen receptor T-cell therapies represent promising approaches to target different aspects of compartmentalized inflammation and smoldering disease biology."
+- **C083** [competition / neutral / high] Fenebrutinib and remibrutinib are BTK inhibitors competing for patient share with tolebrutinib.  
+  record: E_MED_42828703  
+  region: Global  
+  quote: "New options include Bruton's tyrosine kinase (BTK) inhibitors (e.g., tolebrutinib, fenebrutinib, remibrutinib), projected to reach approximately 16% patient share within 3 years of first launch."
+- **C084** [translation / neutral / high] Tolebrutinib is a brain-penetrant small molecule inhibitor of Bruton's tyrosine kinase.  
+  record: E_MED_41284222  
+  region: Global  
+  quote: "Tolebrutinib (CENRIFKI®) is an orally available, brain-penetrant small molecule inhibitor of Bruton's tyrosine kinase (BTK) being developed by Sanofi for the treatment of multiple sclerosis (MS)."
+- **C085** [regulatory / supports / high] Tolebrutinib received approval in the UAE for the treatment of non-relapsing secondary progressive multiple sclerosis.  
+  record: E_MED_41284222  
+  region: Global  
+  quote: "On 26 August 2025, tolebrutinib received its first approval in the United Arab Emirates (UAE) for the treatment of non-relapsing secondary progressive multiple sclerosis (nrSPMS) and to slow disability accumulation independent of relapse activity in adults."
+- **C086** [competition / neutral / high] Tolebrutinib demonstrated dose-dependent efficacy in reducing new gadolinium-enhancing lesions and T2 lesion counts in patients with relapsing multiple sclerosis.  
+  record: E_MED_41015666  
+  region: Global  
+  quote: "Tolebrutinib demonstrated dose-dependent efficacy in reducing new Gd-enhancing lesions and T2 lesion counts, with optimal effects at 60 mg daily."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C087** [competition / neutral / high] Frequent side effects of tolebrutinib in relapsing multiple sclerosis patients include nasopharyngitis, temporary increases in liver enzymes, and mild gastrointestinal symptoms.  
+  record: E_MED_41015666  
+  region: Global  
+  quote: "Nasopharyngitis, temporary increases in liver enzymes, and mild gastrointestinal symptoms were among the frequent side effects for both agents."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C088** [competition / neutral / high] Evobrutinib is a BTK inhibitor evaluated alongside tolebrutinib for management of relapsing multiple sclerosis.  
+  record: E_MED_41015666  
+  region: Global  
+  quote: "To evaluate the safety profiles and effectiveness of two BTK inhibitors- Tolebrutinib and Evobrutinib in the management of relapsing multiple sclerosis."
+- **C089** [competition / neutral / medium] Data suggests disability slowing with tolebrutinib in non-relapsing secondary progressive multiple sclerosis.  
+  record: E_MED_42299013  
+  region: Global  
+  quote: "Supporting data include disability slowing with tolebrutinib in non-relapsing secondary progressive MS, heterogeneous relapse outcomes across BTKi molecules, and class safety signals that favour BTKi as an add-on rather than a replacement for anti-CD20 therapy."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C090** [translation / neutral / high] Tolebrutinib is an oral, brain-penetrant, covalent BTK inhibitor being investigated for multiple sclerosis.  
+  record: E_MED_41717535  
+  region: Global  
+  quote: "Tolebrutinib is an oral, brain-penetrant, covalent Bruton's tyrosine kinase (BTK) inhibitor currently under investigation as a disease-modifying therapy for multiple sclerosis (MS)."
+- **C091** [safety_or_failure / neutral / high] In a long-term extension study of tolebrutinib, the most common treatment-emergent adverse events were COVID-19 (21%) and headache (14%).  
+  record: E_MED_41717535  
+  region: Global  
+  quote: "The most common treatment-emergent AEs were COVID-19 (n=26/125, 21%) and headache (n=17/125, 14%)."
+- **C092** [competition / neutral / high] In a long-term extension study of tolebrutinib, the annualized relapse rate was 0.17 for patients on the 60 mg/day dose.  
+  record: E_MED_41717535  
+  region: Global  
+  quote: "ARR on tolebrutinib 60 mg/day for ≥8 weeks was 0.17 (95% confidence interval: 0.12, 0.25), and median EDSS scores were stable."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C093** [competition / neutral / high] The tolebrutinib long-term extension study results are limited by its open-label design and lack of a comparator group.  
+  record: E_MED_41717535  
+  region: Global  
+  quote: "Conclusions regarding efficacy are limited by the study's open-label design and lack of a comparator group."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C094** [other / neutral / high] Teriflunomide is used for the management of multiple sclerosis and has data supporting its role in slowing disability progression.  
+  record: E_MED_42661714  
+  region: Global  
+  quote: "Conclusion Teriflunomide is emerging as a valuable, multi-faceted contributor to the MS treatment landscape, with data supporting its role in preserving brain volume, slowing disability progression, and maintaining cognitive function."
+- **C095** [competition / neutral / high] The HERCULES trial showed that tolebrutinib reduced the risk of disability progression by 31% in non-relapsing secondary progressive multiple sclerosis patients.  
+  record: E_MED_40651461  
+  region: Global  
+  quote: "Results from the HERCULES trial1 showed that tolebrutinib, a brain-penetrant BTKi, reduced by 31% the risk of disability progression in non-relapsing secondary progressive MS patients, with a good safety profile."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C096** [other / neutral / high] In a meta-analysis of four RCTs, BTK inhibitors reduced the risk of 3-month confirmed disability worsening compared to teriflunomide.  
+  record: E_MED_41518815  
+  region: Global  
+  quote: "BTK inhibitors reduced the risk of 3-month CDW compared with teriflunomide (HR: 0.81; 95% CI: 0.67-0.97) but not 6-month CDW (HR: 0.88; 95% CI: 0.63-1.24)."
+- **C097** [clinical / neutral / high] A meta-analysis found no significant difference in annualized relapse rates between BTK inhibitors and teriflunomide in relapsing multiple sclerosis.  
+  record: E_MED_41518815  
+  region: Global  
+  quote: "ARR was similar between the groups (Rate Ratio: 1.03; 95% CI: 0.90-1.19)."
+- **C098** [safety_or_failure / neutral / high] A meta-analysis showed that the incidence of serious adverse events was comparable between BTK inhibitors and teriflunomide.  
+  record: E_MED_41518815  
+  region: Global  
+  quote: "The incidence of serious adverse events was comparable between the groups (RR: 1.13; 95% CI: 0.92-1.40)."
+- **C099** [mechanism / neutral / high] Tolebrutinib is designed for potency and CNS exposure to target BTK-dependent signaling in CNS-resident cells.  
+  record: E_MED_38965189  
+  region: Global  
+  quote: "Tolebrutinib is a covalent BTK inhibitor designed and selected for potency and CNS exposure to optimize impact on BTK-dependent signaling in CNS-resident cells"
+- **C100** [competition / neutral / medium] In in vitro kinase assays, tolebrutinib reacted with BTK 65-times faster than evobrutinib.  
+  record: E_MED_38965189  
+  region: Global  
+  quote: "In vitro kinase assays demonstrated that tolebrutinib reacted with BTK 65-times faster than evobrutinib"
+  ℹ claim about another drug ['evobrutinib', 'tolebrutinib']: marked as neutral competition
+- **C101** [competition / neutral / medium] In non-human primate CSF, tolebrutinib achieved exposure (4.8 ng/mL) that exceeded the estimated IC90 value.  
+  record: E_MED_38965189  
+  region: Global  
+  quote: "tolebrutinib CSF exposure (4.8 ng/mL) (kp,uu CSF=0.40) exceeded the IC90 (the estimated concentration inhibiting 90% of kinase activity) value"
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C102** [competition / neutral / high] Evobrutinib and fenebrutinib are BTK inhibitors currently in Phase 3 clinical development for multiple sclerosis.  
+  record: E_MED_38965189  
+  region: Global  
+  quote: "We applied a translational approach to evaluate three BTK inhibitors in Phase 3 clinical development in MS"
+- **C103** [other / neutral / medium] BTK inhibitors like tolebrutinib may function as maintenance therapies for compartmentalized inflammation in multiple sclerosis.  
+  record: E_MED_42462178  
+  region: Global  
+  quote: "Emerging Bruton tyrosine kinase inhibitors may further reshape sequencing paradigms, potentially functioning as maintenance therapies targeting compartmentalized inflammation after initial immune-depleting treatment"
+- **C104** [translation / neutral / high] Tolebrutinib has a short half-life of approximately 3.5 hours in humans.  
+  record: E_MED_37642857  
+  region: Global  
+  quote: "Tolebrutinib and metabolite M2 had short (3.5-h) half-lives but durable pharmacodynamic effects as expected for an irreversible antagonist."
+- **C105** [translation / neutral / high] Tolebrutinib metabolite M2 retains the ability to irreversibly and potently inhibit Bruton's tyrosine kinase in vitro.  
+  record: E_MED_37642857  
+  region: Global  
+  quote: "Metabolite M2 (4% of circulating radioactivity) retained the ability to irreversibly and potently inhibit Bruton's tyrosine kinase in vitro, similar to the parent compound."
+- **C106** [competition / neutral / high] In a first-in-human trial, tolebrutinib was well-tolerated with all treatment-related adverse events being mild.  
+  record: E_MED_34724345  
+  region: Global  
+  quote: "Tolebrutinib was well-tolerated in the study and all treatment-related treatment emergent adverse events were mild."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C107** [translation / neutral / high] Tolebrutinib crosses the blood-brain barrier and inhibits BTK in microglial cells.  
+  record: E_MED_34724345  
+  region: Global  
+  quote: "Tolebrutinib crosses the blood-brain barrier and potently inhibits BTK in microglial cells isolated from the CNS."
+- **C108** [competition / neutral / high] Evobrutinib is a BTK inhibitor candidate evaluated for use in multiple sclerosis.  
+  record: E_PPR_PPR828673  
+  region: Global  
+  quote: "We applied a translational approach to evaluate three BTK inhibitors in Phase 3 clinical development in MS with respect to their relative potency to block BTK-dependent signaling and exposure in the CNS, employing in vitro kinase, cellular activation assays, and pharmacokinetic sampling of cerebrospinal fluid (CSF) in the non-human primate cynomolgus to estimate the ability of these candidates (evobrutinib, fenebrutinib, and tolebrutinib) to block BTK-dependent signaling inside the CNS."
+- **C109** [competition / neutral / high] Fenebrutinib is a BTK inhibitor candidate evaluated for use in multiple sclerosis.  
+  record: E_PPR_PPR828673  
+  region: Global  
+  quote: "We applied a translational approach to evaluate three BTK inhibitors in Phase 3 clinical development in MS with respect to their relative potency to block BTK-dependent signaling and exposure in the CNS, employing in vitro kinase, cellular activation assays, and pharmacokinetic sampling of cerebrospinal fluid (CSF) in the non-human primate cynomolgus to estimate the ability of these candidates (evobrutinib, fenebrutinib, and tolebrutinib) to block BTK-dependent signaling inside the CNS."
+- **C110** [mechanism / neutral / high] Tolebrutinib is an oral, CNS-penetrant, irreversible inhibitor of Bruton's tyrosine kinase being evaluated for multiple sclerosis.  
+  record: E_MED_34418400  
+  region: Global  
+  quote: "Tolebrutinib is an oral, CNS-penetrant, irreversible inhibitor of Bruton's tyrosine kinase, an enzyme expressed in B lymphocytes and myeloid cells including microglia, which are major drivers of inflammation in multiple sclerosis."
+- **C111** [competition / neutral / high] In a phase 2b trial, 12 weeks of tolebrutinib treatment showed a dose-dependent reduction in new gadolinium-enhancing lesions, with 60 mg being the most efficacious.  
+  record: E_MED_34418400  
+  region: Global  
+  quote: "12 weeks of tolebrutinib treatment led to a dose-dependent reduction in new gadolinium-enhancing lesions, the 60 mg dose being the most efficacious, and the drug was well tolerated."
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C112** [other / neutral / high] In a phase 2b trial, there was a dose-dependent reduction in the number of new gadolinium-enhancing lesions at week 12 (mean lesions per patient: 60 mg, 0·13; placebo, 1·03; p=0·03).  
+  record: E_MED_34418400  
+  region: Global  
+  quote: "At treatment week 12, there was a dose-dependent reduction in the number of new gadolinium-enhancing lesions (mean [SD] lesions per patient: placebo, 1·03 [2·50]; 5 mg, 1·39 [3·20]; 15 mg, 0·77 [1·48]; 30 mg, 0·76 [3·31]; 60 mg, 0·13 [0·43]; p=0·03)."
+- **C113** [competition / neutral / medium] A primary human liver spheroid model recapitulated hepatotoxicity signals observed in clinical development for tolebrutinib.  
+  record: E_MED_42418948  
+  region: Global  
+  quote: "Importantly, the model also recapitulated hepatotoxicity signals observed in recent clinical development, including for Bruton's tyrosine kinase inhibitors (tolebrutinib and evobrutinib)"
+  ℹ claim about another drug ['tolebrutinib']: marked as neutral competition
+- **C114** [translation / neutral / high] Carbon-11-containing tolebrutinib has been synthesized to aid in gaining insight into the drug's biodistribution and target engagement.  
+  record: E_MED_39355640  
+  region: Global  
+  quote: "Positron-emitting-radiolabeled drug candidates represent an important tool for drug hunters to gain insight into a drug's biodistribution and target engagement of exploratory biologic targets of interest."
+- **C115** [competition / neutral / high] Evobrutinib is another BTK inhibitor evaluated alongside tolebrutinib in MS clinical research.  
+  record: E_MED_36301434  
+  region: Global  
+  quote: "Recently, evobrutinib and tolebrutinib have shown efficacy in phase II clinical trials, and there are numerous ongoing phase III clinical trials of various BTKIs in relapsing and progressive forms of MS."
+- **C116** [regulatory / neutral / high] No drug label records for tolebrutinib were found in the openFDA database.  
+  record: E_FDA_absent_tolebrutinib  
+  region: Global  
+  quote: "No drug label records matching 'tolebrutinib' were found in the openFDA drug label database (search by generic name, brand name and substance name)."
+- **C117** [mechanism / neutral / high] Tolebrutinib is a small molecule inhibitor of the tyrosine-protein kinase BTK.  
+  record: E_OT_drug_CHEMBL4650323  
+  region: Global  
+  quote: "Mechanisms of action: Tyrosine-protein kinase BTK inhibitor (action type: INHIBITOR; target: Tyrosine-protein kinase BTK)."
+- **C118** [mechanism / neutral / high] The BTK protein is a non-receptor tyrosine kinase essential for B lymphocyte signaling and activation.  
+  record: E_OT_target_ENSG00000010671  
+  region: Global  
+  quote: "Non-receptor tyrosine kinase indispensable for B lymphocyte development, differentiation and signaling"
+- **C119** [mechanism / neutral / low] Among the top 100 diseases associated with the BTK target in the Open Targets database, multiple sclerosis is not represented.  
+  record: E_OT_target_ENSG00000010671  
+  region: Global  
+  quote: "Among the top 100 diseases associated with this target, none matched 'multiple sclerosis'."

@@ -1,0 +1,88 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 30,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_MED_41297910",
+      "source_type": "pubmed",
+      "source_id": "PMID:41297910",
+      "url": "https://europepmc.org/article/MED/41297910",
+      "title": "Engineered nutrient-stimulated hormonal multi-agonists for precision targeting of obesity and metabolic disorders.",
+      "text": "Obesity and its related metabolic comorbidities, including type 2 diabetes, metabolic dysfunction-associated steatotic liver disease, and cardiovascular disease, are increasingly recognized as heterogeneous and multisystemic disorders. Despite the significant benefits in glycemic control and weight loss exhibited by GLP-1 receptor agonists (GLP-1RAs), their limitations have initiated the development of engineered multi-agonist therapies targeting additional nutrient-stimulated hormonal (NUSH) pathways. Dual and triple peptide-based co-agonists combining glucagon-like peptide-1 (GLP-1) with glucose-dependent insulinotropic polypeptide (GIP), glucagon, amylin, or peptide YY have demonstrated superior metabolic efficacy in preclinical and clinical studies. Tirzepatide (GLP-1/GIP dual agonist), CagriSema (GLP-1/amylin dual agonist), and retatrutide (GLP-1/GIP/glucagon triple agonist) have achieved unprecedented levels of weight loss and glycemic improvement, with certain agents also demonstrating hepatic, cardiovascular, and inflammatory benefits. Non-peptidyl oral GLP-1 RAs such as orforglipron, offer novel formulation strategies to enhance treatment accessibility and adherence. Multi-agonist incretin-based therapies represent a paradigm shift in the management of obesity and metabolic diseases. These agents offer broad clinical utility beyond glucose lowering by mimicking the pleiotropic hormonal responses observed after bariatric surgery. These therapies are poised to emerge as key components of precision metabolic medicine. This review article explores the mechanistic basis, pharmacological characteristics, and clinical data supporting the use of engineered NUSH-based peptide therapies for obesity and its related metabolic disorders, with particular emphasis on recent progress in the development and clinical application of dual and triple agonists.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.3350/cmh.2025.0744",
+        "is_preprint": false,
+        "found_by": "contradiction_search",
+        "found_by_all": [
+          "base_search",
+          "contradiction_search",
+          "tissue_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42567543",
+      "source_type": "pubmed",
+      "source_id": "PMID:42567543",
+      "url": "https://europepmc.org/article/MED/42567543",
+      "title": "Retatrutide: Obesity drug opens to \"compassionate use\" in US after speculation Trump took it.",
+      "text": "",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1136/bmj-2026-100530",
+        "is_preprint": false,
+        "found_by": "base_search",
+        "found_by_all": [
+          "base_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42493254",
+      "source_type": "pubmed",
+      "source_id": "PMID:42493254",
+      "url": "https://europepmc.org/article/MED/42493254",
+      "title": "Retatrutide and the urinary tract infection signal: Is the answer hidden in timing?",
+      "text": "",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1016/j.ejim.2026.107099",
+        "is_preprint": false,
+        "found_by": "base_search",
+        "found_by_all": [
+          "base_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42135195",
+      "source_type": "pubmed",
+      "source_id": "PMID:42135195",
+      "url": "https://europepmc.org/article/MED/42135195",
+      "title": "Retatrutide And Lipid And Metabolite Profiles In Participants With Obesity With Or Without Type 2 Diabetes.",
+      "text": "Context In phase 2 trials, retatrutide reduced body weight, hemoglobin A1c, and improved the lipid profiles of participants living with obesity, with and without T2D. Objective Assess plasma metabolome and lipidome changes associated with retatrutide treatment. Design Metabolomics and lipidomics were performed in fasting samples from two randomized, placebo-controlled phase 2 trials. Participants living with obesity with and without T2D were treated for 36 and 48 weeks, respectively. Setting Post-hoc exploratory analysis. Participants 282 and 213 participants in the obesity and T2D trials, respectively. Intervention(s) Obesity trial; retatrutide (1, 4, 8, 12 mg) or placebo. T2D trial: retatrutide (0.5, 4, 8, 12 mg) or placebo or dulaglutide (1.5 mg). Main outcome measure(s) Changes in metabolite and lipid levels with retatrutide treatment against baseline levels and placebo using multiplicity correction. Results At both primary and study endpoints for both populations, higher doses of retatrutide were associated with changes in a cluster of metabolites comprising 3-hydroxybutyrate, acetylcarnitine, free carnitine and fatty acid-derived long-chain acylcarnitines. Mediation analyses suggested that changes in these biomarkers mediated 23.2% of the weight-reduction response in participants without T2D and that this mediation was blunted to 12.7% in participants with T2D. Retatrutide treatment was also associated with changes in metabolites associated with insulin resistance, including branched-chain amino acids and their catabolic products, 2-aminoadipic acid, 2-hydroxybutyrate, urate, and triglycerides enriched in short-chain and saturated acyl side chains. These changes were found in both study populations and sustained across study endpoints. Conclusions Retatrutide was associated with changes in two metabolic clusters related to fatty acid oxidation and insulin resistance in a direction associated with improved metabolic health and reduced cardiovascular risk.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1210/clinem/dgag201",
+        "is_preprint": false,
+        "found_by": "base_search",
+        "found_by_all": [
+          "base_search"
+        ],
+        "getter": "europepmc"
+      }
+    }
+  ]
+}

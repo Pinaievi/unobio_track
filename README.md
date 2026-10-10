@@ -24,7 +24,14 @@ pip install -r requirements.txt        # google-genai, pydantic, requests, psyco
                                        # python-dotenv, streamlit
 cp .env.example .env                   # fill in the keys below
 python main.py --drug retatrutide --indication obesity
+python main.py --drug tolebrutinib --indication "multiple sclerosis"   # any other drug, from scratch
 ```
+
+There is **no default drug**. Collecting data needs `--drug` (and `--indication`). Steps that
+reuse collected data (`--from claims`, `--only report`) read the drug from
+`results/evidence_raw.json` and stop if `--drug` names a different drug, or if no claim in
+`results/claims.json` mentions the drug. `results/` holds one drug at a time: copy the project
+folder (or the `results/` folder) before collecting a second drug.
 
 When the pipeline finishes, a Streamlit site with the drill-down report opens on its own
 (stop with Ctrl+C). Use `--no-ui` to skip it.
@@ -245,6 +252,9 @@ clearly marked: the claims are tagged **NEW EVIDENCE** and **SYNTHETIC DEMO, NOT
 and the report carries a DEMO banner. Nothing synthetic is ever added unless `--extra` is
 passed.
 
+The two demo files are written for retatrutide, so run the demo on retatrutide data
+(`python main.py --drug retatrutide --indication obesity --no-ui` first).
+
 Run (from the project root; the evidence and claims from a normal run must already exist):
 
 ```bash
@@ -289,6 +299,13 @@ the status of each conflict.
   epidemiology comes from a handful of papers found by title search.
 * **PoS** is a published average by stage and area, not an estimate for this asset; there is
   no rNPV, price or sales model, and the calendar uses registry dates that sponsors can move.
+* **Other drugs.** The pipeline runs for any drug and indication. Short lookup tables are
+  optional enrichment, not logic: code names such as LY3437943 (`SYNONYMS`/`ALIASES`), the
+  sponsor ticker for SEC EDGAR (`SPONSORS`, otherwise the lead sponsor from the registry is
+  matched), and therapeutic-area cost ranges and success benchmarks (`AREA_COSTS`,
+  `BENCH`). Without an entry the run still works with fewer search names, and the report
+  says what is missing. Tested end to end on tolebrutinib in multiple sclerosis with no
+  entries for it.
 * **Cross-study comparisons** (for example retatrutide vs tirzepatide from different trials)
   are inference and are labelled [AI]; only a head-to-head trial counts as direct evidence.
 * **Capital.** Phase 3 only; no manufacturing, filing or launch costs. Cost per participant

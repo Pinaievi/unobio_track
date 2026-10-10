@@ -3,50 +3,50 @@
     "indication": "obesity",
     "mechanism": "retatrutide"
   },
-  "total_seconds": 6.98,
+  "total_seconds": 4.25,
   "duplicates_removed": 16,
   "trace": [
     {
       "getter": "aact",
       "ok": true,
       "count": 33,
-      "seconds": 6.93
+      "seconds": 4.2
     },
     {
       "getter": "clinicaltrials",
       "ok": true,
       "count": 18,
-      "seconds": 0.59
+      "seconds": 0.02
     },
     {
       "getter": "competitors",
       "ok": true,
       "count": 12,
-      "seconds": 1.98
+      "seconds": 0.16
     },
     {
       "getter": "edgar",
       "ok": true,
       "count": 1,
-      "seconds": 0.06
+      "seconds": 0.1
     },
     {
       "getter": "europepmc",
       "ok": true,
       "count": 46,
-      "seconds": 1.44
+      "seconds": 0.16
     },
     {
       "getter": "openfda",
       "ok": true,
       "count": 2,
-      "seconds": 1.11
+      "seconds": 0.05
     },
     {
       "getter": "opentargets",
       "ok": true,
       "count": 9,
-      "seconds": 0.38
+      "seconds": 0.16
     },
     {
       "getter": "edgar:refine",

@@ -1,0 +1,86 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 35,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_MED_42610728",
+      "source_type": "pubmed",
+      "source_id": "PMID:42610728",
+      "url": "https://europepmc.org/article/MED/42610728",
+      "title": "The changing global epidemiology of obesity.",
+      "text": "",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1093/ndt/gfag186",
+        "is_preprint": false,
+        "found_by": "epidemiology_search",
+        "found_by_all": [
+          "epidemiology_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_41927053",
+      "source_type": "pubmed",
+      "source_id": "PMID:41927053",
+      "url": "https://europepmc.org/article/MED/41927053",
+      "title": "Temporal Trends of the Obesity Epidemic in the United States.",
+      "text": "Objectives Obesity has emerged as a major public health concern in the United States, with prevalence increasing steadily over the past 4 decades. This mini-review summarizes recent trends and subgroup disparities using data from the National Health and Nutrition Examination Survey (NHANES) and related publications. Methods Data from NHANES cycles conducted between 1988 and 2023 were reviewed to examine temporal trends in adult obesity prevalence, with particular attention to differences by age, sex, race, and interactions between sex and age as well as sex and race. Results The prevalence of adult obesity increased from approximately 15% in the late 1970s to 42.4% in 2017-2018. For the first time in nearly 3 decades, consecutive declines were observed, with prevalence falling to 40.3% in 2021-2023. Disparities persist: middle-aged adults and non-Hispanic Black females continue to experience the highest prevalence of obesity, whereas non-Hispanic Asian populations consistently exhibit the lowest rates. Conclusions Recent declines may indicate progress in obesity control; however, targeted and equity-focused interventions remain essential to sustain improvements and reduce persistent disparities.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.3961/jpmph.25.973",
+        "is_preprint": false,
+        "found_by": "epidemiology_search",
+        "found_by_all": [
+          "epidemiology_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42611392",
+      "source_type": "pubmed",
+      "source_id": "PMID:42611392",
+      "url": "https://europepmc.org/article/MED/42611392",
+      "title": "State-Level Prevalence of Obesity/overweight and Pancreatic Cancer Incidence in the United States: An Ecological Analysis Using BRFSS, CDC WONDER and ACS for the Year 2021.",
+      "text": "Purpose While obesity is established as an individual-level risk factor for pancreatic cancer (PC), population-level associations remain unclear. This study examines whether state-level overweight/obesity (O/OV) prevalence corresponds with age-adjusted PC incidence across the United States. Methods We conducted an ecological, cross-sectional analysis using 2021 data from the Behavioral Risk Factor Surveillance System (BRFSS) for state-level O/OV prevalence (BMI ≥ 25 kg/m²) and CDC WONDER for age-adjusted incidence rates (AAIR) of PC per 100,000 population. Demographic covariates such as percentage of non-Hispanic Black (NHB) population and population ≥ 65 years old were extracted from American Community Survey (ACS) data. Prevalence of current smokers and diabetes were also extracted from BRFSS. As a descriptive exploratory approach, incidence rate ratios (IRR) were calculated relative to West Virginia (WV) which had the highest O/OV prevalence, 73.6%. For inferential analysis, a univariable ordinary least square (OLS) linear regression was used to determine the association between O/OV prevalence and PC incidence. Multivariable linear regression model was fitted to adjust for prevalence of age ≥ 65, NHB race/ethnicity, current smokers and diabetes prevalence. Results Across 50 US jurisdictions, including DC, the mean O/OV prevalence was 67.72%, ranging from 55.4% in DC to 73.6% in WV. Florida was excluded from the complete-case analysis and OLS due to missing BRFSS values for O/OV. Twenty-nine states with O/OV prevalence lower than WV also had lower PC incidence (concordance) whereas 20 states including DC exhibited lower O/OV prevalence yet higher PC incidence (discordance). Univariable OLS model showed no statistically significant association between O/OV and AAIR (slope: -0.035, p = 0.56; R²=0.007). Multivariable OLS well fitted model showed no significant association between O/OV and AAIR. Only Black population proportion was significantly associated with PC incidence across the states. Conclusions In this study, state-level O/OV prevalence failed to demonstrate a statistically significant association with PC incidence. Proportion of Black population was significantly associated with increased PC incidence. These findings suggest that population-level PC risk is likely influenced by multiple interacting metabolic, behavioral, sociodemographic, environmental, and healthcare-related factors beyond obesity alone. Further longitudinal and multivariable studies are needed to better delineate the complex relationship between obesity and PC at the population level.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1007/s12029-026-01562-3",
+        "is_preprint": false,
+        "found_by": "epidemiology_search",
+        "found_by_all": [
+          "epidemiology_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42548312",
+      "source_type": "pubmed",
+      "source_id": "PMID:42548312",
+      "url": "https://europepmc.org/article/MED/42548312",
+      "title": "Serum <i>n</i>-3 fatty acids and obesity-comorbid depression in US adults: an integrated epidemiology and network pharmacology study.",
+      "text": "n-3 PUFA, DHA and EPA possess anti-inflammatory properties, yet their association with obesity-depression comorbidity remains unclear. This study investigated the association among USA adults and explored underlying mechanisms. We performed a cross-sectional analysis of 4,423 adults participating in the National Health and Nutrition Examination Survey 2003-2004 and 2011-2014. Serum fatty acids were quantified by gas chromatography. Obesity was defined using anthropometric criteria, and depression was assessed using the Patient Health Questionnaire-9 or antidepressant use. Multivariable logistic regression estimated odds ratio (OR) per sd increase in PUFA levels. Mechanistic explore through network pharmacology identified potential pathways, which were examined using correlation analyses with inflammatory indices. Higher n-3 PUFA levels were associated with lower odds of central obesity comorbid depression in females (OR: 0·82, 95 % CI: 0·69-0·96) and older adults (OR: 0·79, 95 % CI: 0·64-0·97). DHA was significantly associated with lower odds of central obesity (OR: 0·83, 95 % CI: 0·73-0·95), depressive symptoms (OR: 0·88, 95 % CI: 0·77-1·00) and their comorbidity (OR: 0·85, 95 % CI: 0·74-0·98), whereas no significant associations were found for EPA. Mechanistic exploration implicated DHA in TNF and IL-17 signalling pathways, supported by inverse correlations with monocyte:HDL ratio (r: -0·138, P r: -0·108, P < 0·001). In conclusion, serum DHA is inversely associated with obesity-depression comorbidity, with potential involvement of anti-inflammatory pathways. These findings underscore the potential of DHA for the management of obesity comorbid depression and the need for further interventional trials.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1017/s0007114526108198",
+        "is_preprint": false,
+        "found_by": "epidemiology_search",
+        "found_by_all": [
+          "epidemiology_search"
+        ],
+        "getter": "europepmc"
+      }
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 7,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_AACT_NCT06313528",
+      "source_type": "nct_aact",
+      "source_id": "NCT06313528",
+      "url": "https://clinicaltrials.gov/study/NCT06313528",
+      "title": "A Randomized, Double-Blind, Phase 1 Study to Investigate the Effect of LY3437943 Versus Placebo on Calorie Intake and Energy Expenditure in Participants With Obesity Under Calorie Restriction",
+      "text": "The main purpose of the study is to look at the effect of the study drug compared to placebo on calorie intake, energy metabolism, and appetite. The study will last up to 6 months and may include up to 20 visits.",
+      "meta": {
+        "brief_title": "A Study to Measure Calorie Consumption and Usage in Participants With Obesity Using LY3437943",
+        "status": "COMPLETED",
+        "why_stopped": null,
+        "phase": "PHASE1",
+        "study_type": "INTERVENTIONAL",
+        "enrollment": 85,
+        "start_date": "2024-03-20",
+        "primary_completion": "2025-08-26",
+        "completion": "2025-08-26",
+        "results_submitted": null,
+        "has_results": false,
+        "has_primary_results_in_text": false,
+        "conditions": [
+          "Obesity"
+        ],
+        "interventions": [
+          "LY3437943",
+          "Placebo"
+        ],
+        "lead_sponsor": "Eli Lilly and Company",
+        "primary_outcomes": [
+          "Change from Baseline in Total Calorie Intake at Lunch and Dinner (Combined)"
+        ],
+        "primary_analyses": [],
+        "getter": "aact",
+        "also_found_in": [
+          "nct"
+        ]
+      }
+    },
+    {
+      "id": "E_AACT_NCT06313528_population",
+      "source_type": "nct_aact_population",
+      "source_id": "NCT06313528",
+      "url": "https://clinicaltrials.gov/study/NCT06313528",
+      "title": "Population and eligibility: A Study to Measure Calorie Consumption and Usage in Participants With Obesity Using LY3437943",
+      "text": "Population and eligibility for trial NCT06313528 (A Study to Measure Calorie Consumption and Usage in Participants With Obesity Using LY3437943). Eligible population: not stated. Sex: ALL; age: 18 Years to 60 Years; healthy volunteers: not stated. Inclusion criteria: * BMI greater than 30 kg/m2 * History of at least 1 self-reported unsuccessful dietary effort to reduce body weight Exclusion criteria: * Change in body weight of greater than 5 kg (11 pounds) within 3 months prior to start of study * Any of the following treatments for obesity within 1 year prior, or plan to undergo any of these during the study period: liposuction, cryolipolysis, or abdominoplasty * Prior or planned bariatric or gastric sleeve surgery, endoscopic therapy, or device-based therapy for obesity * Type 1 or Type 2 Diabetes, history of ketoacidosis, or hyperosmolar state * Family or personal history of medullary thyroid carcinoma or multiple endocrine neoplasia syndrome Type 2 * Acute or chronic hepatitis * Had within 90 days prior: acute myocardial infarction, cerebrovascular accident (stroke), coronary artery...",
+      "meta": {
+        "record_kind": "population",
+        "nct_id": "NCT06313528",
+        "sex": "ALL",
+        "min_age": "18 Years",
+        "max_age": "60 Years",
+        "healthy_volunteers": false,
+        "has_baseline_data": false,
+        "getter": "aact"
+      }
+    }
+  ]
+}

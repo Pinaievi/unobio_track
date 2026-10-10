@@ -1,0 +1,70 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 14,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_AACT_NCT05445232",
+      "source_type": "nct_aact",
+      "source_id": "NCT05445232",
+      "url": "https://clinicaltrials.gov/study/NCT05445232",
+      "title": "A Multiple-Dose Drug-Drug Interaction Study to Determine the Effect of LY3437943 on Drug Metabolizing Enzymes",
+      "text": "The main purpose of this study is to determine the effect of LY3437943 when administered subcutaneously on the levels of midazolam, warfarin and caffeine in the blood stream when administered orally as a drug cocktail in obese participants. This study will last up to approximately 25 weeks for each participant.",
+      "meta": {
+        "brief_title": "A Drug-Drug Interaction (DDI) Study of LY3437943 in Obese Participants",
+        "status": "COMPLETED",
+        "why_stopped": null,
+        "phase": "PHASE1",
+        "study_type": "INTERVENTIONAL",
+        "enrollment": 32,
+        "start_date": "2022-07-08",
+        "primary_completion": "2023-02-24",
+        "completion": "2023-02-24",
+        "results_submitted": null,
+        "has_results": false,
+        "has_primary_results_in_text": false,
+        "conditions": [
+          "Obesity"
+        ],
+        "interventions": [
+          "Caffeine",
+          "LY3437943",
+          "Midazolam",
+          "Warfarin"
+        ],
+        "lead_sponsor": "Eli Lilly and Company",
+        "primary_outcomes": [
+          "Pharmacokinetics (PK): Area Under the Concentration Versus Time Curve From Zero to Infinity (AUC[0-∞]) of Midazolam",
+          "PK: Maximum Observed Concentration (Cmax) of Midazolam",
+          "PK: AUC[0-∞] of Warfarin"
+        ],
+        "primary_analyses": [],
+        "getter": "aact",
+        "also_found_in": [
+          "nct"
+        ]
+      }
+    },
+    {
+      "id": "E_AACT_NCT05445232_population",
+      "source_type": "nct_aact_population",
+      "source_id": "NCT05445232",
+      "url": "https://clinicaltrials.gov/study/NCT05445232",
+      "title": "Population and eligibility: A Drug-Drug Interaction (DDI) Study of LY3437943 in Obese Participants",
+      "text": "Population and eligibility for trial NCT05445232 (A Drug-Drug Interaction (DDI) Study of LY3437943 in Obese Participants). Eligible population: not stated. Sex: ALL; age: 18 Years to 70 Years; healthy volunteers: not stated. Inclusion criteria: * Body mass index (BMI) within the range 27.0 to 40.0 kilograms per meter squared (kg/m²) * Male and female participants of childbearing potential who agree to use contraceptive methods Exclusion criteria: * Have a history of diabetes or current diagnosis of diabetes * History or presence of a of significant bleeding disorder * Participants with significant comorbidity * Participants receiving treatment with midazolam, warfarin, inhibitors or inducers of cytochrome P450 (CYP) -1A2, CYP2C9, or CYP3A4 enzymes, or drugs are CYP substrates and have a narrow therapeutic index",
+      "meta": {
+        "record_kind": "population",
+        "nct_id": "NCT05445232",
+        "sex": "ALL",
+        "min_age": "18 Years",
+        "max_age": "70 Years",
+        "healthy_volunteers": false,
+        "has_baseline_data": false,
+        "getter": "aact"
+      }
+    }
+  ]
+}

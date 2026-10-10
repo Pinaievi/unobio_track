@@ -1,0 +1,123 @@
+[
+  {
+    "reason": "numbers ['18', '20'] are in the record, but not in the claim quote or in meta",
+    "claim": {
+      "claim": "A Phase 2 clinical trial is investigating whether tolebrutinib can help clear inflammation in multiple sclerosis brain lesions in adults aged 18 and older who are on anti-CD20 therapy.",
+      "evidence_id": "E_AACT_NCT04742400",
+      "quote": "To see if tolebrutinib can help clear inflammation in MS brain lesions.",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "numbers ['48.9'] are in the record, but not in the claim quote or in meta",
+    "claim": {
+      "claim": "The study population consisted of participants between 18 and 60 years of age with a mean age of 48.9 years.",
+      "evidence_id": "E_AACT_NCT04411641_population",
+      "quote": "18 to 60 years of age inclusive",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "The primary reasons for study discontinuation in the tolebrutinib 60 mg group were withdrawal by subject, other reasons, and poor compliance to protocol.",
+      "evidence_id": "E_AACT_NCT04410991_flow",
+      "quote": "Tolebrutinib 60 mg: Withdrawal by Subject (55), Other (4), Poor compliance to protocol (4).",
+      "stage": "safety_or_failure",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "The primary reasons for study discontinuation in the teriflunomide 14 mg group were withdrawal by subject, other reasons, and poor compliance to protocol.",
+      "evidence_id": "E_AACT_NCT04410991_flow",
+      "quote": "Teriflunomide 14 mg: Withdrawal by Subject (59), Other (10), Poor compliance to protocol (5)",
+      "stage": "safety_or_failure",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "numbers ['31'] from the claim are absent from the record",
+    "claim": {
+      "claim": "In Part A of the tolebrutinib Phase 2 trial, 17 out of 31 participants reported treatment-emergent adverse events in the 5 mg dose group.",
+      "evidence_id": "E_AACT_NCT03996291",
+      "quote": "Part A: Tolebrutinib 5 mg [TEAEs]: COUNT_OF_PARTICIPANTS 17 Participants",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "numbers ['31'] from the claim are absent from the record",
+    "claim": {
+      "claim": "In Part A of the tolebrutinib Phase 2 trial, 20 out of 31 participants reported treatment-emergent adverse events in the 60 mg dose group.",
+      "evidence_id": "E_AACT_NCT03996291",
+      "quote": "Part A: Tolebrutinib 60 mg [TEAEs]: COUNT_OF_PARTICIPANTS 20 Participants",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "In the Tolebrutinib 5 mg group of trial NCT03996291, one participant did not complete the trial due to reasons categorized as other.",
+      "evidence_id": "E_AACT_NCT03996291_flow",
+      "quote": "Part A: Tolebrutinib 5 mg: Other (1), Adverse Event (0), Poor compliance to protocol (0), Withdrawal by Subject (0)",
+      "stage": "safety_or_failure",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "numbers ['60'] are in the record, but not in the claim quote or in meta",
+    "claim": {
+      "claim": "In 6 healthy volunteers, a 60-mg oral dose of tolebrutinib showed a 3.5-hour half-life.",
+      "evidence_id": "E_MED_37642857",
+      "quote": "Tolebrutinib and metabolite M2 had short (3.5-h) half-lives but durable pharmacodynamic effects as expected for an irreversible antagonist.",
+      "stage": "translation",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "numbers ['130'] are in the record, but not in the claim quote or in meta",
+    "claim": {
+      "claim": "In a phase 2b trial of 130 participants with relapsing multiple sclerosis, tolebrutinib demonstrated a dose-dependent reduction in new gadolinium-enhancing lesions.",
+      "evidence_id": "E_MED_34418400",
+      "quote": "At treatment week 12, there was a dose-dependent reduction in the number of new gadolinium-enhancing lesions (mean [SD] lesions per patient: placebo, 1·03 [2·50]; 5 mg, 1·39 [3·20]; 15 mg, 0·77 [1·48]; 30 mg, 0·76 [3·31]; 60 mg, 0·13 [0·43]; p=0·03).",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "numbers ['65'] are in the record, but not in the claim quote or in meta",
+    "claim": {
+      "claim": "In the United States, the prevalence rate of multiple sclerosis among older adults aged 65 and above increased from 210.55 per 100,000 in 2011 to 243.17 per 100,000 in 2021.",
+      "evidence_id": "E_MED_40898667",
+      "quote": "The prevalence rate of MS in older adults increased by 15.49%, from 210.55 (per 100,000) in 2011 to 243.17 in 2021.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: quote is a long list of names, not a statement",
+    "claim": {
+      "claim": "Several drugs appear in the FDA database search for labels mentioning multiple sclerosis, though this does not confirm indication or standard of care for these drugs.",
+      "evidence_id": "E_FDA_indication_multiple_sclerosis",
+      "quote": "Drug names (openFDA generic name) whose FDA label text in the indications section contains any of these phrases: 'multiple sclerosis'. Drugs found: ALEMTUZUMAB; BACLOFEN; BETAMETHASONE ACETATE AND BETAMETHASONE SODIUM PHOSPHATE; BETAMETHASONE SODIUM PHOSPHATE AND BETAMETHASONE ACETATE; CLADRIBINE; DALFAMPRIDINE; DANTROLENE SODIUM; DEXAMETHASONE; DEXAMETHASONE 1.5 MG; DEXAMETHASONE INTENSOL; DEXAMETHASONE SODIUM PHOSPHATE; DIMETHYL FUMARATE; DIMETHYL FUMARATE KIT; DIMETHYL-FUMARATE; DIROXIMEL FUMARATE; FINGOLIMOD; FINGOLIMOD HCL; FINGOLIMOD HYDROCHLORIDE; FINGOLIMOD LAURYL SULFATE; GLATIRAMER; GLATIRAMER ACETATE; GLATIRAMER ACETATE INJECTION; HYDROCORTISONE; HYDROXOCOBALAMIN; INTERFERON BETA-1A; INTERFERON BETA-1B; KENALOG; METHYLPREDNISOLONE; METHYLPREDNISOLONE ACETATE; METHYLPREDNISOLONE SODIUM SUCCINATE; MITOXANTRONE; MITOXANTRONE HYDROCHLORIDE; MONOMETHYL FUMARATE; NATALIZUMAB; NATALIZUMAB-SZTN; OCRELIZUMAB; OFATUMUMAB; ONABOTULINUMTOXINA; OZANIMOD HYDROCHLORIDE; PEGINTERFERON BETA-1A; PONESIMOD; PREDNISOLONE; PREDNISOLONE SODIUM PHOSPHATE; PREDNISONE; PREDNISONE D/P; PREDNISONE INTENSOL; REPOSITORY CORTICOTROPIN; SIPONIMOD; SOLU-CORTEF; SOLU-MEDROL; SOLU-MEDROL(R) METHYLPREDNISOLONE SODIUM SUCCINAT; TERIFLUNOMIDE; TRIAMCINOLONE ACETONIDE; UBLITUXIMAB.",
+      "stage": "regulatory",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  }
+]

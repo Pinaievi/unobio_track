@@ -1,0 +1,87 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 28,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_MED_42530676",
+      "source_type": "pubmed",
+      "source_id": "PMID:42530676",
+      "url": "https://europepmc.org/article/MED/42530676",
+      "title": "Design of a metabolically-stable peptide therapeutic with triple-hormone-receptor agonist activity.",
+      "text": "Peptide-based therapeutics such as tirzepatide and semaglutide target the neuroendocrine system to remediate both diabetes and obesity. In addition to integrating the complementary actions of two endogenous metabolically related hormones targeting glucagon-like peptide-1 and glucagon receptors (GLP-1R and GCGR), the synergistic targeting of a third G protein-coupled receptor (GPCR), namely the gastric inhibitory polypeptide receptor (GIPR), may achieve optimal control of blood glucose levels and weight loss in patients with diabetes and obesity. In this work, we harness the predictive power of sequence-derived in silico mutagenesis to rationally design effective single-molecule peptides with triple-receptor-agonist activities. We model the binding profiles of our designed peptides to the GIP, GLP-1 and GCG receptor triad through multiple, long, repeat molecular simulations and effective binding enthalpy calculations to assess their predicted multi-receptor engagement profiles. Our data predict a balanced, highly favourable effective binding enthalpy profile of our newly designed peptides for the three receptors compared to endogenous peptides and the experimental reference peptides, with high targeted specificity for the receptors. The peptides are further engineered to structurally support metabolic stability by substituting sites prone to proteolytic cleavage. The predicted triple-hormone-receptor agonist peptide mechanism opens new avenues for the synthesis and activity testing of multi-targeting peptides with improved stability, offering a computational design strategy for testing the potential reduction of adverse gastrointestinal effects of peptide therapeutics and support future development of lower-dose oral formulations.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1007/s10822-026-00903-5",
+        "is_preprint": false,
+        "found_by": "base_search",
+        "found_by_all": [
+          "base_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42751099",
+      "source_type": "pubmed",
+      "source_id": "PMID:42751099",
+      "url": "https://europepmc.org/article/MED/42751099",
+      "title": "Sustained weight loss exceeding 100 kg with sequential incretin-based therapy in Prader-Willi syndrome.",
+      "text": "Prader-Willi syndrome (PWS) is a neurogenetic disorder characterized by hyperphagia, severe obesity, and early-onset metabolic complications, in which durable weight loss is rarely achieved. We report a 29-year-old man with genetically confirmed maternal uniparental disomy PWS who presented with severe obesity (185 kg; body mass index [BMI] 59.7 kg/m2) and newly diagnosed type 2 diabetes (glycated hemoglobin [HbA1c], 8.3% [SI: 67 mmol/mol] [reference range, <5.7% (SI: <39 mmol/mol)]). He received sequential incretin-based therapy, initiated with retatrutide (1-12 mg weekly) within a clinical trial, followed by oral semaglutide and then dulaglutide after retatrutide became unavailable, together with a structured hypocaloric diet and supervised exercise. At 18 months, total weight loss reached 58.8% (-108.7 kg), with HbA1c of 4.9% (SI: 30 mmol/mol), consistent with diabetes remission after discontinuation of all glucose-lowering medications. Mild transient gastrointestinal symptoms occurred during dose escalation, with no serious adverse events. Follow-up bioimpedance showed a skeletal muscle mass of 38.5 kg after a 58.8% reduction in total body weight.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1210/jcemcr/luag260",
+        "is_preprint": false,
+        "found_by": "base_search",
+        "found_by_all": [
+          "base_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42156758",
+      "source_type": "pubmed",
+      "source_id": "PMID:42156758",
+      "url": "https://europepmc.org/article/MED/42156758",
+      "title": "Kynurenic acid mediates epicardial fat-induced lymphatic metabolic dysfunction in atrial fibrillation.",
+      "text": "Atrial fibrillation represents a prevalent cardiac arrhythmia whose pathogenic mechanisms remain incompletely understood. Here, we identify impaired atrial lymphangiogenesis as a critical determinant in atrial fibrillation pathogenesis. Analysis of human left atrial appendage specimens reveals decreased lymphatic vessel density in atrial fibrillation patients compared to those in sinus rhythm. Mechanistically, we demonstrate that epicardial adipose tissues from atrial fibrillation patients secrete kynurenic acid, which acts via GPR35 to disrupt lymphatic endothelial cell metabolism and mitochondrial homeostasis, ultimately promoting endothelial-to-mesenchymal transition. Using an organotypic culture system, we show that epicardial adipose tissue -derived factors directly impair lymphatic vessel formation. In vivo studies utilizing angiotensin II-induced and high-fat diet male mouse models confirm the critical role of lymphatic dysfunction in atrial fibrillation susceptibility. Therapeutic interventions promoting lymphangiogenesis, either through VEGFC administration or weight loss intervention by LY3437943 (the novel triple GIP, GLP-1, and glucagon receptor agonist), significantly attenuate atrial fibrillation inducibility. These findings establish lymphatic dysfunction as a novel pathogenic mechanism in atrial fibrillation and highlight lymphatic vessel formation as a promising therapeutic target.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1038/s41467-026-72974-9",
+        "is_preprint": false,
+        "found_by": "base_search",
+        "found_by_all": [
+          "base_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42688617",
+      "source_type": "pubmed",
+      "source_id": "PMID:42688617",
+      "url": "https://europepmc.org/article/MED/42688617",
+      "title": "Comparative efficacy and safety of glucagon-like peptide 1 based drugs for weight loss in adults with overweight or obesity without diabetes: network meta-analysis of randomised controlled trials.",
+      "text": "Objective To compare the efficacy and safety of glucagon-like peptide 1 (GLP-1) based drug treatments for weight loss in adults with overweight or obesity without diabetes. Design Network meta-analysis of randomised controlled trials. Data sources Embase, PubMed (Medline), and Web of Science, 1 January 2000 to 6 March 2026. Eligibility criteria for selecting studies Randomised controlled trials that enrolled adults with overweight or obesity, comparing GLP-1 receptor agonists or related co-agonists with placebo or active comparators, with a minimum intervention duration of 12 weeks. Excluded were trials that enrolled participants with diabetes, or where diabetes status could not be clearly determined. Results 58 trials of 24 214 participants were analysed. Compared with placebo, weight loss was greatest with retatrutide (-22.10%, 95% confidence interval -25.60% to -18.60%), followed by tirzepatide (-19.28%, -20.39% to -18.16%), and CagriSema (a combination of cagrilintide and semaglutide, -17.32%, -19.32% to -15.32%). Conventional GLP-1 receptor agonists showed more modest effects. Similar patterns were seen for waist circumference and lipid outcomes. Treatment rankings suggested a probabilistic hierarchy favouring next generation incretin based treatments, although confidence intervals overlapped for several comparisons. Low certainty evidence suggested higher rates for discontinuing treatment with danuglipron and retatrutide, whereas mazdutide showed better tolerability. Conclusions In adults with overweight or obesity without diabetes, next generation incretin based treatments achieved greater weight loss than conventional GLP-1 receptor agonists. Differences in tolerability, limited head-to-head evidence, and residual uncertainty, however, should be considered when interpreting comparative treatment effects. Study registration PROSPERO CRD420261279841.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1136/bmjmed-2026-003026",
+        "is_preprint": false,
+        "found_by": "contradiction_search",
+        "found_by_all": [
+          "base_search",
+          "contradiction_search"
+        ],
+        "getter": "europepmc"
+      }
+    }
+  ]
+}

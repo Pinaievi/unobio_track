@@ -1,19 +1,19 @@
 [
   {
-    "reason": "числа ['27'] є в записі, але не в цитаті claim й не в meta",
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
     "claim": {
-      "claim": "The trial requires a BMI of at least 30 kg/m2 or at least 27 kg/m2 with a weight-related condition for inclusion.",
+      "claim": "The trial excludes individuals with a history of medullary thyroid carcinoma or multiple endocrine neoplasia syndrome type 2.",
       "evidence_id": "E_AACT_NCT07357415_population",
-      "quote": "≥ 30 kilogram per square meter (kg/m2) OR",
+      "quote": "Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2)",
       "stage": "clinical",
       "direction": "neutral",
       "confidence": "high"
     }
   },
   {
-    "reason": "шум: вузька підгрупа/асоціація ризику/критерії доглядальника",
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
     "claim": {
-      "claim": "Patients with a personal or family history of medullary thyroid carcinoma or multiple endocrine neoplasia syndrome type 2 are excluded from the study.",
+      "claim": "The trial excludes participants with a history of medullary thyroid carcinoma or multiple endocrine neoplasia syndrome type 2.",
       "evidence_id": "E_AACT_NCT07232719_population",
       "quote": "Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2)",
       "stage": "clinical",
@@ -22,9 +22,20 @@
     }
   },
   {
-    "reason": "шум: вузька підгрупа/асоціація ризику/критерії доглядальника",
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
     "claim": {
-      "claim": "Patients with a personal or family history of medullary thyroid carcinoma or MEN-2 are excluded from NCT06662383.",
+      "claim": "Participants with a history of medullary thyroid carcinoma or MEN-2 are excluded from NCT06859268.",
+      "evidence_id": "E_AACT_NCT06859268_population",
+      "quote": "* Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2)",
+      "stage": "clinical",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "Exclusion criteria for NCT06662383 include a family or personal history of medullary thyroid carcinoma or multiple endocrine neoplasia syndrome type 2.",
       "evidence_id": "E_AACT_NCT06662383_population",
       "quote": "* Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2).",
       "stage": "clinical",
@@ -33,32 +44,20 @@
     }
   },
   {
-    "reason": "числа ['27'] є в записі, але не в цитаті claim й не в meta",
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
     "claim": {
-      "claim": "A key inclusion criterion for the TRIUMPH-1 trial is a BMI ≥30.0 kg/m², or ≥27.0 kg/m² with at least one weight-related condition.",
-      "evidence_id": "E_AACT_NCT05929066_population",
-      "quote": "* Have body mass index (BMI) ≥30.0 kilograms per square meter (kg/m²)",
+      "claim": "Trial NCT05929079 excludes individuals with a personal or family history of medullary thyroid carcinoma or multiple endocrine neoplasia syndrome type 2.",
+      "evidence_id": "E_AACT_NCT05929079_population",
+      "quote": "* Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2)",
       "stage": "clinical",
-      "direction": "neutral",
-      "confidence": "high",
-      "quote_trimmed": true
-    }
-  },
-  {
-    "reason": "числа ['27', '40'] є в записі, але не в цитаті claim й не в meta",
-    "claim": {
-      "claim": "Participants in trial NCT05548231 are native Chinese males or females aged 20 to 65 years with a BMI between 27 and 40 kg/m².",
-      "evidence_id": "E_AACT_NCT05548231_population",
-      "quote": "Are native Chinese males or females",
-      "stage": "unmet_need",
       "direction": "neutral",
       "confidence": "high"
     }
   },
   {
-    "reason": "шум: поодинокий випадок у когорті без порівняння з контролем",
+    "reason": "noise: single case in a cohort without comparison to a control",
     "claim": {
-      "claim": "Two participants in the 12 mg LY3437943 (2 mg) group discontinued the study due to an adverse event.",
+      "claim": "In the 12 mg LY3437943 (2 mg) group of study NCT04881760, 2 participants discontinued due to an adverse event.",
       "evidence_id": "E_AACT_NCT04881760_flow",
       "quote": "12 mg LY3437943 (2 mg): Lost to Follow-up (4), Adverse Event (2), Withdrawal by Subject (2), Site Closure (0), Death (0), Inadvertent Enrollment (0)",
       "stage": "safety_or_failure",
@@ -67,9 +66,9 @@
     }
   },
   {
-    "reason": "шум: вузька підгрупа/асоціація ризику/критерії доглядальника",
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
     "claim": {
-      "claim": "Retatrutide has an extended plasma detection window of approximately 56 days after the first 2 mg dose in self-administering human users.",
+      "claim": "In a study of four users, retatrutide was detected in plasma for approximately 56 days after the first 2 mg dose.",
       "evidence_id": "E_MED_42745421",
       "quote": "The extended plasma detection window, approximately 56 days after the first dose, supports plasma-based testing as a suitable analytical strategy for this and related long-acting therapeutic peptides",
       "stage": "translation",
@@ -78,9 +77,42 @@
     }
   },
   {
-    "reason": "шум: вузька підгрупа/асоціація ризику/критерії доглядальника",
+    "reason": "numbers ['29'] are in the record, but not in the claim quote or in meta",
     "claim": {
-      "claim": "Clinical obesity in US adults was associated with a 1.46 hazard ratio for all-cause mortality compared to preclinical obesity.",
+      "claim": "A single case report describes a 29-year-old man with Prader-Willi syndrome who achieved significant weight loss while receiving retatrutide.",
+      "evidence_id": "E_MED_42751099",
+      "quote": "He received sequential incretin-based therapy, initiated with retatrutide (1-12 mg weekly) within a clinical trial",
+      "stage": "clinical",
+      "direction": "supports",
+      "confidence": "low"
+    }
+  },
+  {
+    "reason": "noise: unmet need is not about the indication",
+    "claim": {
+      "claim": "Effective pharmacological therapies for patients with MASH-related cirrhosis currently remain an unmet clinical need.",
+      "evidence_id": "E_MED_42421259",
+      "quote": "Despite recent advances, effective pharmacological therapy for MASH-related cirrhosis remains an unmet need, underscoring the importance of early identification and intervention.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: unmet need is not about the indication",
+    "claim": {
+      "claim": "The mean age of the 146 participants randomized in the TRANSCEND-CKD trial was 65.1 years.",
+      "evidence_id": "E_MED_41160422",
+      "quote": "The mean age was 65.1 years [standard deviation (SD) 10.6], 45.2% were female and 69.9% were White.",
+      "stage": "unmet_need",
+      "direction": "neutral",
+      "confidence": "high"
+    }
+  },
+  {
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
+    "claim": {
+      "claim": "Among US adults, clinical obesity was associated with a higher risk of all-cause mortality (HR 1.46) compared to preclinical obesity.",
       "evidence_id": "E_MED_42056948",
       "quote": "Clinical obesity was associated with significantly higher risks of all-cause (HR 1.46, 95% CI 1.29–1.66) and cardiovascular (HR 1.65, 95% CI 1.29–2.10) mortality versus preclinical obesity.",
       "stage": "unmet_need",
@@ -89,53 +121,42 @@
     }
   },
   {
-    "reason": "числа ['40', '64'] є в записі, але не в цитаті claim й не в meta",
+    "reason": "quote not found in the record",
     "claim": {
-      "claim": "Combined overweight and obesity prevalence among US midlife women aged 40-64 years increased from 49.2% in 1990 to 74.2% in 2021.",
-      "evidence_id": "E_MED_41805450",
-      "quote": "Combined overweight/obesity prevalence increased from 49.2% (95% uncertainty interval (UI) 45.8-52.2; 17.7 million (95% UI 16.5-18.8 million)) in 1990 to 74.2% (95% UI 68.8-79.1; 33.4 million (95% UI 31.0-35.6 million)) in 2021",
-      "stage": "unmet_need",
-      "direction": "neutral",
-      "confidence": "high"
-    }
-  },
-  {
-    "reason": "цитата не знайдена в записі",
-    "claim": {
-      "claim": "The age-standardized prevalence of clinical obesity in US adults nearly doubled from 14.3% in 1999-2000 to 26.6% in 2021-2023.",
+      "claim": "The age-standardized prevalence of clinical obesity in US adults increased from 14.3% in 1999-2000 to 26.6% in 2021-2023.",
       "evidence_id": "E_MED_41734890",
-      "quote": "age-standardized prevalence of clinical obesity nearly doubled (14.3% to 26.6%; p < 0.001)",
+      "quote": "From 1999-2000 to 2021-2023, age-standardized prevalence of clinical obesity nearly doubled (14.3% to 26.6%; p < 0.001).",
       "stage": "unmet_need",
       "direction": "neutral",
       "confidence": "high"
     }
   },
   {
-    "reason": "шум: вузька підгрупа/асоціація ризику/критерії доглядальника",
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
     "claim": {
-      "claim": "In a cross-sectional analysis of US adults from 2003-2004 and 2011-2014, higher serum DHA levels were associated with lower odds of central obesity.",
+      "claim": "In a study of US adults, higher serum DHA levels were associated with lower odds of central obesity in a cross-sectional analysis.",
       "evidence_id": "E_MED_42548312",
       "quote": "DHA was significantly associated with lower odds of central obesity (OR: 0·83, 95 % CI: 0·73-0·95)",
       "stage": "unmet_need",
       "direction": "neutral",
-      "confidence": "high"
+      "confidence": "medium"
     }
   },
   {
-    "reason": "шум: вузька підгрупа/асоціація ризику/критерії доглядальника",
+    "reason": "noise: narrow subgroup/risk association/caregiver criteria",
     "claim": {
       "claim": "In 2021, high BMI globally contributed to 5255 thyroid cancer-related deaths.",
       "evidence_id": "E_MED_41986900",
-      "quote": "In 2021, high BMI contributed to 5255 thyroid cancer-related deaths (age-standardised mortality rate: 0.06 per 100 000) and 144 955 DALYs (age-standardised rate: 1.68 per 100 000)",
+      "quote": "In 2021, high BMI contributed to 5255 thyroid cancer-related deaths",
       "stage": "unmet_need",
       "direction": "neutral",
       "confidence": "high"
     }
   },
   {
-    "reason": "шум: цитата — довгий список назв, а не твердження",
+    "reason": "noise: quote is a long list of names, not a statement",
     "claim": {
-      "claim": "The FDA label for Orforglipron mentions the term obesity or weight management, but this does not confirm it is indicated for obesity.",
+      "claim": "The FDA label for the drug orforglipron mentions the indication obesity, but this text search does not mean the drug is approved for it.",
       "evidence_id": "E_FDA_indication_obesity",
       "quote": "Drug names (openFDA generic name) whose FDA label text in the indications section contains any of these phrases: 'obesity', 'weight management', 'excess body weight'. Drugs found: AMPHETAMINE; AMPHETAMINE SULFATE; AMPHETAMINE SULFATE TABLETS; ASTHMA DROPS; BENZPHETAMINE HYDROCHLORIDE; CHOLESTYRAMINE; CHOLESTYRAMINE FOR ORAL SUSPENSION; CHOLESTYRAMINE LIGHT; CHOLESTYRAMINE POWDER FOR SUSPENSION; CHOLEYSTYRAMINE LIGHT; CHORIOGONADOTROPIN ALFA; CHORIONIC GONADOTROPIN; DIETHYLPROPION HYDROCHLORIDE; DIETHYLPROPION HYDROCHLORIDE ER; FENOFIBRATE; GEMFIBROZIL; ISONIAZID; LIRAGLUTIDE; LISDEXAMFETAMINE; LISDEXAMFETAMINE DIMESYLATE; LISDEXAMFETAMINE DIMESYLATE CAPSULES; LISDEXAMFETAMINE DIMESYLATE ORAL; NALTREXONE HYDROCHLORIDE AND BUPROPION HYDROCHLORIDE; ORFORGLIPRON; ORLISTAT; PHENDIMETRAZINE TARTRATE; PHENTERMINE AND TOPIRAMATE; PHENTERMINE AND TOPIRAMATE EXTENDED-RELEASE; PHENTERMINE HCL C-IV; PHENTERMINE HYDROCHLORIDE; RAUWOLFIA COMBINATION; SEMAGLUTIDE; SETMELANOTIDE; TIRZEPATIDE.",
       "stage": "regulatory",

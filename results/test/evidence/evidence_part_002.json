@@ -1,0 +1,66 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 2,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_AACT_NCT07357415",
+      "source_type": "nct_aact",
+      "source_id": "NCT07357415",
+      "url": "https://clinicaltrials.gov/study/NCT07357415",
+      "title": "A Phase 3b Study to Investigate the Efficacy and Safety of Different Retatrutide Dose Escalation Schemes in Participants Without Type 2 Diabetes Who Have Obesity or Overweight: A Randomized, Controlled, Double-Blind Trial",
+      "text": "The purpose of this study is to investigate the efficacy and safety of different retatrutide dose escalation schemes in participants without type 2 diabetes who have obesity or overweight. Participation in the study will last about 113 weeks.",
+      "meta": {
+        "brief_title": "A Study of Retatrutide (LY3437943) in Participants Without Type 2 Diabetes Who Have Obesity or Overweight",
+        "status": "ACTIVE_NOT_RECRUITING",
+        "why_stopped": null,
+        "phase": "PHASE3",
+        "study_type": "INTERVENTIONAL",
+        "enrollment": 600,
+        "start_date": "2026-01-24",
+        "primary_completion": "2028-10-31",
+        "completion": "2028-11-30",
+        "results_submitted": null,
+        "has_results": false,
+        "has_primary_results_in_text": false,
+        "conditions": [
+          "Obesity",
+          "Overweight"
+        ],
+        "interventions": [
+          "Retatrutide"
+        ],
+        "lead_sponsor": "Eli Lilly and Company",
+        "primary_outcomes": [
+          "Percent Change from Baseline in Body Weight"
+        ],
+        "primary_analyses": [],
+        "getter": "aact",
+        "also_found_in": [
+          "nct"
+        ]
+      }
+    },
+    {
+      "id": "E_AACT_NCT07357415_population",
+      "source_type": "nct_aact_population",
+      "source_id": "NCT07357415",
+      "url": "https://clinicaltrials.gov/study/NCT07357415",
+      "title": "Population and eligibility: A Study of Retatrutide (LY3437943) in Participants Without Type 2 Diabetes Who Have Obesity or Overweight",
+      "text": "Population and eligibility for trial NCT07357415 (A Study of Retatrutide (LY3437943) in Participants Without Type 2 Diabetes Who Have Obesity or Overweight). Eligible population: not stated. Sex: ALL; age: 18 Years to not stated; healthy volunteers: not stated. Inclusion criteria: * Have a Body Mass Index (BMI) at screening * ≥ 30 kilogram per square meter (kg/m2) OR * ≥ 27 kg/m2 with presence of at least one of the following weight-related conditions at screening: high blood pressure, abnormal levels of lipid, obstructive sleep apnea, heart disease * Have at least one unsuccessful attempt to lose weight by dieting Exclusion criteria: * Have a self-reported change in body weight \\>5 kilograms (kg) (11 pounds) within 90 days before screening * Have a prior or planned surgical treatment for obesity * Have type 1 diabetes or type 2 diabetes * Have a family or personal history of medullary thyroid carcinoma (MTC) or multiple endocrine neoplasia syndrome type 2 (MEN-2) * Have had within the past 90 days before screening: * heart attack * stroke * hospitalization for unstable angina or heart failure * Have New York Heart Association Functional Classification Class IV congestive heart failure * Have a history of chronic or acute pancreatitis * Have taken weight loss drugs, including over-the counter medications within 90 days...",
+      "meta": {
+        "record_kind": "population",
+        "nct_id": "NCT07357415",
+        "sex": "ALL",
+        "min_age": "18 Years",
+        "max_age": null,
+        "healthy_volunteers": false,
+        "has_baseline_data": false,
+        "getter": "aact"
+      }
+    }
+  ]
+}

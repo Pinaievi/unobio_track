@@ -24,6 +24,7 @@ from core.md_rendering import *
 from core.evidence import *
 from core.capital import *
 from core.outlook import *
+from core.config import fetched_target, same_name
 
 MODEL = "gemini-3.1-flash-lite"      
 FINAL_MODEL = "gemini-3.1-flash-lite"
@@ -241,8 +242,10 @@ def read_usage(interaction, prompt_text: str, out_text: str):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--drug", default="retatrutide")
-    ap.add_argument("--indication", default="obesity")
+    ap.add_argument("--drug", default=None,
+                    help="target drug (default: the drug results/evidence_raw.json was collected for)")
+    ap.add_argument("--indication", default=None,
+                    help="indication (default: the one results/evidence_raw.json was collected for)")
     ap.add_argument("--claims", default=str(RESULTS / "claims.json"))
     ap.add_argument("--evidence", default=str(RESULTS / "evidence"))
     ap.add_argument("--extra", default=None,
@@ -251,6 +254,23 @@ def main():
     ap.add_argument("--compare", default=None,
                     help="path to the previous report.json to compare conclusions")
     args = ap.parse_args()
+
+    # The target drug is never assumed. It comes from --drug or from the collected data, and the
+    # two must agree: otherwise claims about one drug would be written up under another name.
+    data_drug, data_ind = fetched_target(RESULTS)
+    default_paths = (args.claims == str(RESULTS / "claims.json")
+                     and args.evidence == str(RESULTS / "evidence"))
+    if default_paths and args.drug and data_drug and not same_name(args.drug, data_drug):
+        sys.exit(f"results/ holds data collected for '{data_drug}', but --drug is '{args.drug}'. "
+                 f"Collect data for this drug first: python main.py --drug \"{args.drug}\" "
+                 f"--indication \"<indication>\"")
+    args.drug = args.drug or data_drug
+    if args.indication is None:
+        args.indication = data_ind or ""
+    if not args.drug:
+        sys.exit("Drug is not set: pass --drug, or run the fetch step first "
+                 "(results/evidence_raw.json is missing).")
+    print(f"Target: drug={args.drug!r}, indication={args.indication!r}")
 
     dotenv.load_dotenv()
     key = os.environ.get("API_KEY")
@@ -272,6 +292,11 @@ def main():
         INDICATION_WORDS.add(w[:6])
         INDICATION_WORDS.update(INDICATION_SYNONYMS.get(w, []))
     claims, dropped = prepare_claims(claims_raw, evidence, loose, "C")
+    if claims and not any(mentions_drug(c) for c in claims
+                          if c.get("source_type") != "nct_aact_population"):
+        sys.exit(f"None of the {len(claims)} claims mentions '{args.drug}'. results/claims.json "
+                 f"was probably built for another drug. Re-run the pipeline for this drug: "
+                 f"python main.py --drug \"{args.drug}\" --indication \"{args.indication}\"")
 
     if args.extra:
         extra = load_json(Path(args.extra))

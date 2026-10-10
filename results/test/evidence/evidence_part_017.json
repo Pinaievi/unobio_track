@@ -1,0 +1,111 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 17,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_AACT_NCT04881760_flow",
+      "source_type": "nct_aact_flow",
+      "source_id": "NCT04881760",
+      "url": "https://clinicaltrials.gov/study/NCT04881760",
+      "title": "Participant flow: A Study of LY3437943 in Participants Who Have Obesity or Are Overweight",
+      "text": "Participant flow for trial NCT04881760 (A Study of LY3437943 in Participants Who Have Obesity or Are Overweight). Participants by group: 12 mg LY3437943 (2 mg): started 62, completed 54; 1 mg LY3437943: started 69, completed 60; 4 mg LY3437943: started 34, completed 26; 4 mg LY3437943 (2 mg): started 33, completed 26; 8 mg LY3437943 (2 mg): started 35, completed 30; 8 mg LY3437943 (4 mg): started 35, completed 29; Placebo: started 70, completed 50. Reasons for not completing (number of participants): 12 mg LY3437943 (2 mg): Lost to Follow-up (4), Adverse Event (2), Withdrawal by Subject (2), Site Closure (0), Death (0), Inadvertent Enrollment (0); 1 mg LY3437943: Lost to Follow-up (7), Adverse Event (1), Withdrawal by Subject (1), Death (0), Randomized but Never Treated (0), Site Closure (0); 4 mg LY3437943: Withdrawal by Subject (4), Lost to Follow-up (1), Death (1), Randomized but Never Treated (1), Site Closure (1), Inadvertent Enrollment (0); 4 mg LY3437943 (2 mg): Lost to Follow-up (5), Withdrawal by Subject (1), Adverse Event (1), Inadvertent Enrollment (0), Randomized but Never Treated (0), Site Closure (0); 8 mg LY3437943 (2 mg): Withdrawal by Subject (2), Lost to Follow-up (2), Adverse Event (1), Inadvertent Enrollment (0), Site Closure (0), Randomized but Never Treated (0); 8 mg LY3437943 (4 mg): Lost to Follow-up (4), Adverse Event (1), Withdrawal by Subject (1), Death (0), Inadvertent Enrollment (0), Randomized but Never Treated (0); Placebo: Withdrawal by Subject (13), Lost to Follow-up (5), Inadvertent Enrollment (2), Death (0), Randomized but Never Treated (0), Site Closure (0).",
+      "meta": {
+        "record_kind": "flow",
+        "nct_id": "NCT04881760",
+        "groups": {
+          "12 mg LY3437943 (2 mg)": {
+            "COMPLETED": 54,
+            "STARTED": 62
+          },
+          "1 mg LY3437943": {
+            "STARTED": 69,
+            "COMPLETED": 60
+          },
+          "4 mg LY3437943": {
+            "COMPLETED": 26,
+            "STARTED": 34
+          },
+          "4 mg LY3437943 (2 mg)": {
+            "STARTED": 33,
+            "COMPLETED": 26
+          },
+          "8 mg LY3437943 (2 mg)": {
+            "COMPLETED": 30,
+            "STARTED": 35
+          },
+          "8 mg LY3437943 (4 mg)": {
+            "STARTED": 35,
+            "COMPLETED": 29
+          },
+          "Placebo": {
+            "COMPLETED": 50,
+            "STARTED": 70
+          }
+        },
+        "dropout_reasons": {
+          "12 mg LY3437943 (2 mg)": [
+            "Lost to Follow-up (4)",
+            "Adverse Event (2)",
+            "Withdrawal by Subject (2)",
+            "Site Closure (0)",
+            "Death (0)",
+            "Inadvertent Enrollment (0)"
+          ],
+          "1 mg LY3437943": [
+            "Lost to Follow-up (7)",
+            "Adverse Event (1)",
+            "Withdrawal by Subject (1)",
+            "Death (0)",
+            "Randomized but Never Treated (0)",
+            "Site Closure (0)"
+          ],
+          "4 mg LY3437943": [
+            "Withdrawal by Subject (4)",
+            "Lost to Follow-up (1)",
+            "Death (1)",
+            "Randomized but Never Treated (1)",
+            "Site Closure (1)",
+            "Inadvertent Enrollment (0)"
+          ],
+          "4 mg LY3437943 (2 mg)": [
+            "Lost to Follow-up (5)",
+            "Withdrawal by Subject (1)",
+            "Adverse Event (1)",
+            "Inadvertent Enrollment (0)",
+            "Randomized but Never Treated (0)",
+            "Site Closure (0)"
+          ],
+          "8 mg LY3437943 (2 mg)": [
+            "Withdrawal by Subject (2)",
+            "Lost to Follow-up (2)",
+            "Adverse Event (1)",
+            "Inadvertent Enrollment (0)",
+            "Site Closure (0)",
+            "Randomized but Never Treated (0)"
+          ],
+          "8 mg LY3437943 (4 mg)": [
+            "Lost to Follow-up (4)",
+            "Adverse Event (1)",
+            "Withdrawal by Subject (1)",
+            "Death (0)",
+            "Inadvertent Enrollment (0)",
+            "Randomized but Never Treated (0)"
+          ],
+          "Placebo": [
+            "Withdrawal by Subject (13)",
+            "Lost to Follow-up (5)",
+            "Inadvertent Enrollment (2)",
+            "Death (0)",
+            "Randomized but Never Treated (0)",
+            "Site Closure (0)"
+          ]
+        },
+        "getter": "aact"
+      }
+    }
+  ]
+}

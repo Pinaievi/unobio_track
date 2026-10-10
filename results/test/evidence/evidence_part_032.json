@@ -1,0 +1,86 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 32,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_MED_40094000",
+      "source_type": "pubmed",
+      "source_id": "PMID:40094000",
+      "url": "https://europepmc.org/article/MED/40094000",
+      "title": "Incretin triple agonist retatrutide (LY3437943) alleviates obesity-associated cancer progression.",
+      "text": "Medical therapeutics for weight loss are changing the landscape of obesity but impacts on obesity-associated cancer remain unclear. We report that in pre-clinical models with significant retatrutide (RETA, LY3437943)-induced weight loss, pancreatic cancer engraftment was reduced, tumor onset was delayed, and progression was attenuated resulting in a 14-fold reduction in tumor volume compared to only 4-fold reduction in single agonist semaglutide-treated mice. Despite weight re-gain after RETA withdrawal, the anti-tumor benefits of RETA persisted. Remarkably, RETA-induced protection extends to a lung cancer model with 50% reduced tumor engraftment, significantly delayed tumor onset, and mitigated tumor progression, with a 17-fold reduction in tumor volume compared to controls. RETA induced immune reprogramming systemically and in the tumor microenvironment with durable anti-tumor immunity evidenced by elevated circulating IL-6, increased antigen presenting cells, reduced immunosuppressive cells, and activation of pro-inflammatory pathways. In sum, our findings suggest that patients with RETA-mediated weight loss may also benefit from reduced cancer risk and improved outcomes.",
+      "meta": {
+        "year": "2025",
+        "journal": null,
+        "doi": "10.1038/s44324-025-00054-5",
+        "is_preprint": false,
+        "found_by": "pk_search",
+        "found_by_all": [
+          "pk_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42630988",
+      "source_type": "pubmed",
+      "source_id": "PMID:42630988",
+      "url": "https://europepmc.org/article/MED/42630988",
+      "title": "Comparative effects of semaglutide tirzepatide and retatrutide on renal fibrosis in UUO and aged mice.",
+      "text": "Chronic kidney disease is a major health burden. Given the therapeutic potential of GLP-1 receptor agonists (semaglutide, tirzepatide, and retatrutide) in diabetic nephropathy, we evaluated their anti-fibrotic and anti-inflammatory effects in non-diabetic renal fibrosis using HK-2 cells and murine UUO and aging models. Integrating in vivo and in vitro data showed model- and drug-specific patterns of action among the three agents. In the UUO model, semaglutide effects were associated with PI3K-AKT inhibition, tirzepatide effects with PI3K-AKT inhibition and PPAR pathway activation, and retatrutide effects with concurrent inhibition of both PI3K-AKT and NF-κB pathways. In the aging model, all three drugs were linked to G2/M arrest mitigation. Retatrutide showed the greatest efficacy at the doses tested in the models studied. This comparative study offers a framework for understanding the renoprotective actions of these drugs and generates hypotheses for future investigation.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1016/j.isci.2026.117174",
+        "is_preprint": false,
+        "found_by": "pk_search",
+        "found_by_all": [
+          "pk_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_40613938",
+      "source_type": "pubmed",
+      "source_id": "PMID:40613938",
+      "url": "https://europepmc.org/article/MED/40613938",
+      "title": "Inotropic effects of retatrutide in isolated human atrial preparations.",
+      "text": "Retatrutide (LY3437943) was developed as a drug to treat type 2 diabetes and obesity. Retatrutide, a not endogenously occurring peptide, stimulated the glucagon receptor (GCGR), the glucose-dependent insulinotropic polypeptide (GIP) receptor (GIPR), and the glucagon-like peptide-1 receptor (GLP-1R) in cell cultures; increased the activity of adenylyl cyclases (AC); and thus augmented the 3',5' cyclic adenosine monophosphate (cAMP) levels. We tested the hypothesis that retatrutide increased force of contraction (FOC) in human right atrial preparations (HAP) from adult patients. HAP were obtained during open heart surgery from patients who suffered from severe coronary heart disease. We noted that cumulatively applied retatrutide starting at 10 nM (up to 100 nM the highest concentration tested) elevated FOC in HAP in a concentration- and time-dependent manner. In the additional presence of the phosphodiesterase III inhibitor cilostamide (1 µM), retatrutide was more potent and more effective to increase FOC in HAP. Under these conditions, retatrutide shortened the time of muscle relaxation in HAP. These positive inotropic effects of glucagon were diminished by a GLP1-R antagonist, by a GIPR antagonist, and by a CGCR antagonist but not by propranolol, an antagonist at β-adrenoceptors. The effects of retatrutide on FOC were also reduced by 100 nM ryanodine, an inhibitor of the ryanodine receptor in the sarcoplasmic reticulum, by 1 µM carbachol, a M-cholinoceptor agonist, and by 1 µM (-)-N6-phenylisopropyladenosine, an A1-adenosine receptor agonist. Summarily, we suggest that retatrutide enlarged FOC in HAP via the cAMP system through its cognate receptors.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1007/s00210-025-04421-3",
+        "is_preprint": false,
+        "found_by": "pk_search",
+        "found_by_all": [
+          "pk_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_41160422",
+      "source_type": "pubmed",
+      "source_id": "PMID:41160422",
+      "url": "https://europepmc.org/article/MED/41160422",
+      "title": "Rationale, design and baseline characteristics of the TRANSCEND-CKD trial of retatrutide in patients with chronic kidney disease.",
+      "text": "Background and hypothesis Retatrutide is an agonist of the glucose-dependent insulinotropic polypeptide, glucagon-like peptide-1 and glucagon receptors that reduced weight and hemoglobin A1c (HbA1c) in individuals with obesity and type 2 diabetes (T2D). Retatrutide may also address key chronic kidney disease (CKD)-related pathophysiological pathways. Mechanism-of-action studies are needed to understand its effects on kidney function. Methods TRANSCEND-CKD is a double-blind, placebo-controlled, Phase 2b mechanistic study evaluating the efficacy of retatrutide in adults with overweight/obesity and CKD [estimated glomerular filtration rate (eGFR) 25-75 mL/min/1.73 m2], with and without T2D. Participants were randomized 1:1 to once-weekly retatrutide maximum tolerated dose up to 12 mg or matched placebo. The primary objective is to evaluate the effect of retatrutide versus placebo on change in measured glomerular filtration rate (mGFR) by iohexol clearance from baseline to Week 24. Additional objectives include changes in magnetic resonance imaging-assessed kidney hemodynamic and volumetric measurements, including perirenal and renal sinus fat. Results Of 367 participants screened, 146 were randomized to study interventions. The mean age was 65.1 years [standard deviation (SD) 10.6], 45.2% were female and 69.9% were White. The mean weight was 101.1 kg (SD 20.6) and body mass index 35.7 kg/m2 (SD 6.1). Participants with T2D (37.7%) had a mean HbA1c of 7.1% (SD 1.1%), while HbA1c was 5.7% (SD 0.3%) in participants without T2D. The mean mGFR was 49.3 mL/min/1.73 m2 (SD 19.0), cystatin C-based eGFR was 49.6 mL/min/1.73 m2 (SD 13.2) and creatinine-based eGFR was 64.2 mL/min/1.73 m2 (SD 17.8). The median baseline urine albumin-to-creatinine ratio was 14.0 mg/g (interquartile range 6.0-69.0). A total of 21.8% of participants were treated with sodium-glucose cotransporter-2 inhibitors at baseline. Conclusions TRANSCEND-CKD is designed to provide mechanistic insights on the effects of retatrutide on kidney function and structure, and to inform clinical findings in the ongoing cardio-kidney outcome trial TRIUMPH-Outcomes (NCT06383390). Clinical trial registration number NCT05936151.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1093/ndt/gfaf230",
+        "is_preprint": false,
+        "found_by": "pk_search",
+        "found_by_all": [
+          "pk_search"
+        ],
+        "getter": "europepmc"
+      }
+    }
+  ]
+}

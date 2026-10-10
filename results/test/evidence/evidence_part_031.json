@@ -1,0 +1,87 @@
+{
+  "input": {
+    "indication": "obesity",
+    "mechanism": "retatrutide"
+  },
+  "part": 31,
+  "total_parts": 40,
+  "evidence": [
+    {
+      "id": "E_MED_42701351",
+      "source_type": "pubmed",
+      "source_id": "PMID:42701351",
+      "url": "https://europepmc.org/article/MED/42701351",
+      "title": "The Evolution of Medications for Obesity Management.",
+      "text": "This narrative review provides an overview of progress in the development of obesity medications, including a synthesis of data describing the efficacy and safety of currently available agents and emerging therapeutic options. Historically, many obesity medications have been withdrawn from the market due to safety concerns. However, expansion in scientific knowledge of the mechanisms regulating appetite and energy balance has led to the development of medications with greater safety and efficacy. The current generation of injectable incretin analogs, semaglutide and tirzepatide, is associated with mean weight loss in the range of 15%-20% over approximately 12-18 months. These agents confer additional substantial cardiometabolic benefits, including reductions in adverse cardiovascular and kidney outcomes, and improvements in glycaemia, blood pressure, lipid profile and steatohepatitis. As therapeutic options continue to expand, obesity medications are poised to play a critical role in the management of cardiometabolic disease.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1002/jgh3.70466",
+        "is_preprint": false,
+        "found_by": "contradiction_search",
+        "found_by_all": [
+          "base_search",
+          "contradiction_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42671251",
+      "source_type": "pubmed",
+      "source_id": "PMID:42671251",
+      "url": "https://europepmc.org/article/MED/42671251",
+      "title": "Upcoming therapies for steatotic liver disease: Translating breakthroughs into clinical practice.",
+      "text": "Metabolic dysfunction-associated steatotic liver disease (MASLD) is the most common chronic liver disease worldwide and a leading cause of cirrhosis, hepatocellular carcinoma, and cardiometabolic morbidity. Often clinically silent until advanced fibrosis develops, management has largely relied on lifestyle interventions, with limited pharmacological options and inconsistent risk stratification. Recent advances in noninvasive diagnostics and targeted therapies are beginning to transform this approach. This review examines the evolving management paradigm of MASLD and metabolic dysfunction-associated steatohepatitis (MASH), focusing on practical implementation of fibrosis-based risk stratification, structured care pathways, and newly approved or late-stage pharmacological therapies. Recent clinical trials demonstrate that therapies targeting metabolic dysfunction and hepatic fibrogenesis can improve steatohepatitis and fibrosis, particularly in patients with advanced disease. Incretin-based therapies have shown MASH resolution in approximately 40%-60% of patients, accompanied by weight loss of 10%-20%, whereas thyroid hormone receptor-β agonists have demonstrated substantial reductions in liver fat and improvements in fibrosis-related endpoints. Emerging fibroblast growth factor analogs and combination therapeutic approaches suggest additive benefit through complementary metabolic and anti-fibrotic mechanisms. Together, these advances support treatment strategies guided by fibrosis risk rather than steatosis alone. MASLD care is therefore moving from reactive disease management toward structured pathways that integrate scalable diagnostics with disease-modifying therapy, offering the potential to alter disease progression and reduce the burden of advanced liver disease.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.1111/joim.70143",
+        "is_preprint": false,
+        "found_by": "contradiction_search",
+        "found_by_all": [
+          "contradiction_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_42421259",
+      "source_type": "pubmed",
+      "source_id": "PMID:42421259",
+      "url": "https://europepmc.org/article/MED/42421259",
+      "title": "Pharmacological Therapy for Metabolic Dysfunction-Associated Steatotic Liver Disease in a New Era for Obesity and Metabolic Medicine: A State-of-the-Art Review.",
+      "text": "Metabolic dysfunction-associated steatotic liver disease (MASLD) is the most common chronic liver disease worldwide and a major cause of cirrhosis, hepatocellular carcinoma, and liver-related mortality. Weight loss via positive health behavioral changes is the cornerstone of management of MASLD. However, this is a huge challenge for many patients, highlighting the need for effective pharmacological therapies. Two pharmacological agents have received accelerated approval for the treatment of metabolic dysfunction-associated steatohepatitis (MASH), the progressive inflammatory form of MASLD, namely resmetirom, an oral, liver-directed, selective thyroid hormone receptor-β agonist, and semaglutide, a glucagon-like peptide-1 receptor agonist. Despite recent advances, effective pharmacological therapy for MASH-related cirrhosis remains an unmet need, underscoring the importance of early identification and intervention. This narrative review summarizes the current pharmacological therapy landscape of MASLD, including emerging incretin-based therapies and fibroblast growth factor-21 analogues, as well as current guidance on the use of non-invasive tests for treatment selection and monitoring for treatment response. It also provides a background on recent advances in obesity and metabolic medicine, highlighting the evolving paradigm of complication-centric obesity management and the potential role of incretin-based therapies as the backbone of the management of obesity and obesity-related conditions, including MASLD.",
+      "meta": {
+        "year": "2026",
+        "journal": null,
+        "doi": "10.7570/jomes26005",
+        "is_preprint": false,
+        "found_by": "contradiction_search",
+        "found_by_all": [
+          "contradiction_search"
+        ],
+        "getter": "europepmc"
+      }
+    },
+    {
+      "id": "E_MED_39507873",
+      "source_type": "pubmed",
+      "source_id": "PMID:39507873",
+      "url": "https://europepmc.org/article/MED/39507873",
+      "title": "The \"Weight\" for a New Agent Is Almost Over: A Commentary on the Novel Triagonist Retatrutide for Obesity.",
+      "text": "Retatrutide, a hormone receptor agonist targeting glucagon, glucagon-like peptide 1, and glucose-dependent insulinotropic polypeptide, is being developed to treat obesity. A literature review from April 2019 to April 2024 included such terms as \"retatrutide,\" \"LY3437943,\" \"overweight,\" and \"obesity.\" Phase I proof-of-concept studies led to phase II trials showing up to 24% body weight reduction and nearly 20 cm waist circumference reduction. The most common adverse effects were gastrointestinal. Ongoing phase II and III studies aim to further evaluate the safety and efficacy of retatrutide as a novel triagonist for obesity treatment.",
+      "meta": {
+        "year": "2024",
+        "journal": null,
+        "doi": "10.1177/87551225241285326",
+        "is_preprint": false,
+        "found_by": "pk_search",
+        "found_by_all": [
+          "pk_search"
+        ],
+        "getter": "europepmc"
+      }
+    }
+  ]
+}

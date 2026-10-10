@@ -8,11 +8,14 @@ main.py — запускає весь конвеєр від запиту до ф
   4. report  — build_report.py               (звіт -> results/report.md, report.json)
   5. ui      — app.py (Streamlit)             (drill-down сайт зі звітом; відкривається сам)
 
+Препарат ніколи не вгадується: для збору даних потрібен --drug; кроки без збору
+беруть препарат із results/evidence_raw.json і зупиняються, якщо --drug не збігається.
+
 Приклади (з кореня проєкту):
-  python main.py                                     # ретатрутид, ожиріння (за замовчуванням)
   python main.py --drug retatrutide --indication obesity
+  python main.py --drug tolebrutinib --indication "multiple sclerosis"
   python main.py --from claims                       # зібрані докази вже є, почати з витягу фактів
-  python main.py --only report                       # лише перебудувати звіт
+  python main.py --only report                       # лише перебудувати звіт (для зібраного препарату)
   python main.py --only report --extra extra_claims.json --out-prefix report_new \
                  --compare results/report.json       # демо «нові докази змінюють висновок»
   python main.py --no-ui                             # не відкривати сайт після конвеєра
@@ -31,6 +34,9 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
+from core.config import fetched_target, same_name
+
 RESULTS = ROOT / "results"
 STEPS = ["fetch", "split", "claims", "report"]
 
@@ -183,8 +189,12 @@ def print_summary(out_prefix: str, timings: dict, start_ts: str):
 
 def main():
     ap = argparse.ArgumentParser(description="Run the whole underwriting pipeline")
-    ap.add_argument("--drug", default=None, help="drug (default: retatrutide)")
-    ap.add_argument("--indication", default=None, help="indication (default: obesity)")
+    ap.add_argument("--drug", default=None,
+                    help="drug to underwrite (required when data is collected; otherwise "
+                         "taken from results/evidence_raw.json)")
+    ap.add_argument("--indication", default=None,
+                    help="indication, e.g. \"multiple sclerosis\" (default: the one the "
+                         "collected data was gathered for)")
     ap.add_argument("--from", dest="start", choices=STEPS, default="fetch",
                     help="start from this step (earlier steps are skipped)")
     ap.add_argument("--only", choices=STEPS, default=None, help="run only this step")
@@ -211,6 +221,29 @@ def main():
     else:
         steps = STEPS[STEPS.index(args.start):]
 
+    # The target drug is never assumed. Collecting data needs --drug. Steps that reuse
+    # collected data take the drug from results/evidence_raw.json and refuse a different
+    # --drug (otherwise old claims would be written up under the new drug's name).
+    if "fetch" in steps:
+        if not args.drug:
+            sys.exit('Specify the drug, e.g.: python main.py --drug tolebrutinib '
+                     '--indication "multiple sclerosis"')
+    else:
+        data_drug, data_ind = fetched_target(RESULTS)
+        if not data_drug and not args.drug:
+            sys.exit("No collected data in results/. First run: python main.py --drug <drug> "
+                     "--indication \"<indication>\"")
+        if args.drug and data_drug and not same_name(args.drug, data_drug):
+            sys.exit(f"results/ holds data collected for '{data_drug}', not '{args.drug}'. "
+                     f"Collect data for '{args.drug}' first: python main.py --drug "
+                     f"\"{args.drug}\" --indication \"<indication>\"")
+        args.drug = args.drug or data_drug
+        if args.indication is None:
+            args.indication = data_ind or ""
+        elif data_ind and not same_name(args.indication, data_ind):
+            print(f"Note: data was collected for indication '{data_ind}', "
+                  f"the report uses '{args.indication}'.")
+
     cmds = build_commands(args)
 
     for s in steps:
@@ -218,8 +251,7 @@ def main():
         if not script.exists():
             sys.exit(f"{script} not found. Run main.py from the project root.")
 
-    print(f"Drug: {args.drug or 'retatrutide (default)'}, "
-          f"indication: {args.indication or 'obesity (default)'}")
+    print(f"Drug: {args.drug}, indication: {args.indication or '(not set)'}")
     print("Steps: " + " -> ".join(steps))
 
     start_ts = time.strftime("%Y-%m-%d %H:%M:%S")

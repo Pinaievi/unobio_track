@@ -1,8 +1,8 @@
 import re
 from typing import Literal
 from pydantic import BaseModel, Field
-from text_utils import *
-from config import *
+from core.text_utils import *
+from core.config import *
 
 class Conflict(BaseModel):
     topic: str = Field(description="What the disagreement is about, one line.")
@@ -448,7 +448,7 @@ def cross_trial_item(claim_map: dict):
     b = best["claim"].rstrip(". ")
     return {"text": (f"Indirect cross-study comparison, not a head-to-head trial. {a}. "
                      f"Other agents: {b}. The studies differ in populations, doses and duration, "
-                     f"so this does not prove that retatrutide is better."),
+                     f"so this does not prove that this drug is better."),
             "kind": "inference", "claim_ids": [lead["claim_ids"][0], best["id"]],
             "unverified_numbers": []}
 

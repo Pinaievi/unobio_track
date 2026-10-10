@@ -152,7 +152,8 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
         if DRUG_NAMES and rec.get("source_type") in ("pubmed", "epmc_pmc", "epmc_ppr"):
             in_claim = any(nm in c.get("claim", "").lower() for nm in DRUG_NAMES)
             in_quote = any(nm in c.get("quote", "").lower() for nm in DRUG_NAMES)
-            item["drug_not_in_quote"] = bool(in_claim and not in_quote)
+            in_title = any(nm in (rec.get("title") or "").lower() for nm in DRUG_NAMES)
+            item["drug_not_in_quote"] = bool(in_claim and not in_quote and not in_title)
 
         if DRUG_NAMES and item.get("stage") in OTHER_DRUG_STAGES \
                 and item.get("direction") in ("supports", "contradicts") \

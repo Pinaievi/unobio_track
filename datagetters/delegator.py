@@ -2,7 +2,6 @@
 delegator.py — запускає всі data getters паралельно й збирає результат.
 
 Запуск:
-  python delegator.py                                         # препарат за замовчуванням (retatrutide)
   python delegator.py tirzepatide                             # один аргумент = препарат
   python delegator.py "Alzheimer disease" "BACE1 inhibitor"   # хвороба + препарат
 
@@ -22,9 +21,6 @@ GETTER_TIMEOUT = 90
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = ROOT / "results"
 OUTPUT_PATH = RESULTS_DIR / "evidence_raw.json"
-
-DEFAULT_INDICATION = ""
-DEFAULT_MECHANISM = "retatrutide"
 
 TRIAL_SOURCE_PRIORITY = {"nct_aact": 2, "nct": 1}
 
@@ -136,14 +132,11 @@ def run(query: Query, getters: list[DataGetter] | None = None) -> dict:
 def parse_args(args: list[str]) -> tuple[str, str]:
     """Розбирає аргументи командного рядка: (хвороба, препарат)."""
     args = [a.strip() for a in args]
-    if len(args) == 0:
-        return DEFAULT_INDICATION, DEFAULT_MECHANISM
     if len(args) == 1:
         return "", args[0]
     if len(args) == 2:
         return args[0], args[1]
-    print('Usage:\n'
-          '  python delegator.py                      (default)\n'
+    print('Usage (the drug is always required, there is no default):\n'
           '  python delegator.py "<drug>"\n'
           '  python delegator.py "<disease>" "<drug>"')
     sys.exit(1)
