@@ -113,6 +113,10 @@ Checks done in code (`core/validation.py`, `pipeline/build_report.py`):
 * **contradictions**: both sides must use the same comparator, at least one claim per side
   must be about the target drug, and "conflicts" that the model itself calls a non-contradiction
   are removed;
+* a number in an [E] statement that is not in the cited claims (for example a sum the model
+  computed) downgrades it to [AI];
+* the Recommendation cannot ignore an unresolved contradiction: if it does not cite the strongest
+  contradicting claim of an unresolved conflict, the code adds it as an [E] statement;
 * claim ids are stripped from prose (they are shown only as links to claims);
 * a coverage check lists important supporting/contradicting claims that no section used.
 
@@ -152,8 +156,11 @@ final prompt asks the model to split unknowns into *blocking* ones (an unfavoura
 would break the thesis, for example efficacy in humans not shown, or a material unresolved
 contradiction) and ordinary diligence items (long-term follow-up, head-to-head data, pricing).
 The code lowers a proposed Invest to Conditional only if (a) the dossier has no
-high-confidence clinical claim supporting efficacy, or (b) the model itself lists blocking
-unknowns. The reason is stored in `invest_gate` and printed in the report.
+high-confidence clinical claim supporting efficacy, (b) the model itself lists blocking
+unknowns, or (c) evidence added after the baseline (`--extra`) contradicts the thesis with high
+confidence and has not been through diligence yet. Rule (c) is a policy, not a model judgement:
+new adverse evidence always gives a human a reason to re-review before capital is committed.
+The reasons are stored in `invest_gate` and printed in the report.
 
 Because the model writes both the answer and the explanation under the same policy, the text
 of the report stays consistent with the final level.
@@ -189,10 +196,11 @@ Both sections are computed **by code** (`core/outlook.py`), with no LLM call.
 * **Catalyst calendar.** From the registry records of the drug: the primary-completion date of
   each trial (when the main data are expected), stopped/suspended trials, and the first and last
   primary completion of each competitor's Phase 3 programme. Past events are shown only for
-  Phase 2+ trials in the indication; a trial whose primary completion has passed gets one of
+  Phase 2+ trials in the indication, and competitor programmes only for future dates; a trial whose primary completion has passed gets one of
   three labels (results in the registry, results reported in the literature, or no results in
   our sources, which is raised as a diligence question). Dates are the sponsor's own estimates.
-  Filing and approval dates are **not** predicted.
+  Filing and approval dates are **not** predicted. The nearest dated catalysts of the drug are also given to
+  the final model call so that *What would change the conclusion* can name them (it may not invent dates).
 * **Probability of success.** The current stage is the highest phase among the drug's trials in
   the indication. PoS to approval is the product of published phase-transition rates from that
   stage (BIO / Informa / QLS, *Clinical Development Success Rates 2011-2020*: Phase I→II 52.0%,
@@ -261,11 +269,12 @@ Observed results (retatrutide in obesity):
 |---|---|---|
 | `report_baseline` | **Invest** or **Conditional** (model judgement) | strong phase 2/3 efficacy versus placebo; Invest if no blocking unknown is named, otherwise Conditional with the blocking unknowns and the Invest gate reason printed; no critical findings |
 | `report_hold` | **Do Not Invest** | triage rated the liver-injury death, the FDA clinical hold and the probable causality as *critical*; a stop-category finding gives Do Not Invest, the model applied it itself or the code lowered it |
-| `report_new` | **Conditional** | the new head-to-head result (no superiority vs tirzepatide) appears as [E] evidence in the Recommendation and the "no head-to-head data" statements disappear; triage rated it *major*, not critical, so the level does not move |
+| `report_new` | **Conditional** (from a baseline Invest) | the new head-to-head result (no superiority vs tirzepatide, discontinuation 14.8% vs 6.1%, serious adverse events 9.4% vs 4.7%) appears as [E] evidence in the Recommendation; it is not a stop-category finding, so it cannot give Do Not Invest, but the Invest gate (rule c) lowers Invest to Conditional and names the new claims |
 
-The point of the two scenarios: the system does not flip on any new input (B), but it reacts
-to a finding that can stop the programme (A), and the finding is recognised by a model
-judgement rather than a fixed list. The *Compare* tab and the `--compare` console output show
+The point of the two scenarios: new adverse evidence that does not stop the programme moves
+the decision by one step (Invest to Conditional), while a finding that can stop the programme
+moves it to Do Not Invest; which findings are critical is a model judgement rather than a
+fixed list. The *Compare* tab and the `--compare` console output show
 the old and new recommendation, the new claims, new critical unknowns, critical findings and
 the status of each conflict.
 

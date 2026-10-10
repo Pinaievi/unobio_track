@@ -148,8 +148,10 @@ def catalyst_calendar(evidence: dict, indication_words: set, reported: set | Non
                 "evidence_ids": [r["id"]], "url": r.get("url")})
     rows.sort(key=lambda x: (x["date"] == "", x["date"]))
     upcoming = [x for x in rows if not x["past"] and x["scope"] == "target"]
+    # «наступний катализатор» — з показання інвестиції; інші показання лише якщо інших немає
+    own = [x for x in upcoming if x.get("in_indication", True)]
     return {"as_of": str(today), "rows": rows,
-            "next_target_readout": upcoming[0] if upcoming else None}
+            "next_target_readout": (own or upcoming or [None])[0]}
 
 
 # ---------------------------------------------------------------- PoS за еталоном

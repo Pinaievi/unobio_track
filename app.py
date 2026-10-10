@@ -154,7 +154,7 @@ def tab_report(rep: dict, claims: dict, sources: dict, only_evidence: bool):
                            "Trial": r["nct"] or "—", "Phase": r["phase"],
                            "Status": r["status"], "Sponsor": r["sponsor"] or "—",
                            "Primary endpoint / programme": (r["primary_outcome"] or "—")[:100]}
-                          for r in rows], use_container_width=True)
+                          for r in rows], width="stretch")
     if rep.get("pos"):
         st.subheader("Probability of success (benchmark)")
         render_statements(rep["pos_statements"], claims, sources, "pos", only_evidence)
@@ -167,7 +167,7 @@ def tab_report(rep: dict, claims: dict, sources: dict, only_evidence: bool):
                            "NDA/BLA→approval": f"{r['stage_rates']['nda']*100:.1f}%",
                            "PoS to approval from current stage":
                                f"{r['pos_to_approval']*100:.0f}%"} for r in pos["rows"]],
-                         use_container_width=True)
+                         width="stretch")
             st.caption("Source: " + pos["source"])
     sec = rep["sections"]["key_risks"]
     st.subheader(sec["title"])
