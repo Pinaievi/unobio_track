@@ -134,6 +134,8 @@ def catalyst_calendar(evidence: dict, indication_words: set, reported: set | Non
         if not pcs:
             continue
         for d, label in sorted({(pcs[0], "earliest"), (pcs[-1], "latest")}):
+            if d < today:           # минулі дати конкурентів — шум; лишаємо лише майбутні
+                continue
             rows.append({
                 "date": str(d), "scope": "competitor",
                 "kind": f"Competitor Phase 3 programme: {label} primary completion",
@@ -151,6 +153,17 @@ def catalyst_calendar(evidence: dict, indication_words: set, reported: set | Non
 
 
 # ---------------------------------------------------------------- PoS за еталоном
+
+def catalysts_for_prompt(cal: dict, limit: int = 6) -> str:
+    """Найближчі дати з реєстру для фінального виклику: тільки те, що є в календарі."""
+    rows = [r for r in cal["rows"] if not r["past"]]
+    mine = [r for r in rows if r["scope"] == "target" and r.get("in_indication", True)][:limit]
+    comp = [r for r in rows if r["scope"] == "competitor"][:3]
+    lines = [f"- {r['date']}: {r['nct']} ({r['phase']}, {r['status']}), primary endpoint: "
+             f"{(r['primary_outcome'] or 'not stated')[:100]}" for r in mine]
+    lines += [f"- {r['date']}: competitor programme {r['primary_outcome']}" for r in comp]
+    return "\n".join(lines) or "none in the registry records"
+
 
 def pos_benchmark(evidence: dict, indication_words: set, indication: str,
                   flags: list | None = None, reported: set | None = None) -> dict:

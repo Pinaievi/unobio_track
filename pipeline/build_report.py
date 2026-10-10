@@ -407,6 +407,8 @@ def main():
     majors = [t for t in triage if t["level"] == "major"]
     if majors:
         flags_text += "\n(major, not critical: " + ", ".join(t["id"] for t in majors) + ")"
+    reported = reported_trials(claims, evidence)
+    cal = catalyst_calendar(evidence, INDICATION_WORDS, reported)
     final_prompt = (FINAL_TASK
                     + f"\nDRUG: {args.drug}\nINDICATION: {args.indication}\n"
                     + known_names_line(args.drug) + "\n"
@@ -415,6 +417,8 @@ def main():
                     + "\n\nDRAFTED SECTIONS:\n" + "\n".join(sections_text)
                     + "\n\nCONFLICTS:\n" + conflicts_text
                     + "\n\nCAPITAL ESTIMATE:\n" + capital_text
+                    + "\n\nUPCOMING REGISTRY CATALYSTS (dates are the sponsor's estimates):\n"
+                    + catalysts_for_prompt(cal)
                     + "\n\nCRITICAL FINDINGS (rated by a separate severity review; a critical "
                       "finding can stop the programme on its own):\n" + flags_text
                     + "\nPOLICY: first fill recommendation_without_critical_findings (all "
@@ -452,6 +456,10 @@ def main():
         rationale.append(it)
         issues.append(f"Recommendation: код додав нове свідчення {it['claim_ids'][0]} "
                       f"(is_extra) — воно має бути видно в рекомендації")
+    for it in conflict_risk_items(conflicts, claim_map, rationale):
+        rationale.append(it)
+        issues.append(f"Recommendation: код додав аргумент «проти» {it['claim_ids'][0]} з нерозв'язаної "
+                      f"суперечності «{it['from_conflict'][:60]}» — рекомендація не може її обходити")
     rationale = order_rationale(rationale, claim_map, flag_ids)
 
     recommendation = final.recommendation
@@ -464,6 +472,17 @@ def main():
         if not any(c.get("stage") == "clinical" and c.get("direction") == "supports"
                    and c.get("confidence") == "high" for c in claim_map.values()):
             invest_gate["reasons"].append("the dossier has no high-confidence clinical claim supporting efficacy")
+        # (3) нові докази (is_extra), що з високою впевненістю СУПЕРЕЧАТЬ тезі, ще не пройшли
+        # дилідженс: Invest на такому досьє не лишається, поки їх не зведено. Це політика, не
+        # оцінка моделі: нові суперечливі докази завжди дають людині причину переглянути рішення.
+        new_against = [c["id"] for c in claim_map.values()
+                       if c.get("is_extra") and c.get("direction") == "contradicts"
+                       and c.get("confidence") == "high"
+                       and c.get("stage") in ("clinical", "competition", "safety_or_failure", "regulatory")]
+        if new_against:
+            invest_gate["reasons"].append(
+                "newly added high-confidence evidence contradicts the thesis and has not been "
+                "reviewed in diligence yet: " + ", ".join(new_against))
         if final.blocking_unknowns:
             invest_gate["reasons"].append("the model named blocking unknowns: "
                                           + "; ".join(final.blocking_unknowns))
@@ -493,8 +512,6 @@ def main():
                           f"«{recommendation}» (правило виконано моделлю).")
 
     # календар катализаторів і PoS: рахує код з реєстру й опублікованого еталону (без LLM)
-    reported = reported_trials(claims, evidence)
-    cal = catalyst_calendar(evidence, INDICATION_WORDS, reported)
     pos = pos_benchmark(evidence, INDICATION_WORDS, args.indication, flags, reported)
     cal_stmts, pos_stmts = outlook_statements(cal, pos)
 

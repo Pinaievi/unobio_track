@@ -307,7 +307,10 @@ RULES:
 4. diligence_questions: 5 to 10 questions a diligence team should ask the company or
    check in data. Each must be specific and answerable.
 5. what_would_change_the_conclusion: concrete new evidence that would move the
-   recommendation up or down (for example a specific kind of trial result).
+   recommendation up or down (for example a specific kind of trial result). When a dated
+   registry catalyst listed under UPCOMING REGISTRY CATALYSTS would be such evidence, name
+   it with its NCT number and date (for example the head-to-head trial or the pivotal
+   readout); never invent a date or a trial that is not listed.
 6. Use only the facts in the sections and claims. Cite claim ids exactly as given.
 7. Do not present any-adverse-event percentages from Phase 1 or healthy-volunteer cohorts
    as a safety problem unless the claims compare them with placebo. Do not list as a

@@ -189,9 +189,12 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                     issues.append(f"{section}: [E] знижено до [AI] — числа {missing} "
                                   f"відсутні в цитованому claim: {s.text[:70]}")
                 elif missing:
+                    # число, якого немає в цитованих claims (наприклад, сума), — це обчислення
+                    # моделі, а не факт з джерела: [E] -> [AI], попередження лишається
+                    item["kind"] = "inference"
                     item["unverified_numbers"] = missing
-                    issues.append(f"{section}: числа {missing} відсутні в цитованих "
-                                  f"claims: {s.text[:70]}")
+                    issues.append(f"{section}: [E] знижено до [AI] — числа {missing} відсутні "
+                                  f"в цитованих claims (це обчислення, не факт): {s.text[:70]}")
         if single_evidence and item["kind"] == "inference" and ids:
             # висновок моделі в рекомендації теж не має містити чисел, яких нема в цитованих claims
             have = set()
@@ -381,6 +384,28 @@ def order_rationale(items: list, claim_map: dict, flag_ids: set = None) -> list:
         return (grp, -max(claim_strength(claim_map[i]) for i in x["claim_ids"]))
     ev.sort(key=key)
     return ev + rest
+
+
+def conflict_risk_items(conflicts: list, claim_map: dict, rationale: list, n: int = 2) -> list:
+    """Рекомендація не може мовчати про нерозв'язану суперечність. Для кожної такої
+    суперечності беремо найсильніший заперечуючий claim (не low-confidence), якщо
+    рекомендація його ще не цитує як [E], і додаємо як [E]. Максимум n штук."""
+    have = {i for x in rationale if x["kind"] == "evidence" for i in x["claim_ids"]}
+    out = []
+    for c in conflicts:
+        if c.get("status") != "unresolved":
+            continue
+        cands = [claim_map[i] for i in c.get("contradicting", []) if i in claim_map
+                 and claim_map[i].get("confidence") != "low"]
+        if not cands or any(x["id"] in have for x in cands):
+            continue
+        best = max(cands, key=claim_strength)
+        out.append({"text": best["claim"], "kind": "evidence", "claim_ids": [best["id"]],
+                    "unverified_numbers": [], "from_conflict": c.get("topic", "")})
+        have.add(best["id"])
+        if len(out) >= n:
+            break
+    return out
 
 
 def key_efficacy_items(claim_map: dict, cited: set, n: int = 3) -> list:
