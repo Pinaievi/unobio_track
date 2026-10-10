@@ -99,7 +99,7 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
         ids = [i for i in s.claim_ids if i in claim_map]
         bad = [i for i in s.claim_ids if i not in claim_map]
         if bad:
-            issues.append(f"{section}: вигадані id {bad} прибрано")
+            issues.append(f"{section}: invented ids {bad} removed")
         item = {"text": strip_inline_ids(s.text), "kind": s.kind, "claim_ids": ids,
                 "unverified_numbers": []}
         gap = GAP_RE.search(s.text)
@@ -109,59 +109,59 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
 
             if s.kind == "evidence":
                 item["kind"] = "inference"
-            issues.append(f"{section}: твердження про відсутність даних -> [AI]"
-                          f"{' з приміткою про джерела' if gap.start() <= 12 else ''}: "
+            issues.append(f"{section}: statement about missing data -> [AI]"
+                          f"{' with a source note' if gap.start() <= 12 else ''}: "
                           f"{s.text[:70]}")
         if single_evidence and ids and item["kind"] == "evidence" \
                 and all(claim_map[i]["stage"] in MECH_STAGES for i in ids):
-            issues.append(f"{section}: тривіальний [E] про механізм прибрано з "
-                          f"рекомендації (він є в розділі 1): {s.text[:70]}")
+            issues.append(f"{section}: trivial [E] about the mechanism removed from "
+                          f"the recommendation (it is in section 1): {s.text[:70]}")
             continue
         if item["kind"] == "evidence":
             if not ids:
-                issues.append(f"{section}: evidence без claims відкинуто: "
+                issues.append(f"{section}: evidence without claims dropped: "
                               f"{s.text[:70]}")
                 continue
             if section.startswith("Commercial") and all(
                     claim_map[i].get("source_type") == "nct_aact_population" for i in ids):
                 
-                issues.append(f"{section}: [E] лише на критеріях включення в дослідження "
-                              f"(не показник ринку) відкинуто: {s.text[:70]}")
+                issues.append(f"{section}: [E] based only on study inclusion criteria "
+                              f"(not a market indicator) dropped: {s.text[:70]}")
                 continue
             families = {claim_map[i]["stage"] in MECH_STAGES for i in ids}
             dirs = {claim_map[i]["direction"] for i in ids}
             reason = None
             if len(families) > 1:
-                reason = "поєднує біологію/PK і клінічні дані"
+                reason = "combines biology/PK and clinical data"
             elif {"supports", "contradicts"} <= dirs:
-                reason = "поєднує claims із протилежними напрямками"
+                reason = "combines claims with opposite directions"
             elif len({claim_map[i].get("evidence_id") for i in ids}) > 1 \
                     and CROSS_LINK_RE.search(s.text):
-                reason = ("зіставляє claims із різних записів (порівняння/зміна "
-                          "між джерелами — це висновок моделі, не факт)")
+                reason = ("compares claims from different records (comparison/change "
+                          "between sources — a model inference, not a fact)")
             elif any(claim_map[i].get("source_type") == "opentargets" for i in ids) \
                     and _ot_label_mismatch(s.text, ids, claim_map):
-                reason = ("тип доказу (genetic/clinical/literature) для балу Open Targets "
-                          "названо, але цитовані claims не дають такого балу з цими числами")
+                reason = ("evidence type (genetic/clinical/literature) for the Open Targets score "
+                          "is named, but the cited claims do not give such a score with these numbers")
             elif any(claim_map[i].get("confidence") == "low" for i in ids):
-                reason = "серед цитованих claims є low-confidence: не подаємо як факт"
+                reason = "cited claims include low-confidence ones: not presented as fact"
             elif section.startswith("Commercial") \
                     and len({claim_map[i].get("evidence_id") for i in ids}) > 1 \
                     and len(numbers(strip_labels(s.text))) >= 2:
-                reason = ("у комерції числа з різних записів в одному [E] "
-                          "(можуть бути різні показники)")
+                reason = ("in commercial, numbers from different records in one [E] "
+                          "(they may be different measures)")
             elif section.startswith("Commercial") and (
                     RISK_ASSOC_RE.search(s.text)
                     or any(RISK_ASSOC_RE.search(claim_map[i]["claim"] + " " + claim_map[i]["quote"])
                            for i in ids)):
-                reason = ("ризик-асоціація (HR/OR) описує хворобу, а не розмір ринку: "
-                          "не подаємо як факт про комерційну можливість")
+                reason = ("risk association (HR/OR) describes the disease, not the market size: "
+                          "not presented as a fact about the commercial opportunity")
             elif single_evidence and len(ids) > 1:
-                reason = "у рекомендації факт має спиратися на один claim"
+                reason = "in the recommendation a fact must rest on a single claim"
             elif single_evidence and any(
                     claim_map[i].get("confidence") == "low"
                     or claim_map[i].get("source_type") == "epmc_ppr" for i in ids):
-                reason = "у рекомендації не можна подавати low-confidence/препринт як факт"
+                reason = "in the recommendation low-confidence/preprint cannot be presented as fact"
             if not reason:
 
                 no_ci = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", item["text"])
@@ -171,13 +171,13 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                         | percent_numbers(claim_map[i]["quote"])
                 bad_pct = sorted(percent_numbers(no_ci) - have_pct)
                 if bad_pct:
-                    reason = (f"число(а) {bad_pct} подано зі знаком % , а в цитованих "
-                              f"claims їх немає зі знаком % (одиницю дописано)")
+                    reason = (f"number(s) {bad_pct} given with a % sign, but in the cited "
+                              f"claims they have no % sign (unit was added)")
             if not reason and single_evidence and len(ids) == 1:
                 item["text"] = claim_map[ids[0]]["claim"]
             if reason:
                 item["kind"] = "inference"
-                issues.append(f"{section}: [E] знижено до [AI] — {reason}: "
+                issues.append(f"{section}: [E] downgraded to [AI] — {reason}: "
                               f"{s.text[:70]}")
             else:
                 have = set()
@@ -186,15 +186,15 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
                 missing = sorted(numbers(strip_labels(item["text"])) - have)
                 if missing and single_evidence:
                     item["kind"] = "inference"
-                    issues.append(f"{section}: [E] знижено до [AI] — числа {missing} "
-                                  f"відсутні в цитованому claim: {s.text[:70]}")
+                    issues.append(f"{section}: [E] downgraded to [AI] — numbers {missing} "
+                                  f"absent from the cited claim: {s.text[:70]}")
                 elif missing:
                     # число, якого немає в цитованих claims (наприклад, сума), — це обчислення
                     # моделі, а не факт з джерела: [E] -> [AI], попередження лишається
                     item["kind"] = "inference"
                     item["unverified_numbers"] = missing
-                    issues.append(f"{section}: [E] знижено до [AI] — числа {missing} відсутні "
-                                  f"в цитованих claims (це обчислення, не факт): {s.text[:70]}")
+                    issues.append(f"{section}: [E] downgraded to [AI] — numbers {missing} absent "
+                                  f"from the cited claims (a calculation, not a fact): {s.text[:70]}")
         if single_evidence and item["kind"] == "inference" and ids:
             # висновок моделі в рекомендації теж не має містити чисел, яких нема в цитованих claims
             have = set()
@@ -203,8 +203,8 @@ def validate_statements(statements: list, claim_map: dict, section: str, issues:
             txt = re.sub(r"(?i)\d+\s*%\s*(?:CI|confidence interval)", "", item["text"])
             missing = sorted(numbers(strip_labels(txt)) - have)
             if missing:
-                issues.append(f"{section}: [AI] прибрано — числа {missing} відсутні в "
-                              f"цитованих claims: {s.text[:70]}")
+                issues.append(f"{section}: [AI] removed — numbers {missing} absent from "
+                              f"the cited claims: {s.text[:70]}")
                 continue
         out.append(item)
     return out
@@ -221,31 +221,31 @@ def validate_conflicts(draft: ConflictsDraft, claim_map: dict, issues: list):
                if i in claim_map and claim_map[i]["direction"] == "contradicts"]
         if len(sup) != len(c.supporting_claim_ids) or \
                 len(con) != len(c.contradicting_claim_ids):
-            issues.append(f"Conflicts: у темі «{c.topic[:50]}» прибрано id, яких "
-                          f"немає або чий напрямок не збігається з боком конфлікту")
+            issues.append(f"Conflicts: in topic \"{c.topic[:50]}\" removed ids that "
+                          f"do not exist or whose direction does not match the conflict side")
         if not sup or not con:
-            issues.append(f"Conflicts: тему «{c.topic[:50]}» відкинуто "
-                          f"(немає claims з обох боків)")
+            issues.append(f"Conflicts: topic \"{c.topic[:50]}\" dropped "
+                          f"(no claims on both sides)")
             continue
         if not any(mentions_drug(claim_map[i]) for i in sup) or \
                 not any(mentions_drug(claim_map[i]) for i in con):
-            issues.append(f"Conflicts: тему «{c.topic[:50]}» відкинуто — з одного "
-                          f"боку немає жодного claim про цільовий препарат "
-                          f"(клас або інший препарат проти нашого)")
+            issues.append(f"Conflicts: topic \"{c.topic[:50]}\" dropped — one "
+                          f"side has no claim about the target drug "
+                          f"(a class or another drug versus ours)")
             continue
         if NOT_CONFLICT_RE.search(c.assessment or ""):
-            issues.append(f"Conflicts: тему «{c.topic[:50]}» відкинуто — сама оцінка "
-                          f"каже, що це не емпіричне протиріччя")
+            issues.append(f"Conflicts: topic \"{c.topic[:50]}\" dropped — the assessment itself "
+                          f"says this is not an empirical contradiction")
             continue
         cs, cc = comparators(sup, claim_map), comparators(con, claim_map)
         if cs and cc and not (cs & cc):
-            issues.append(f"Conflicts: тему «{c.topic[:50]}» відкинуто — сторони "
-                          f"порівнюють із різним компаратором ({sorted(cs)} проти "
+            issues.append(f"Conflicts: topic \"{c.topic[:50]}\" dropped — the sides "
+                          f"use different comparators ({sorted(cs)} versus "
                           f"{sorted(cc)})")
             continue
         if set(sup) <= used_sup:
-            issues.append(f"Conflicts: тему «{c.topic[:50]}» відкинуто (ті самі "
-                          f"supporting claims уже використані в іншій суперечності)")
+            issues.append(f"Conflicts: topic \"{c.topic[:50]}\" dropped (the same "
+                          f"supporting claims are already used in another contradiction)")
             continue
         used_sup |= set(sup)
         status = c.status
@@ -253,8 +253,8 @@ def validate_conflicts(draft: ConflictsDraft, claim_map: dict, issues: list):
                 len({claim_map[i].get("evidence_id") for i in sup + con}) > 1:
             
             status = "unresolved"
-            issues.append(f"Conflicts: «{c.topic[:50]}» — статус resolved знижено до "
-                          f"unresolved (сторони з різних досліджень)")
+            issues.append(f"Conflicts: \"{c.topic[:50]}\" — status resolved downgraded to "
+                          f"unresolved (the sides come from different studies)")
         assessment = c.assessment or ""
         if status == "unresolved" and RESOLVED_TEXT_RE.search(assessment):
             assessment = RESOLVED_TEXT_RE.sub("", assessment).strip()
@@ -277,8 +277,8 @@ def drop_false_absence(sections: dict, claim_map: dict, issues: list):
         kept = []
         for st in sec["statements"]:
             if says_no_human_data(st["text"]):
-                issues.append(f"{sec['title']}: твердження прибрано — воно каже, що "
-                              f"клінічних даних у людей немає, але в досьє є {lid}: "
+                issues.append(f"{sec['title']}: statement removed — it says that "
+                              f"there are no clinical data in humans, but the dossier has {lid}: "
                               f"{st['text'][:70]}")
             else:
                 kept.append(st)
@@ -286,7 +286,7 @@ def drop_false_absence(sections: dict, claim_map: dict, issues: list):
         gaps = []
         for g in sec["gaps"]:
             if says_no_human_data(g):
-                issues.append(f"{sec['title']}: gap прибрано — суперечить {lid}: {g[:70]}")
+                issues.append(f"{sec['title']}: gap removed — contradicts {lid}: {g[:70]}")
             else:
                 gaps.append(g)
         sec["gaps"] = gaps
@@ -563,8 +563,8 @@ def drop_false_h2h_absence(sections: dict, rationale: list, claim_map: dict, iss
         kept = []
         for st in sec["statements"]:
             if bad(st["text"]):
-                issues.append(f"{sec['title']}: твердження прибрано — каже, що head-to-head даних "
-                              f"немає, але в досьє є {h['id']}: {st['text'][:70]}")
+                issues.append(f"{sec['title']}: statement removed — says there is no head-to-head data "
+                              f"but the dossier has {h['id']}: {st['text'][:70]}")
             else:
                 kept.append(st)
         sec["statements"] = kept
@@ -572,8 +572,8 @@ def drop_false_h2h_absence(sections: dict, rationale: list, claim_map: dict, iss
     out = []
     for st in rationale:
         if bad(st["text"]):
-            issues.append(f"Recommendation: твердження прибрано — каже, що head-to-head даних "
-                          f"немає, але в досьє є {h['id']}: {st['text'][:70]}")
+            issues.append(f"Recommendation: statement removed — says there is no head-to-head data "
+                          f"but the dossier has {h['id']}: {st['text'][:70]}")
         else:
             out.append(st)
     return out
@@ -600,19 +600,19 @@ def validate_triage(draft: TriageDraft, claim_map: dict, issues: list) -> list:
     for it in draft.items:
         c = claim_map.get(it.claim_id)
         if not c:
-            issues.append(f"Тріаж: id {it.claim_id} не існує — оцінку відкинуто")
+            issues.append(f"Triage: id {it.claim_id} does not exist — assessment dropped")
             continue
         if c.get("source_type") == "nct_aact_population" or c.get("drug_not_in_quote") \
                 or not mentions_drug(c):
-            issues.append(f"Тріаж: {it.claim_id} не про цільовий препарат — оцінку відкинуто")
+            issues.append(f"Triage: {it.claim_id} is not about the target drug — assessment dropped")
             continue
         level = it.level
         if level == "critical" and c.get("confidence") == "low":
             level = "major"
-            issues.append(f"Тріаж: {it.claim_id} «critical» знижено до «major» — low-confidence claim")
+            issues.append(f"Triage: {it.claim_id} \"critical\" downgraded to \"major\" — low-confidence claim")
         if level == "critical" and it.category == "not_critical":
             level = "major"
-            issues.append(f"Тріаж: {it.claim_id} «critical» без категорії — знижено до «major»")
+            issues.append(f"Triage: {it.claim_id} \"critical\" without a category — downgraded to \"major\"")
         out.append({"id": c["id"], "level": level, "category": it.category,
                     "reason": it.reason.strip()})
     return out

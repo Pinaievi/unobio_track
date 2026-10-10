@@ -64,8 +64,8 @@ def capital_from_registry(evidence: dict, claims: list, claim_map: dict,
       - розмір вибірки — з реєстру; суму і вартість рахує код."""
     area, cost_lo, cost_hi = cost_for_indication(indication)
     if area == "general":
-        issues.append("Capital: терапевтичну область не визначено за показанням — "
-                      "використано загальний діапазон допущення")
+        issues.append("Capital: therapeutic area not identified from the indication — "
+                      "using the general assumption range")
     table = trial_table(evidence)
     reported = reported_trials(claims, evidence)
     counted, closed, done = [], [], []
@@ -73,7 +73,7 @@ def capital_from_registry(evidence: dict, claims: list, claim_map: dict,
     for nct, t in sorted(table.items()):
         if not t["phase3"]:
             if t["phase3"] is None:
-                issues.append(f"Capital: {nct} пропущено — фаза в реєстрі не вказана")
+                issues.append(f"Capital: {nct} skipped — phase not given in the registry")
             continue
         if t["has_results"] or nct in reported or t["status"] in (
                 "COMPLETED", "TERMINATED", "WITHDRAWN"):
@@ -82,13 +82,13 @@ def capital_from_registry(evidence: dict, claims: list, claim_map: dict,
             closed.append(t)
         elif t["status"] in ENROLLING:
             if t["enrollment"] is None:
-                issues.append(f"Capital: {nct} набирає учасників, але розмір вибірки "
-                              f"у реєстрі не вказано — не пораховано")
+                issues.append(f"Capital: {nct} is recruiting, but the sample size "
+                              f"is not given in the registry — not calculated")
                 continue
             counted.append(t)
         else:
-            issues.append(f"Capital: {nct} має статус «{t['status'] or '?'}» — "
-                          f"не пораховано")
+            issues.append(f"Capital: {nct} has status \"{t['status'] or '?'}\" — "
+                          f"not calculated")
 
     def claim_ids_of(t):
         return [c["id"] for c in claims if c["evidence_id"] in t["evidence_ids"]][:3]
@@ -152,7 +152,7 @@ def capital_from_registry(evidence: dict, claims: list, claim_map: dict,
     rows = []
     for t in active:
         if not t["enrollment"]:
-            issues.append(f"Capital: {t['nct']} без розміру вибірки — не пораховано")
+            issues.append(f"Capital: {t['nct']} has no sample size — not calculated")
             continue
         f_lo, f_hi, why = remaining_fraction(t, today)
         tot_lo, tot_hi = t["enrollment"] * cost_lo, t["enrollment"] * cost_hi
@@ -285,8 +285,8 @@ def funding_statements(evidence: dict, calc, issues: list) -> list:
                     "kind": "evidence", "claim_ids": [], "evidence_ids": [r["id"]],
                     "unverified_numbers": []})
         if m.get("cash_unit") != "USD" or m.get("opcf_unit") != "USD":
-            issues.append(f"Capital: цифри {m.get('company')} не в USD — порівняння не "
-                          f"робилось")
+            issues.append(f"Capital: {m.get('company')} figures are not in USD — comparison was not "
+                          f"performed")
             continue
         cash, opcf = m.get("cash_value"), m.get("opcf_value")
         bits = []

@@ -63,7 +63,7 @@ def dir_badge(direction: str) -> str:
 
 
 def render_claim(c: dict, sources: dict):
-    """Один claim: текст, мітки, цитата, джерело."""
+    """One claim: text, labels, quote, source."""
     marks = [dir_badge(c["direction"]), badge(c["stage"], "#0969da"),
              badge(f"confidence: {c['confidence']}", "#57606a")]
     if c.get("is_extra"):
@@ -75,20 +75,20 @@ def render_claim(c: dict, sources: dict):
         st.markdown(c["claim"])
         st.markdown(f"> {c['quote']}")
         if c.get("numbers_outside_quote"):
-            st.caption(f"⚠ числа поза цитатою (є деінде в записі): "
+            st.caption(f"⚠ numbers outside the quote (found elsewhere in the record): "
                        f"{c['numbers_outside_quote']}")
         src = sources.get(c["evidence_id"], {})
         title = c.get("record_title") or src.get("title") or c["evidence_id"]
         url = c.get("url") or src.get("url")
-        line = f"Джерело: **{title}** · `{c['evidence_id']}` · {c.get('source_type', '')}"
+        line = f"Source: **{title}** · `{c['evidence_id']}` · {c.get('source_type', '')}"
         if url:
-            line += f" · [відкрити]({url})"
+            line += f" · [open]({url})"
         st.markdown(line)
 
 
 def render_statements(items: list, claims: dict, sources: dict, key: str,
                       only_evidence: bool):
-    """Список тверджень; кожне розгортається до claims і цитат."""
+    """List of statements; each expands to claims and quotes."""
     for i, s in enumerate(items):
         if only_evidence and s["kind"] != "evidence":
             continue
@@ -101,25 +101,25 @@ def render_statements(items: list, claims: dict, sources: dict, key: str,
             st.markdown(kind_badge(s["kind"]), unsafe_allow_html=True)
             st.markdown(s["text"])
             if s.get("unverified_numbers"):
-                st.warning(f"Числа не підтверджені цитованими claims: "
+                st.warning(f"Numbers not confirmed by the cited claims: "
                            f"{s['unverified_numbers']}")
             if s["kind"] == "inference":
-                st.caption("Це висновок моделі, а не факт з джерела. Нижче "
-                           "claims, на яких він побудований.")
+                st.caption("This is a model inference, not a fact from the source. Below are "
+                           "the claims it is based on.")
             if ids:
                 for cid in ids:
                     if cid in claims:
                         render_claim(claims[cid], sources)
             if ev_ids:
-                st.markdown("**Записи реєстру:**")
+                st.markdown("**Registry records:**")
                 for eid in ev_ids:
                     src = sources.get(eid, {})
                     url = src.get("url")
                     st.markdown(f"- `{eid}` {src.get('title', '')}"
-                                + (f" · [відкрити]({url})" if url else ""))
+                                + (f" · [open]({url})" if url else ""))
             if not ids and not ev_ids:
-                st.caption("Для цього твердження немає claims (розрахунок коду "
-                           "або обмеження оцінки).")
+                st.caption("This statement has no claims (a code calculation "
+                           "or an assessment limitation).")
 
 
 # ---------------------------------------------------------------- вкладки
@@ -140,7 +140,7 @@ def tab_report(rep: dict, claims: dict, sources: dict, only_evidence: bool):
                       only_evidence)
     calc = rep.get("capital_calc") or {}
     if calc:
-        with st.expander("Розрахунок капіталу (код, без LLM)"):
+        with st.expander("Capital calculation (code, no LLM)"):
             st.json(calc)
     if rep.get("catalyst_calendar"):
         st.subheader("Catalyst calendar")
@@ -188,23 +188,23 @@ def tab_report(rep: dict, claims: dict, sources: dict, only_evidence: bool):
 
 def tab_conflicts(rep: dict, claims: dict, sources: dict):
     if not rep["conflicts"]:
-        st.info("Суперечностей між підтримуючими й заперечуючими claims не знайдено.")
+        st.info("No contradictions found between supporting and contradicting claims.")
         return
     for c in rep["conflicts"]:
         st.markdown(f"### {c['topic']}")
-        st.markdown(f"Статус: **{c['status']}** · endpoint: "
-                    f"*{c.get('endpoint', '?')}* · компаратор: "
+        st.markdown(f"Status: **{c['status']}** · endpoint: "
+                    f"*{c.get('endpoint', '?')}* · comparator: "
                     f"*{c.get('shared_comparator', '?')}*")
         st.markdown(kind_badge("inference") + " " + c["assessment"],
                     unsafe_allow_html=True)
         left, right = st.columns(2)
         with left:
-            st.markdown("**Підтримують**")
+            st.markdown("**Supporting**")
             for cid in c["supporting"]:
                 if cid in claims:
                     render_claim(claims[cid], sources)
         with right:
-            st.markdown("**Заперечують**")
+            st.markdown("**Contradicting**")
             for cid in c["contradicting"]:
                 if cid in claims:
                     render_claim(claims[cid], sources)
@@ -221,30 +221,30 @@ def tab_claims(rep: dict, sources: dict):
                            default=["supports", "contradicts", "neutral"])
     f_conf = c3.multiselect("Confidence", ["high", "medium", "low"],
                             default=["high", "medium", "low"])
-    q = st.text_input("Пошук у тексті claim або цитаті")
-    only_new = st.checkbox("Тільки NEW EVIDENCE")
+    q = st.text_input("Search in claim text or quote")
+    only_new = st.checkbox("NEW EVIDENCE only")
     shown = [c for c in cl
              if c["stage"] in f_stage and c["direction"] in f_dir
              and c["confidence"] in f_conf
              and c.get("region", "Global") in f_reg
              and (not only_new or c.get("is_extra"))
              and (not q or q.lower() in (c["claim"] + c["quote"]).lower())]
-    st.caption(f"Показано {len(shown)} з {len(cl)} claims")
+    st.caption(f"Showing {len(shown)} of {len(cl)} claims")
     for c in shown[:200]:
         render_claim(c, sources)
     if len(shown) > 200:
-        st.caption("Показано перші 200; звузьте фільтр.")
+        st.caption("Showing the first 200; narrow the filter.")
 
 
 def tab_compare(rep: dict, paths: list):
-    st.markdown("Порівняння двох звітів: що змінилося після нових доказів.")
+    st.markdown("Comparison of two reports: what changed after the new evidence.")
     names = [p.name for p in paths]
-    other_name = st.selectbox("Базовий звіт («до»)", names,
+    other_name = st.selectbox("Baseline report (\"before\")", names,
                               index=min(1, len(names) - 1))
     other = load_report(str(RESULTS / other_name),
                         (RESULTS / other_name).stat().st_mtime)
     a, b = st.columns(2)
-    for col, r, title in [(a, other, "До"), (b, rep, "Після")]:
+    for col, r, title in [(a, other, "Before"), (b, rep, "After")]:
         color = REC_COLORS.get(r["recommendation"], "#57606a")
         col.markdown(f"**{title}**<br>" + badge(r["recommendation"], color),
                      unsafe_allow_html=True)
@@ -253,27 +253,27 @@ def tab_compare(rep: dict, paths: list):
         return (c.get("evidence_id"), " ".join((c.get("quote") or "").split()))
     old_keys = {ckey(c) for c in other["claims"]}
     new_claims = [c for c in rep["claims"] if ckey(c) not in old_keys]
-    st.markdown(f"**Нові claims: {len(new_claims)}**")
+    st.markdown(f"**New claims: {len(new_claims)}**")
     for c in new_claims:
         st.markdown(f"- `{c['id']}` {c['claim']}"
                     + ("  **(SYNTHETIC DEMO)**" if is_synthetic(c) else ""))
     old_u = set(other.get("critical_unknowns", []))
     new_u = [u for u in rep.get("critical_unknowns", []) if u not in old_u]
-    st.markdown(f"**Нові критичні невідомі: {len(new_u)}**")
+    st.markdown(f"**New critical unknowns: {len(new_u)}**")
     for u in new_u:
         st.markdown(f"- {u}")
     old_c = {c["topic"]: c["status"] for c in other.get("conflicts", [])}
     for c in rep.get("conflicts", []):
         before = old_c.get(c["topic"])
         if before and before != c["status"]:
-            st.markdown(f"**Конфлікт «{c['topic']}»:** {before} → {c['status']}")
+            st.markdown(f"**Conflict \"{c['topic']}\":** {before} → {c['status']}")
     r1, r2 = st.columns(2)
     with r1:
-        st.markdown("**Обґрунтування «до»**")
+        st.markdown("**Rationale (before)**")
         for s in other["recommendation_rationale"]:
             st.markdown(f"- **[{'E' if s['kind'] == 'evidence' else 'AI'}]** {s['text']}")
     with r2:
-        st.markdown("**Обґрунтування «після»**")
+        st.markdown("**Rationale (after)**")
         for s in rep["recommendation_rationale"]:
             st.markdown(f"- **[{'E' if s['kind'] == 'evidence' else 'AI'}]** {s['text']}")
 
@@ -281,21 +281,21 @@ def tab_compare(rep: dict, paths: list):
 def tab_run(rep: dict):
     cost = rep.get("cost", {})
     c1, c2, c3 = st.columns(3)
-    c1.metric("LLM викликів", cost.get("calls", "?"))
-    c2.metric("Токени (вхід/вихід)",
+    c1.metric("LLM calls", cost.get("calls", "?"))
+    c2.metric("Tokens (input/output)",
               f"{cost.get('input_tokens', 0)} / {cost.get('output_tokens', 0)}")
-    c3.metric("Вартість кроку звіту, $", f"{cost.get('usd', 0):.4f}")
-    st.caption("Ціни моделей у скриптах орієнтовні. Повний журнал: "
+    c3.metric("Report step cost, $", f"{cost.get('usd', 0):.4f}")
+    st.caption("Model prices in the scripts are approximate. Full log: "
                "results/run_log.jsonl")
-    st.markdown("**Автоматичні перевірки**")
+    st.markdown("**Automated checks**")
     if rep.get("issues"):
         for i in rep["issues"]:
             st.markdown(f"- {i}")
     else:
-        st.write("Зауважень немає.")
-    st.markdown("**Джерела**")
+        st.write("No issues.")
+    st.markdown("**Sources**")
     for s in rep["sources"]:
-        link = f" · [відкрити]({s['url']})" if s.get("url") else ""
+        link = f" · [open]({s['url']})" if s.get("url") else ""
         st.markdown(f"- `{s['evidence_id']}` ({s['source_type']}) {s['title']}{link}"
                     f" — claims: {', '.join(s['claim_ids']) or '—'}")
 
@@ -306,25 +306,25 @@ def main():
     paths = list_reports()
     st.title("Investment Underwriting: drill-down")
     if not paths:
-        st.error(f"У {RESULTS} немає звітів (*.json). Спершу запустіть "
+        st.error(f"No reports (*.json) in {RESULTS}. First run "
                  "python main.py --drug ... --indication ...")
         return
 
     with st.sidebar:
-        st.header("Звіт")
+        st.header("Report")
         names = [p.name for p in paths]
         # main.py передає ім'я щойно створеного звіту через змінну середовища
         wanted = os.environ.get("UNDERWRITING_REPORT")
         default_idx = names.index(wanted) if wanted in names else 0
-        choice = st.selectbox("Файл", names, index=default_idx)
-        only_evidence = st.checkbox("Показувати лише [E] (факти з джерел)")
-        st.markdown("**Легенда**")
-        st.markdown(kind_badge("evidence") + " твердження переказує один claim "
-                    "із цитатою", unsafe_allow_html=True)
-        st.markdown(kind_badge("inference") + " висновок моделі на основі claims",
+        choice = st.selectbox("File", names, index=default_idx)
+        only_evidence = st.checkbox("Show only [E] (facts from sources)")
+        st.markdown("**Legend**")
+        st.markdown(kind_badge("evidence") + " statement restates a single claim "
+                    "with a quote", unsafe_allow_html=True)
+        st.markdown(kind_badge("inference") + " model inference based on claims",
                     unsafe_allow_html=True)
-        st.caption("Шлях: Рекомендація → твердження → claim → цитата → джерело. "
-                   "Розгорніть будь-яке твердження.")
+        st.caption("Path: Recommendation → statement → claim → quote → source. "
+                   "Expand any statement.")
 
     path = RESULTS / choice
     rep = load_report(str(path), path.stat().st_mtime)
@@ -334,24 +334,24 @@ def main():
     color = REC_COLORS.get(rep["recommendation"], "#57606a")
     st.markdown(f"## {rep['drug']} in {rep['indication']}  "
                 + badge(rep["recommendation"], color), unsafe_allow_html=True)
-    st.caption(f"Згенеровано {rep['generated']} · claims: {len(rep['claims'])}")
+    st.caption(f"Generated {rep['generated']} · claims: {len(rep['claims'])}")
     if rep.get("red_flags"):
         if rep.get("critical_rule_applied_by") == "code":
-            step = (f" Модель запропонувала «{rep.get('recommendation_by_model')}», "
-                    f"код знизив до «{rep['recommendation']}».")
+            step = (f" The model proposed \"{rep.get('recommendation_by_model')}\", "
+                    f"the code lowered it to \"{rep['recommendation']}\".")
         else:
-            step = " Модель сама застосувала правило; код лише перевірив."
-        st.warning("🚩 Правило критичних знахідок: " + "; ".join(
+            step = " The model applied the rule itself; the code only verified it."
+        st.warning("🚩 Critical findings rule: " + "; ".join(
             f"{f['id']} ({'+'.join(f.get('found_by', []))}): {f.get('reason', '')}"
             for f in rep["red_flags"]) + "." + step)
     gate = rep.get("invest_gate") or {}
     if gate.get("checked") and not gate.get("passed"):
-        st.info("⚖ Invest gate: модель запропонувала Invest, код знизив до Conditional — "
+        st.info("⚖ Invest gate: the model proposed Invest, the code lowered it to Conditional — "
                 + "; ".join(gate.get("reasons", [])))
     if any(is_synthetic(c) for c in rep["claims"]):
-        st.error("DEMO: звіт містить СИНТЕТИЧНІ докази (source_type "
-                 "demo_synthetic), вигадані лише для перевірки конвеєра. "
-                 "Це не реальні дані.")
+        st.error("DEMO: this report contains SYNTHETIC evidence (source_type "
+                 "demo_synthetic), invented solely to test the pipeline. "
+                 "This is not real data.")
 
     t1, t2, t3, t4, t5 = st.tabs(["Report", "Contradictions", "Claims explorer",
                                   "Compare", "Run & sources"])
@@ -363,7 +363,7 @@ def main():
         tab_claims(rep, sources)
     with t4:
         if len(paths) < 2:
-            st.info("Для порівняння потрібно щонайменше два звіти в results/.")
+            st.info("Comparison requires at least two reports in results/.")
         else:
             tab_compare(rep, paths)
     with t5:

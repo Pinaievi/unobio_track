@@ -1,7 +1,7 @@
-# Залежності конвеєра андеррайтингу (Python 3.11+)
-google-genai        # Gemini API (витяг фактів і збірка звіту)
-pydantic>=2         # схеми відповідей LLM
-python-dotenv       # читання .env
-requests            # запити до відкритих API (Europe PMC, openFDA, Open Targets, SEC EDGAR)
-psycopg[binary]     # підключення до AACT (реєстр випробувань, PostgreSQL)
-streamlit           # сайт drill-down (app.py)
+# Underwriting pipeline dependencies (Python 3.11+)
+google-genai        # Gemini API (claim extraction and report assembly)
+pydantic>=2         # LLM response schemas
+python-dotenv       # reads .env
+requests            # requests to open APIs (Europe PMC, openFDA, Open Targets, SEC EDGAR)
+psycopg[binary]     # connection to AACT (trial registry, PostgreSQL)
+streamlit           # drill-down site (app.py)

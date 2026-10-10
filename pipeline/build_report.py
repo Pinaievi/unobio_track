@@ -194,14 +194,14 @@ class Runner:
                 }
                 with open(self.log_path, "a", encoding="utf-8") as f:
                     f.write(json.dumps(entry, ensure_ascii=False) + "\n")
-                print(f"  [{step}] {dt:.1f} с, токени {tin}+{tout}"
-                      f"{' (оцінка)' if est else ''}, ~${cost:.4f}")
+                print(f"  [{step}] {dt:.1f} s, tokens {tin}+{tout}"
+                      f"{' (estimate)' if est else ''}, ~${cost:.4f}")
                 return parsed
             except Exception as e:
                 last_err = e
-                print(f"  [{step}] спроба {attempt} не вдалась: {e}")
+                print(f"  [{step}] attempt {attempt} failed: {e}")
                 time.sleep(2 * attempt)
-        raise RuntimeError(f"Крок {step} не вдався після {MAX_RETRIES} спроб: "
+        raise RuntimeError(f"Step {step} failed after {MAX_RETRIES} attempts: "
                            f"{last_err}")
 
 def known_names_line(drug: str) -> str:
@@ -246,21 +246,21 @@ def main():
     ap.add_argument("--claims", default=str(RESULTS / "claims.json"))
     ap.add_argument("--evidence", default=str(RESULTS / "evidence"))
     ap.add_argument("--extra", default=None,
-                    help="JSON з новими claims (і, за потреби, evidence) для демо")
+                    help="JSON with new claims (and, if needed, evidence) for the demo")
     ap.add_argument("--out-prefix", default="report")
     ap.add_argument("--compare", default=None,
-                    help="шлях до попереднього report.json для порівняння висновків")
+                    help="path to the previous report.json to compare conclusions")
     args = ap.parse_args()
 
     dotenv.load_dotenv()
     key = os.environ.get("API_KEY")
     if not key:
-        sys.exit("Немає API_KEY у .env")
+        sys.exit("API_KEY is missing in .env")
 
     RESULTS.mkdir(exist_ok=True)
     log_path = RESULTS / "run_log.jsonl"
 
-    print("1/5 Завантажую claims та записи...")
+    print("1/5 Loading claims and records...")
     evidence = load_evidence(Path(args.evidence))
     loose: dict = {}
     claims_raw = load_json(Path(args.claims)).get("claims", [])
@@ -281,23 +281,23 @@ def main():
                                                loose, "X")
         claims += ex_claims
         dropped += ex_dropped
-        print(f"  Нові докази з {args.extra}: додано {len(ex_claims)} claims")
+        print(f"  New evidence from {args.extra}: added {len(ex_claims)} claims")
 
-    issues = [f"claim відкинуто ({d['reason']}): {d['claim'].get('claim', '')[:80]}"
+    issues = [f"claim dropped ({d['reason']}): {d['claim'].get('claim', '')[:80]}"
               for d in dropped]
     with open(RESULTS / f"{args.out_prefix}_dropped_claims.json", "w",
               encoding="utf-8") as f:
         json.dump(dropped, f, ensure_ascii=False, indent=2)
-    print(f"  Записів: {len(evidence)}, claims прийнято: {len(claims)}, "
-          f"відкинуто: {len(dropped)}")
+    print(f"  Records: {len(evidence)}, claims accepted: {len(claims)}, "
+          f"dropped: {len(dropped)}")
     if not claims:
-        sys.exit("Немає жодного валідного claim.")
+        sys.exit("No valid claims.")
     claim_map = {c["id"]: c for c in claims}
 
     runner = Runner(genai.Client(api_key=key), log_path)
     ctx = {"drug": args.drug, "indication": args.indication}
 
-    print("2/5 Етапні виклики (6)...")
+    print("2/5 Stage calls (6)...")
     sections = {}
     for spec in SECTIONS:
         sel = [c for c in claims if c["stage"] in spec["stages"]
@@ -306,10 +306,10 @@ def main():
         if not sel:
             sections[spec["key"]] = {
                 "title": spec["title"], "statements": [],
-                "gaps": ["У наборі немає жодного claim для цього розділу."],
+                "gaps": ["The dataset has no claims for this section."],
             }
-            issues.append(f"{spec['title']}: немає claims — розділ порожній")
-            print(f"  [{spec['key']}] claims немає, пропускаю")
+            issues.append(f"{spec['title']}: no claims — section is empty")
+            print(f"  [{spec['key']}] no claims, skipping")
             continue
         prompt = (COMMON_RULES
                   + f"\nSECTION: {spec['title']}\nTASK: "
@@ -336,26 +336,26 @@ def main():
         stm = sections["clinical_plan"]["statements"]
         last_e = max([k for k, x in enumerate(stm) if x["kind"] == "evidence"], default=-1)
         stm[last_e + 1:last_e + 1] = extra_eff
-        issues.append("Clinical development plan: код додав ключові результати ефективності "
+        issues.append("Clinical development plan: code added key efficacy results "
                       + ", ".join(x["claim_ids"][0] for x in extra_eff)
-                      + " (жоден розділ їх не процитував)")
+                      + " (no section cited them)")
 
     ct = cross_trial_item(claim_map)
     if ct and "competitive_landscape" in sections:
         sections["competitive_landscape"]["statements"].append(ct)
-        issues.append(f"Competitive landscape: код додав непряме порівняння ефективності "
-                      f"{ct['claim_ids'][0]} vs {ct['claim_ids'][1]} (різні дослідження, не head-to-head)")
+        issues.append(f"Competitive landscape: code added an indirect efficacy comparison "
+                      f"{ct['claim_ids'][0]} vs {ct['claim_ids'][1]} (different studies, not head-to-head)")
 
     cited = {i for sec in sections.values() for st in sec["statements"]
              for i in st["claim_ids"]}
     for c in claims:
         if c["direction"] in ("supports", "contradicts") and c["id"] not in cited \
                 and c.get("confidence") != "low":
-            issues.append(f"Покриття: claim {c['id']} ({c['direction']}, "
-                          f"{c['stage']}) не використано в жодному розділі: "
+            issues.append(f"Coverage: claim {c['id']} ({c['direction']}, "
+                          f"{c['stage']}) not used in any section: "
                           f"{c['claim'][:80]}")
 
-    print("3/5 Суперечності та капітал...")
+    print("3/5 Contradictions and capital...")
     pro_con = [c for c in claims if c["direction"] in ("supports", "contradicts")]
     conflicts = []
     if any(c["direction"] == "contradicts" for c in pro_con) and \
@@ -366,12 +366,12 @@ def main():
             runner.call("conflicts", MODEL, cprompt, ConflictsDraft),
             claim_map, issues)
     else:
-        issues.append("Conflicts: немає claims з обома напрямками")
+        issues.append("Conflicts: no claims with both directions")
 
     capital_stmts, capital_calc = capital_from_registry(
         evidence, claims, claim_map, issues, args.drug, args.indication)
 
-    print("4/5 Фінальна збірка...")
+    print("4/5 Final assembly...")
     counts = {}
     for c in claims:
         counts.setdefault(c["stage"], {}).setdefault(c["direction"], 0)
@@ -396,7 +396,7 @@ def main():
                 or c["stage"] in ("safety_or_failure", "regulatory")]
     triage = []
     if tri_pool:
-        print("  Тріаж тяжкості знахідок...")
+        print("  Triaging finding severity...")
         tprompt = (TRIAGE_TASK.format(**ctx) + known_names_line(args.drug)
                    + "\nCLAIMS (one JSON per line):\n" + claims_for_prompt(tri_pool))
         triage = validate_triage(runner.call("triage", MODEL, tprompt, TriageDraft),
@@ -440,8 +440,8 @@ def main():
     if lead and not any(x["kind"] == "evidence" and lead["claim_ids"][0] in x["claim_ids"]
                         for x in rationale):
         rationale.append(lead)
-        issues.append(f"Recommendation: код додав головний результат ефективності "
-                      f"{lead['claim_ids'][0]} (модель його не процитувала)")
+        issues.append(f"Recommendation: code added the main efficacy result "
+                      f"{lead['claim_ids'][0]} (the model did not cite it)")
     rationale = drop_false_h2h_absence({}, rationale, claim_map, issues)
 
     # червоні прапори й найважливіші нові докази мають бути в Recommendation як [E]
@@ -450,16 +450,16 @@ def main():
         if f["id"] not in have_e:
             rationale.append({"text": f["claim"], "kind": "evidence",
                               "claim_ids": [f["id"]], "unverified_numbers": []})
-            issues.append(f"Recommendation: код додав критичну знахідку {f['id']} "
-                          f"({f['kind']}, знайшов: {'+'.join(f['found_by'])}) — модель її не процитувала")
+            issues.append(f"Recommendation: code added critical finding {f['id']} "
+                          f"({f['kind']}, found by: {'+'.join(f['found_by'])}) — the model did not cite it")
     for it in new_evidence_items(claim_map, rationale, flag_ids):
         rationale.append(it)
-        issues.append(f"Recommendation: код додав нове свідчення {it['claim_ids'][0]} "
-                      f"(is_extra) — воно має бути видно в рекомендації")
+        issues.append(f"Recommendation: code added new evidence {it['claim_ids'][0]} "
+                      f"(is_extra) — it must be visible in the recommendation")
     for it in conflict_risk_items(conflicts, claim_map, rationale):
         rationale.append(it)
-        issues.append(f"Recommendation: код додав аргумент «проти» {it['claim_ids'][0]} з нерозв'язаної "
-                      f"суперечності «{it['from_conflict'][:60]}» — рекомендація не може її обходити")
+        issues.append(f"Recommendation: code added counter-argument {it['claim_ids'][0]} from an unresolved "
+                      f"contradiction \"{it['from_conflict'][:60]}\" — the recommendation cannot bypass it")
     rationale = order_rationale(rationale, claim_map, flag_ids)
 
     recommendation = final.recommendation
@@ -489,7 +489,7 @@ def main():
         if invest_gate["reasons"]:
             invest_gate["passed"] = False
             recommendation = "Conditional"
-            issues.append("Рекомендацію «Invest» знижено до «Conditional»: "
+            issues.append("Recommendation \"Invest\" downgraded to \"Conditional\": "
                           + " | ".join(invest_gate["reasons"]))
 
     # правило наслідку: підтверджена критична знахідка знижує вивід на один рівень відносно
@@ -500,22 +500,22 @@ def main():
         who = "; ".join(f"{f['id']} ({'+'.join(f['found_by'])})" for f in flags)
         expected = expected_after_flags(final.recommendation_without_critical_findings, flags)
         if LEVELS.index(recommendation) > LEVELS.index(expected):
-            issues.append(f"Правило критичних знахідок ({who}): без знахідок модель дала б "
-                          f"«{final.recommendation_without_critical_findings}», з ними має бути "
-                          f"не вище «{expected}»; модель дала «{recommendation}» — знижено кодом.")
+            issues.append(f"Critical findings rule ({who}): without the findings the model would give "
+                          f"\"{final.recommendation_without_critical_findings}\", with them it must be "
+                          f"no higher than \"{expected}\"; the model gave \"{recommendation}\" — lowered by code.")
             recommendation = expected
             rule_by = "code"
         else:
             rule_by = "model"
-            issues.append(f"Правило критичних знахідок ({who}): без знахідок модель дала б "
-                          f"«{final.recommendation_without_critical_findings}», з ними — "
-                          f"«{recommendation}» (правило виконано моделлю).")
+            issues.append(f"Critical findings rule ({who}): without the findings the model would give "
+                          f"\"{final.recommendation_without_critical_findings}\", with them — "
+                          f"\"{recommendation}\" (rule applied by the model).")
 
     # календар катализаторів і PoS: рахує код з реєстру й опублікованого еталону (без LLM)
     pos = pos_benchmark(evidence, INDICATION_WORDS, args.indication, flags, reported)
     cal_stmts, pos_stmts = outlook_statements(cal, pos)
 
-    print("5/5 Збираю джерела та зберігаю...")
+    print("5/5 Collecting sources and saving...")
     used = {}
     all_stmts = ([s for sec in sections.values() for s in sec["statements"]]
                  + rationale + capital_stmts + cal_stmts + pos_stmts)
@@ -573,26 +573,26 @@ def main():
     with open(out_claims, "w", encoding="utf-8") as f:
         f.write(render_claims_md(report))
 
-    print(f"\nГотово: {out_json.name}, {out_md.name}, {out_claims.name}")
-    print(f"Рекомендація: {recommendation}")
-    print(f"Викликів: {runner.calls}, токени: {runner.total_in} вхід / "
-          f"{runner.total_out} вихід, ~${runner.total_cost:.4f}")
+    print(f"\nDone: {out_json.name}, {out_md.name}, {out_claims.name}")
+    print(f"Recommendation: {recommendation}")
+    print(f"Calls: {runner.calls}, tokens: {runner.total_in} in / "
+          f"{runner.total_out} out, ~${runner.total_cost:.4f}")
     if issues:
-        print(f"Автоматичні перевірки знайшли зауважень: {len(issues)} "
-              f"(див. кінець {out_md.name})")
+        print(f"Automated checks found {len(issues)} issue(s) "
+              f"(see the end of {out_md.name})")
 
     if args.compare:
         old = load_json(Path(args.compare))
-        print("\nПОРІВНЯННЯ З ПОПЕРЕДНІМ ЗВІТОМ")
-        print(f"  Було: {old['recommendation']}  ->  Стало: {recommendation}")
+        print("\nCOMPARISON WITH THE PREVIOUS REPORT")
+        print(f"  Was: {old['recommendation']}  ->  Now: {recommendation}")
         if flags:
-            print("  Критичні знахідки: " + "; ".join(f"{f['id']} ({f['kind']})" for f in flags))
+            print("  Critical findings: " + "; ".join(f"{f['id']} ({f['kind']})" for f in flags))
         new_ids = [c["id"] for c in claims if c.get("is_extra")]
-        print(f"  Нові claims: {', '.join(new_ids) or 'немає'}")
+        print(f"  New claims: {', '.join(new_ids) or 'none'}")
         old_unknowns = set(old.get("critical_unknowns", []))
         for u in final.critical_unknowns:
             if u not in old_unknowns:
-                print(f"  + нове критичне невідоме: {u}")
+                print(f"  + new critical unknown: {u}")
 
 if __name__ == "__main__":
     main()

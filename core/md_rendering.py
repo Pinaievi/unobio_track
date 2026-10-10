@@ -5,9 +5,9 @@ def render_md(report: dict, claims_file: str) -> str:
     L.append(f"*Generated: {report['generated']}. Claims used: "
              f"{len(report['claims'])}. Run cost: ~${report['cost']['usd']:.4f}.*\n")
     if any(c.get("source_type") == "demo_synthetic" for c in report["claims"]):
-        L.append("> ⚠ **DEMO:** цей звіт містить СИНТЕТИЧНІ докази "
-                 "(source_type demo_synthetic), вигадані лише для перевірки "
-                 "конвеєра. Це не реальні дані.\n")
+        L.append("> ⚠ **DEMO:** this report contains SYNTHETIC evidence "
+                 "(source_type demo_synthetic), invented solely to test "
+                 "the pipeline. This is not real data.\n")
     L.append("Legend: **[E]** = restates evidence, **[AI]** = AI inference. "
              f"Ids in brackets are claim ids; every claim with its exact quote is in "
              f"`{claims_file}`.\n")
@@ -150,8 +150,8 @@ def render_claims_md(report: dict) -> str:
                  + (f"  \n  ⚠ numbers not in the quote (found elsewhere in the "
                     f"record): {c['numbers_outside_quote']}"
                     if c.get("numbers_outside_quote") else "")
-        + (f"\n  ℹ claim про інший препарат {c['reclassified_other_drug']}: "
-           f"позначено як нейтральний competition"
+        + (f"\n  ℹ claim about another drug {c['reclassified_other_drug']}: "
+           f"marked as neutral competition"
            if c.get("reclassified_other_drug") else "")
                  + ("  \n  ⚠ drug name is in the claim but not in the quote "
                     "(attribution not verified)" if c.get("drug_not_in_quote") else ""))

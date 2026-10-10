@@ -185,15 +185,15 @@ class EdgarGetter(DataGetter):
             return []
         cik, company, ticker, verified = self._find_company(drug)
         if cik is None:
-            print(f"[edgar] для «{drug}» не знайдено компанії, що подає звіти до SEC")
+            print(f"[edgar] no SEC-reporting company found for \"{drug}\"")
             return []
         facts = _sec_get(FACTS_URL.format(cik=cik))
         rec = self._build_record(drug, cik, company, ticker, verified, facts)
         if rec is None:
-            print(f"[edgar] у XBRL {company} немає потрібних цифр")
+            print(f"[edgar] XBRL for {company} has no required figures")
             return []
-        print(f"[edgar] {company} ({ticker}): запис із фінансами створено"
-              f"{'' if verified else ' (спонсор НЕ підтверджено)'}")
+        print(f"[edgar] {company} ({ticker}): financials record created"
+              f"{'' if verified else ' (sponsor NOT verified)'}")
         return [rec]
 
     def refine(self, query: Query, evidence: list):
@@ -207,8 +207,8 @@ class EdgarGetter(DataGetter):
         sponsor = counts.most_common(1)[0][0]
         found = match_sponsor(sponsor, _sec_get(TICKERS_URL))
         if not found:
-            print(f"[edgar] спонсор з реєстру «{sponsor}» не подає звіти до SEC "
-                  f"(або назву не знайдено): запис про фінанси не створюється")
+            print(f"[edgar] registry sponsor \"{sponsor}\" does not file with the SEC "
+                  f"(or the name was not found): no financials record is created")
             return [], {"sec_filings"}
         cik, company, ticker = found
         facts = _sec_get(FACTS_URL.format(cik=cik))
@@ -216,7 +216,7 @@ class EdgarGetter(DataGetter):
         if rec is None:
             return [], {"sec_filings"}
         rec["meta"]["sponsor_source"] = f"registry lead sponsor: {sponsor}"
-        print(f"[edgar] спонсор з реєстру «{sponsor}» -> {company} ({ticker})")
+        print(f"[edgar] registry sponsor \"{sponsor}\" -> {company} ({ticker})")
         return [rec], {"sec_filings"}
 
     def _find_company(self, drug: str):
@@ -229,12 +229,12 @@ class EdgarGetter(DataGetter):
             for row in tickers.values():
                 if row.get("ticker", "").upper() == ticker:
                     return int(row["cik_str"]), row["title"], ticker, True
-            print(f"[edgar] тикер {ticker} не знайдено у списку SEC (компанію могли "
-                  f"поглинути)")
+            print(f"[edgar] ticker {ticker} not found in the SEC list (the company may have been "
+                  f"acquired)")
             return None, None, None, False
         if os.environ.get("EDGAR_ALLOW_UNVERIFIED") != "1":
-            print(f"[edgar] спонсора «{drug}» немає в SPONSORS; пошук за текстом "
-                  f"вимкнено (EDGAR_ALLOW_UNVERIFIED=1 вмикає)")
+            print(f"[edgar] sponsor for \"{drug}\" is not in SPONSORS; full-text search "
+                  f"is disabled (set EDGAR_ALLOW_UNVERIFIED=1 to enable)")
             return None, None, None, False
         try:
             data = _sec_get(SEARCH_URL, {"q": f'"{drug}"', "forms": "10-K,20-F"})
@@ -249,7 +249,7 @@ class EdgarGetter(DataGetter):
                                   names[0] if names else f"CIK {cik}")
                     return cik, re.sub(r"\s+", " ", name).strip(), ticker, False
         except Exception as e:
-            print(f"[edgar] повнотекстовий пошук не вдався: {e}")
+            print(f"[edgar] full-text search failed: {e}")
         return None, None, None, False
 
     def _build_record(self, drug, cik, company, ticker, verified, facts):

@@ -43,13 +43,13 @@ def main() -> None:
     line_limit = int(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_LINE_LIMIT
 
     if not INPUT_PATH.exists():
-        print(f"Немає файлу {INPUT_PATH}. Спочатку запусти delegator.py")
+        print(f"File {INPUT_PATH} not found. Run delegator.py first")
         sys.exit(1)
 
     data = json.loads(INPUT_PATH.read_text(encoding="utf-8"))
     records = data.get("evidence", [])
     if not records:
-        print("У файлі немає записів evidence.")
+        print("The file has no evidence records.")
         sys.exit(1)
 
     PARTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -58,8 +58,8 @@ def main() -> None:
 
     chunks = split_records(records, line_limit)
 
-    print(f"Записів: {len(records)}, ліміт: {line_limit} рядків, частин: {len(chunks)}\n")
-    print("Файл                        Записів   Рядків")
+    print(f"Records: {len(records)}, limit: {line_limit} lines, parts: {len(chunks)}\n")
+    print("File                        Records   Lines")
     print("-" * 46)
 
     for n, chunk in enumerate(chunks, 1):
@@ -74,7 +74,7 @@ def main() -> None:
         path.write_text(text, encoding="utf-8")
         print(f"{path.name:<28}{len(chunk):>7}   {len(text.splitlines()):>6}")
 
-    print(f"\nГотово. Частини лежать у {PARTS_DIR}")
+    print(f"\nDone. Parts are in {PARTS_DIR}")
 
 
 if __name__ == "__main__":

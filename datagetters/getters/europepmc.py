@@ -174,8 +174,8 @@ class EuropePMCGetter(DataGetter):
                 for fq in fallbacks:
                     if len(found) >= LIMITS[tag]:
                         break
-                    print(f"[europepmc] «{tag}»: {len(found)} результатів, "
-                          f"доповнюю м'якшим запитом")
+                    print(f"[europepmc] \"{tag}\": {len(found)} results, "
+                          f"supplementing with a looser query")
                     seen = {r["id"] for r in found}
                     found += [r for r in self._safe_search(tag, fq)
                               if r["id"] not in seen]
@@ -196,7 +196,7 @@ class EuropePMCGetter(DataGetter):
             rec["meta"]["found_by_all"] = tags[rid]
 
         summary = ", ".join(f"{t}: {n}" for t, n in counts.items())
-        print(f"[europepmc] знайдено за запитами — {summary}; унікальних статей: {len(merged)}")
+        print(f"[europepmc] found by queries — {summary}; unique articles: {len(merged)}")
         return list(merged.values())
 
     def _safe_search(self, tag: str, q: str) -> list[dict]:
@@ -204,7 +204,7 @@ class EuropePMCGetter(DataGetter):
         try:
             return self._search(q, LIMITS[tag])
         except Exception as e:
-            print(f"[europepmc] запит «{tag}» пропущено: {e}")
+            print(f"[europepmc] query \"{tag}\" skipped: {e}")
             return []
 
     @staticmethod

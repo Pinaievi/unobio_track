@@ -142,10 +142,10 @@ def parse_args(args: list[str]) -> tuple[str, str]:
         return "", args[0]
     if len(args) == 2:
         return args[0], args[1]
-    print('Використання:\n'
-          '  python delegator.py                      (за замовчуванням)\n'
-          '  python delegator.py "<препарат>"\n'
-          '  python delegator.py "<хвороба>" "<препарат>"')
+    print('Usage:\n'
+          '  python delegator.py                      (default)\n'
+          '  python delegator.py "<drug>"\n'
+          '  python delegator.py "<disease>" "<drug>"')
     sys.exit(1)
 
 
@@ -153,27 +153,27 @@ def main() -> None:
     indication, mechanism = parse_args(sys.argv[1:])
 
     if not indication and not mechanism:
-        print("Потрібно вказати хоча б хворобу або препарат.")
+        print("Specify at least a disease or a drug.")
         sys.exit(1)
 
-    print(f"Запит: indication={indication!r}, mechanism={mechanism!r}")
+    print(f"Query: indication={indication!r}, mechanism={mechanism!r}")
     result = run(Query(indication=indication, mechanism=mechanism))
 
-    print("\nДжерело            Статус   Записів   Секунд")
+    print("\nSource             Status   Records   Seconds")
     print("-" * 50)
     for t in result["trace"]:
         if t["ok"]:
             print(f"{t['getter']:<18} ok       {t['count']:>7}   {t['seconds']:>6}")
         else:
-            print(f"{t['getter']:<18} ПОМИЛКА  {t['error']}")
+            print(f"{t['getter']:<18} ERROR    {t['error']}")
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(
         json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    print(f"\nДублів прибрано: {result['duplicates_removed']}")
-    print(f"Усього унікальних записів: {len(result['evidence'])}")
-    print(f"Збережено: {OUTPUT_PATH}")
+    print(f"\nDuplicates removed: {result['duplicates_removed']}")
+    print(f"Total unique records: {len(result['evidence'])}")
+    print(f"Saved: {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":

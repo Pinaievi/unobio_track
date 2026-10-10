@@ -154,7 +154,7 @@ def process_part(client, prompt: str, path: Path):
             return [c.model_dump() for c in parsed.claims], tin, tout, cost
         except Exception as e:
             last_err = e
-            print(f"  [{path.name}] спроба {attempt}/{MAX_RETRIES} не вдалась: {e}")
+            print(f"  [{path.name}] attempt {attempt}/{MAX_RETRIES} failed: {e}")
             time.sleep(3 * attempt)
         finally:
             if uploaded is not None:
@@ -169,7 +169,7 @@ def process_part(client, prompt: str, path: Path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--workers", type=int, default=DEFAULT_WORKERS,
-                    help="скільки частин обробляти одночасно")
+                    help="how many parts to process at once")
     args = ap.parse_args()
 
     prompt = prompts.EXTRACTION_PROMPT
@@ -177,16 +177,16 @@ def main():
     dotenv.load_dotenv()
     key = os.environ.get("API_KEY")
     if not key:
-        sys.exit("Немає API_KEY у .env")
+        sys.exit("API_KEY is missing in .env")
 
     parts = sorted(FOLDER.glob("evidence_part_*.json"))
     if not parts:
-        sys.exit(f"Немає частин evidence у {FOLDER}. Спершу запусти split_evidence.py.")
+        sys.exit(f"No evidence parts in {FOLDER}. Run split_evidence.py first.")
 
     RESULTS.mkdir(exist_ok=True)
     client = genai.Client(api_key=key)
 
-    print(f"Частин evidence: {len(parts)}, потоків: {args.workers}, модель: {MODEL}")
+    print(f"Evidence parts: {len(parts)}, threads: {args.workers}, model: {MODEL}")
     t_start = time.time()
     by_part: dict[Path, list] = {}
     failed: list[str] = []
@@ -198,11 +198,11 @@ def main():
             try:
                 claims, tin, tout, cost = fut.result()
                 by_part[p] = claims
-                print(f"  [{p.name}] claims: {len(claims)}, токени {tin}+{tout}, "
+                print(f"  [{p.name}] claims: {len(claims)}, tokens {tin}+{tout}, "
                       f"~${cost:.4f}", flush=True)
             except Exception as e:
                 failed.append(f"{p.name}: {e}")
-                print(f"  [{p.name}] НЕ ОБРОБЛЕНО: {e}", flush=True)
+                print(f"  [{p.name}] NOT PROCESSED: {e}", flush=True)
 
     all_claims = []
     for p in parts:
@@ -212,13 +212,13 @@ def main():
         json.dump({"claims": all_claims}, f, ensure_ascii=False, indent=2)
 
     dt = time.time() - t_start
-    print(f"\nГотово: {len(all_claims)} claims із {len(by_part)}/{len(parts)} частин "
-          f"за {dt:.0f} с -> {OUTPUT_FILE.name}")
-    print(f"Викликів: {_totals['calls']}, токени: {_totals['in']} вхід / "
-          f"{_totals['out']} вихід, ~${_totals['cost']:.4f}")
+    print(f"\nDone: {len(all_claims)} claims from {len(by_part)}/{len(parts)} parts "
+          f"in {dt:.0f} s -> {OUTPUT_FILE.name}")
+    print(f"Calls: {_totals['calls']}, tokens: {_totals['in']} in / "
+          f"{_totals['out']} out, ~${_totals['cost']:.4f}")
 
     if failed:
-        print("\nУВАГА: частини без claims (докази втрачено):")
+        print("\nWARNING: parts without claims (evidence lost):")
         for line in failed:
             print("  " + line)
         sys.exit(1)

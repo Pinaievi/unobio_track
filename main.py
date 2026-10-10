@@ -75,30 +75,30 @@ def launch_ui(report_name: str, dry: bool):
     app = ROOT / "app.py"
     cmd = [sys.executable, "-m", "streamlit", "run", str(app)]
     print("\n" + "=" * 70)
-    print("САЙТ: drill-down звіту")
+    print("SITE: report drill-down")
     print("  " + " ".join(cmd))
     print("=" * 70, flush=True)
     if dry:
         return
     if not app.exists():
-        print(f"Не знайдено {app}, сайт не запущено.")
+        print(f"{app} not found, site not started.")
         return
     try:
         import streamlit
     except ImportError:
-        print("Streamlit не встановлено. Виконай: pip install streamlit\n"
-              "потім: python main.py --ui-only")
+        print("Streamlit is not installed. Run: pip install streamlit\n"
+              "then: python main.py --ui-only")
         return
     env = dict(os.environ)
     env["PYTHONIOENCODING"] = "utf-8"
     env["PYTHONUTF8"] = "1"
     env["UNDERWRITING_REPORT"] = report_name
-    print("Сайт відкриється в браузері (http://localhost:8501). "
-          "Зупинити: Ctrl+C.", flush=True)
+    print("The site will open in the browser (http://localhost:8501). "
+          "Stop with Ctrl+C.", flush=True)
     try:
         subprocess.call(cmd, cwd=str(ROOT), env=env)
     except KeyboardInterrupt:
-        print("\nСайт зупинено.")
+        print("\nSite stopped.")
 
 
 def clean_old_parts():
@@ -111,12 +111,12 @@ def clean_old_parts():
     for p in old:
         p.unlink()
     if old:
-        print(f"  Прибрано старих частин evidence: {len(old)}")
+        print(f"  Removed old evidence parts: {len(old)}")
 
 
 def run_step(name: str, cmd: list, dry: bool) -> float:
     print("\n" + "=" * 70)
-    print(f"КРОК: {name}")
+    print(f"STEP: {name}")
     print("  " + " ".join(cmd))
     print("=" * 70, flush=True)
     if dry:
@@ -129,28 +129,28 @@ def run_step(name: str, cmd: list, dry: bool) -> float:
     code = subprocess.call(cmd, cwd=str(ROOT), env=env)
     dt = time.time() - t0
     if code != 0:
-        sys.exit(f"\nКрок «{name}» завершився з помилкою (код {code}). "
-                 f"Конвеєр зупинено.")
-    print(f"\nКрок «{name}» завершено за {dt:.1f} с")
+        sys.exit(f"\nStep \"{name}\" failed (exit code {code}). "
+                 f"Pipeline stopped.")
+    print(f"\nStep \"{name}\" finished in {dt:.1f} s")
     return dt
 
 
 def print_summary(out_prefix: str, timings: dict, start_ts: str):
     print("\n" + "=" * 70)
-    print("ПІДСУМОК")
+    print("SUMMARY")
     print("=" * 70)
     for name, dt in timings.items():
-        print(f"  {name:<8} {dt:>7.1f} с")
-    print(f"  {'разом':<8} {sum(timings.values()):>7.1f} с")
+        print(f"  {name:<8} {dt:>7.1f} s")
+    print(f"  {'total':<8} {sum(timings.values()):>7.1f} s")
 
     path = RESULTS / f"{out_prefix or 'report'}.json"
     if not path.exists():
         return
     with open(path, encoding="utf-8") as f:
         rep = json.load(f)
-    print(f"\n  Рекомендація: {rep.get('recommendation')}")
-    print(f"  Claims у звіті: {len(rep.get('claims', []))}")
-    print(f"  Конфліктів доказів: {len(rep.get('conflicts', []))}")
+    print(f"\n  Recommendation: {rep.get('recommendation')}")
+    print(f"  Claims in report: {len(rep.get('claims', []))}")
+    print(f"  Evidence conflicts: {len(rep.get('conflicts', []))}")
 
     log_path = RESULTS / "run_log.jsonl"
     if log_path.exists():
@@ -163,42 +163,42 @@ def print_summary(out_prefix: str, timings: dict, start_ts: str):
                     continue
                 if e.get("ts", "") < start_ts:
                     continue
-                g = "витяг фактів" if str(e.get("step", "")).startswith("claims:") \
-                    else "звіт"
+                g = "claim extraction" if str(e.get("step", "")).startswith("claims:") \
+                    else "report"
                 s = groups.setdefault(g, [0, 0, 0, 0.0])
                 s[0] += 1
                 s[1] += e.get("input_tokens", 0)
                 s[2] += e.get("output_tokens", 0)
                 s[3] += e.get("cost_usd", 0.0)
-        print("\n  Вартість LLM за цей запуск (ціни в файлах — заглушки):")
+        print("\n  LLM cost for this run (prices in the files are placeholders):")
         total = 0.0
         for g, (n, tin, tout, usd) in groups.items():
-            print(f"    {g:<14} викликів {n:>3}, токени {tin} / {tout}, ~${usd:.4f}")
+            print(f"    {g:<16} calls {n:>3}, tokens {tin} / {tout}, ~${usd:.4f}")
             total += usd
-        print(f"    {'разом':<14} ~${total:.4f}")
-    print(f"\n  Звіт:   results/{path.stem}.md")
+        print(f"    {'total':<16} ~${total:.4f}")
+    print(f"\n  Report: results/{path.stem}.md")
     print(f"  Claims: results/{path.stem}_claims.md")
-    print(f"  Логи:   results/run_log.jsonl")
+    print(f"  Logs:   results/run_log.jsonl")
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Запуск усього конвеєра андеррайтингу")
-    ap.add_argument("--drug", default=None, help="препарат (за замовчуванням retatrutide)")
-    ap.add_argument("--indication", default=None, help="показання (за замовчуванням obesity)")
+    ap = argparse.ArgumentParser(description="Run the whole underwriting pipeline")
+    ap.add_argument("--drug", default=None, help="drug (default: retatrutide)")
+    ap.add_argument("--indication", default=None, help="indication (default: obesity)")
     ap.add_argument("--from", dest="start", choices=STEPS, default="fetch",
-                    help="почати з цього кроку (попередні пропускаються)")
-    ap.add_argument("--only", choices=STEPS, default=None, help="виконати лише цей крок")
-    ap.add_argument("--extra", default=None, help="файл з новими claims (для демо)")
-    ap.add_argument("--out-prefix", default=None, help="ім'я вихідного звіту, напр. report_new")
-    ap.add_argument("--compare", default=None, help="попередній report.json для порівняння")
+                    help="start from this step (earlier steps are skipped)")
+    ap.add_argument("--only", choices=STEPS, default=None, help="run only this step")
+    ap.add_argument("--extra", default=None, help="file with new claims (for the demo)")
+    ap.add_argument("--out-prefix", default=None, help="output report name, e.g. report_new")
+    ap.add_argument("--compare", default=None, help="previous report.json to compare against")
     ap.add_argument("--workers", type=int, default=None,
-                    help="потоків для витягу фактів (за замовчуванням як у claim_collector; "
-                         "став 2, якщо API відповідає 429)")
+                    help="threads for claim extraction (default: as in claim_collector; "
+                         "set 2 if the API returns 429)")
     ap.add_argument("--no-ui", action="store_true",
-                    help="не відкривати сайт зі звітом після конвеєра")
+                    help="do not open the report site after the pipeline")
     ap.add_argument("--ui-only", action="store_true",
-                    help="лише відкрити сайт (конвеєр не запускати)")
-    ap.add_argument("--dry-run", action="store_true", help="лише показати команди")
+                    help="only open the site (do not run the pipeline)")
+    ap.add_argument("--dry-run", action="store_true", help="only show the commands")
     args = ap.parse_args()
 
     report_name = f"{args.out_prefix or 'report'}.json"
@@ -216,11 +216,11 @@ def main():
     for s in steps:
         script = Path(cmds[s][1])
         if not script.exists():
-            sys.exit(f"Не знайдено {script}. Запускай main.py з кореня проєкту.")
+            sys.exit(f"{script} not found. Run main.py from the project root.")
 
-    print(f"Препарат: {args.drug or 'retatrutide (за замовчуванням)'}, "
-          f"показання: {args.indication or 'obesity (за замовчуванням)'}")
-    print("Кроки: " + " -> ".join(steps))
+    print(f"Drug: {args.drug or 'retatrutide (default)'}, "
+          f"indication: {args.indication or 'obesity (default)'}")
+    print("Steps: " + " -> ".join(steps))
 
     start_ts = time.strftime("%Y-%m-%d %H:%M:%S")
     timings = {}

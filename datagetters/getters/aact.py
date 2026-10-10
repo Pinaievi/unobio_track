@@ -96,8 +96,8 @@ def _connect() -> psycopg.Connection:
     password = os.environ.get("AACT_PASSWORD")
     if not user or not password:
         raise RuntimeError(
-            "Не задані AACT_USER / AACT_PASSWORD у .env "
-            "(реєстрація: https://aact.ctti-clinicaltrials.org/sign_up)"
+            "AACT_USER / AACT_PASSWORD are not set in .env "
+            "(sign up: https://aact.ctti-clinicaltrials.org/sign_up)"
         )
     return psycopg.connect(
         host=HOST, port=PORT, dbname=DBNAME,
@@ -128,9 +128,9 @@ def safe_chain(conn, label: str, queries: list[str], params: dict) -> list[dict]
             last = (str(e).splitlines() or ["?"])[0]
             continue
         if index > 0:
-            print(f"[aact] «{label}»: використано спрощений запит (розширений не підійшов: {last})")
+            print(f"[aact] \"{label}\": used a simplified query (the extended one did not fit: {last})")
         return rows
-    print(f"[aact] блок «{label}» пропущено: {last}")
+    print(f"[aact] block \"{label}\" skipped: {last}")
     return []
 
 
@@ -236,7 +236,7 @@ def by_key(rows: list[dict], key: str) -> dict:
 
 
 def load_eligibility(conn, ncts):
-    rows = safe(conn, "критерії відбору",
+    rows = safe(conn, "eligibility criteria",
         """SELECT nct_id, population, gender, minimum_age, maximum_age,
                   healthy_volunteers, criteria
            FROM eligibilities WHERE nct_id = ANY(%(ncts)s)""",
@@ -245,7 +245,7 @@ def load_eligibility(conn, ncts):
 
 
 def load_baseline(conn, ncts):
-    measures = safe(conn, "базові характеристики",
+    measures = safe(conn, "baseline characteristics",
         """SELECT bm.nct_id, COALESCE(rg.title, bm.ctgov_group_code) AS grp,
                   bm.title, bm.classification, bm.category, bm.units,
                   bm.param_type, bm.param_value, bm.dispersion_type, bm.dispersion_value
@@ -254,7 +254,7 @@ def load_baseline(conn, ncts):
            WHERE bm.nct_id = ANY(%(ncts)s) AND bm.title ~* %(pattern)s
            ORDER BY bm.nct_id, grp""",
         {"ncts": ncts, "pattern": BASELINE_PATTERN})
-    counts = safe(conn, "кількість учасників у групах",
+    counts = safe(conn, "participant counts per group",
         """SELECT bc.nct_id, COALESCE(rg.title, bc.ctgov_group_code) AS grp, bc.count
            FROM baseline_counts bc
            LEFT JOIN result_groups rg ON rg.id = bc.result_group_id
@@ -265,7 +265,7 @@ def load_baseline(conn, ncts):
 
 
 def load_flow(conn, ncts):
-    milestones = safe(conn, "рух учасників",
+    milestones = safe(conn, "participant flow",
         """SELECT m.nct_id, COALESCE(rg.title, m.ctgov_group_code) AS grp,
                   upper(m.title) AS step, m.count
            FROM milestones m
@@ -273,7 +273,7 @@ def load_flow(conn, ncts):
            WHERE m.nct_id = ANY(%(ncts)s) AND upper(m.title) IN ('STARTED', 'COMPLETED')
            ORDER BY m.nct_id, grp, m.period""",
         {"ncts": ncts})
-    drops = safe(conn, "причини виходу з дослідження",
+    drops = safe(conn, "reasons for study dropout",
         """SELECT dw.nct_id, COALESCE(rg.title, dw.ctgov_group_code) AS grp,
                   dw.reason, SUM(dw.count) AS n
            FROM drop_withdrawals dw
@@ -286,7 +286,7 @@ def load_flow(conn, ncts):
 
 
 def load_pk(conn, ncts):
-    outcomes = safe(conn, "фармакокінетичні результати",
+    outcomes = safe(conn, "pharmacokinetic results",
         """SELECT o.id, o.nct_id, o.title, o.time_frame, o.units
            FROM outcomes o
            WHERE o.nct_id = ANY(%(ncts)s) AND o.title ~* %(pattern)s
@@ -294,7 +294,7 @@ def load_pk(conn, ncts):
         {"ncts": ncts, "pattern": PK_PATTERN})
     if not outcomes:
         return {}, {}
-    values = safe_chain(conn, "значення фармакокінетики", [
+    values = safe_chain(conn, "pharmacokinetic values", [
         """SELECT om.outcome_id, COALESCE(rg.title, om.ctgov_group_code) AS grp,
                   om.classification, om.category, om.title, om.units,
                   om.param_type, om.param_value, om.dispersion_type, om.dispersion_value
@@ -318,7 +318,7 @@ def load_primary_results(conn, ncts) -> dict[str, list[dict]]:
 
     Фармакокінетичні кінцеві точки сюди не беремо: вони йдуть окремим записом (nct_aact_pk).
     Повертає {nct_id: [ {title, time_frame, values, analyses}, ... ]}."""
-    outcomes = safe(conn, "первинні кінцеві точки",
+    outcomes = safe(conn, "primary endpoints",
         """SELECT o.id, o.nct_id, o.title, o.time_frame
            FROM outcomes o
            WHERE o.nct_id = ANY(%(ncts)s)
@@ -330,7 +330,7 @@ def load_primary_results(conn, ncts) -> dict[str, list[dict]]:
         return {}
     ids = [o["id"] for o in outcomes]
 
-    values = safe_chain(conn, "значення первинних результатів по групах", [
+    values = safe_chain(conn, "primary outcome values by group", [
         """SELECT om.outcome_id, COALESCE(rg.title, om.ctgov_group_code) AS grp,
                   om.classification, om.category, om.units,
                   om.param_type, om.param_value, om.dispersion_type, om.dispersion_value
@@ -346,7 +346,7 @@ def load_primary_results(conn, ncts) -> dict[str, list[dict]]:
            ORDER BY om.outcome_id, om.id""",
     ], {"ids": ids})
 
-    analyses = safe_chain(conn, "p-value та інтервали первинних результатів", [
+    analyses = safe_chain(conn, "p-values and intervals of primary outcomes", [
         """SELECT oa.outcome_id, oa.param_type, oa.param_value,
                   oa.p_value, oa.p_value_modifier,
                   oa.ci_percent, oa.ci_lower_limit, oa.ci_upper_limit, oa.method,
@@ -596,7 +596,7 @@ class AACTGetter(DataGetter):
                 break
             except psycopg.OperationalError as e:
                 last_err = e
-                print(f"[aact] з'єднання перервано (спроба {attempt + 1}/3): {e}")
+                print(f"[aact] connection lost (attempt {attempt + 1}/3): {e}")
                 time.sleep(3 * (attempt + 1))
         else:
             raise last_err

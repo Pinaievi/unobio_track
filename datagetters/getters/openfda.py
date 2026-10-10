@@ -98,12 +98,12 @@ def fda_get(url: str, params: dict) -> dict | None:
             resp.raise_for_status()
             data = resp.json()
         except (requests.RequestException, ValueError) as e:
-            raise FDAError(f"неочікувана відповідь: {e}")
+            raise FDAError(f"unexpected response: {e}")
 
         path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
         return data
 
-    raise FDAError(f"мережа: {last}")
+    raise FDAError(f"network: {last}")
 
 
 def public_url(url: str, params: dict) -> str:
@@ -304,7 +304,7 @@ class OpenFDAGetter(DataGetter):
             try:
                 records += self._labels(query.mechanism, generics)
             except FDAError as e:
-                print(f"[openfda] пошук інструкцій пропущено: {e}")
+                print(f"[openfda] label search skipped: {e}")
 
         for generic in generics[:2]:
             try:
@@ -312,7 +312,7 @@ class OpenFDAGetter(DataGetter):
                 if rec:
                     records.append(rec)
             except FDAError as e:
-                print(f"[openfda] побічні ефекти для {generic} пропущено: {e}")
+                print(f"[openfda] adverse events for {generic} skipped: {e}")
 
         if query.indication:
             try:
@@ -320,9 +320,9 @@ class OpenFDAGetter(DataGetter):
                 if rec:
                     records.append(rec)
                 else:
-                    print(f"[openfda] показання '{query.indication}' в інструкціях не знайдено")
+                    print(f"[openfda] indication '{query.indication}' not found in labels")
             except FDAError as e:
-                print(f"[openfda] пошук за показанням пропущено: {e}")
+                print(f"[openfda] indication search skipped: {e}")
 
         return records
 

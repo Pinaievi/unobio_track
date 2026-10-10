@@ -57,20 +57,20 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
         eid = c.get("evidence_id")
         rec = evidence.get(eid)
         if rec is None:
-            dropped.append({"reason": "evidence_id не існує", "claim": c})
+            dropped.append({"reason": "evidence_id does not exist", "claim": c})
             continue
         if eid not in loose:
             loose[eid] = squash(json.dumps(rec, ensure_ascii=False, indent=2))
         if not quote_ok(c.get("quote", ""), loose[eid]):
-            dropped.append({"reason": "цитата не знайдена в записі", "claim": c})
+            dropped.append({"reason": "quote not found in the record", "claim": c})
             continue
         is_registry = str(rec.get("source_type", "")).startswith("nct")
         if not is_registry and len((c.get("quote") or "").strip()) < MIN_QUOTE_LEN:
-            dropped.append({"reason": "цитата надто коротка", "claim": c})
+            dropped.append({"reason": "quote is too short", "claim": c})
             continue
         q = c.get("quote") or ""
         if len(q) > 400 and q.count(";") >= 8:
-            dropped.append({"reason": "шум: цитата — довгий список назв, а не твердження",
+            dropped.append({"reason": "noise: quote is a long list of names, not a statement",
                             "claim": c})
             continue
        
@@ -78,28 +78,28 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
                 and rec.get("source_type") in ("pubmed", "epmc_pmc", "epmc_ppr") \
                 and not any(w in (c.get("claim", "") + " " + c.get("quote", "")).lower()
                             for w in INDICATION_WORDS):
-            dropped.append({"reason": "шум: unmet need не про показання", "claim": c})
+            dropped.append({"reason": "noise: unmet need is not about the indication", "claim": c})
             continue
         ctext = c.get("claim", "") + " " + c.get("quote", "")
         
         if str(c.get("evidence_id", "")).endswith("_flow") and \
                 c.get("direction") == "contradicts" and \
                 NOISE_FLOW_ONE_RE.search(c.get("claim", "")):
-            dropped.append({"reason": "шум: поодинокий випадок у когорті без порівняння "
-                                      "з контролем", "claim": c})
+            dropped.append({"reason": "noise: single case in a cohort without comparison "
+                                      "to a control", "claim": c})
             continue
         if (c.get("direction") == "neutral" and NOISE_FLOW_RE.search(ctext)) or \
                 NOISE_ANY_RE.search(ctext) or (
                 c.get("stage") == "unmet_need" and NOISE_UNMET_RE.search(ctext)):
-            dropped.append({"reason": "шум: вузька підгрупа/асоціація ризику/"
-                                      "критерії доглядальника", "claim": c})
+            dropped.append({"reason": "noise: narrow subgroup/risk association/"
+                                      "caregiver criteria", "claim": c})
             continue
 
         rec_nums = numbers(json.dumps(rec, ensure_ascii=False))
         claim_nums = numbers(strip_labels(c.get("claim", "")))
         invented = sorted(claim_nums - rec_nums)
         if invented:
-            dropped.append({"reason": f"числа {invented} з claim відсутні в записі",
+            dropped.append({"reason": f"numbers {invented} from the claim are absent from the record",
                             "claim": c})
             continue
 
@@ -113,17 +113,17 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
                 c["quote"] = q2
                 c["quote_trimmed"] = True
             else:
-                dropped.append({"reason": "цитата обірвана на півслові", "claim": c})
+                dropped.append({"reason": "quote is cut off mid-word", "claim": c})
                 continue
 
         if LOW_CERT_RE.search(c.get("quote", "")) and c.get("confidence") != "low":
             c["confidence"] = "low"
-            c["confidence_adjusted"] = "цитата: low certainty / не рецензовано / від компанії"
+            c["confidence_adjusted"] = "quote: low certainty / not peer-reviewed / from the company"
 
         if re.search(r"(?i)doping", rec.get("title") or "") and c.get("confidence") != "low":
             c = dict(c)
             c["confidence"] = "low"
-            c["confidence_adjusted"] = "назва запису: антидопінгове дослідження малої вибірки"
+            c["confidence_adjusted"] = "record title: small-sample anti-doping study"
 
         backed = numbers(c.get("quote", "")) | numbers(rec.get("title") or "") | numbers(
             json.dumps(rec.get("meta") or {}, ensure_ascii=False))
@@ -139,13 +139,13 @@ def prepare_claims(claims_raw: list, evidence: dict, loose: dict, prefix: str):
 
         unbacked_key = sorted(percent_numbers(c.get("claim", "")) & set(outside))
         if unbacked_key:
-            dropped.append({"reason": f"ключові числа {unbacked_key} є в записі, але "
-                                      f"не в цитаті claim", "claim": c})
+            dropped.append({"reason": f"key numbers {unbacked_key} are in the record, but "
+                                      f"not in the claim quote", "claim": c})
             continue
         unbacked = [n for n in outside if not YEAR_RE.match(n)]
         if unbacked:
-            dropped.append({"reason": f"числа {unbacked} є в записі, але не в цитаті "
-                                      f"claim й не в meta", "claim": c})
+            dropped.append({"reason": f"numbers {unbacked} are in the record, but not in the claim "
+                                      f"quote or in meta", "claim": c})
             continue
         item = dict(c)
 

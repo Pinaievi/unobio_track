@@ -68,7 +68,7 @@ def gql(query: str, variables: dict | None = None) -> dict:
         try:
             body = resp.json()
         except ValueError:
-            raise OTError(f"відповідь не JSON (HTTP {resp.status_code})")
+            raise OTError(f"response is not JSON (HTTP {resp.status_code})")
 
         if body.get("errors"):
             msg = "; ".join(e.get("message", "?") for e in body["errors"])
@@ -78,7 +78,7 @@ def gql(query: str, variables: dict | None = None) -> dict:
         path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
         return data
 
-    raise OTError(f"мережа: {last}")
+    raise OTError(f"network: {last}")
 
 
 
@@ -111,7 +111,7 @@ def label_selection() -> str | None:
     try:
         data = gql(LABEL_TYPE_Q)
     except OTError as e:
-        print(f"[opentargets] не вдалось дізнатись схему синонімів: {e}")
+        print(f"[opentargets] could not determine the synonym schema: {e}")
         return None
     fields = [f["name"] for f in ((data.get("__type") or {}).get("fields") or [])]
     for candidate in ("label", "name"):
@@ -169,7 +169,7 @@ def drug_indications(chembl_id: str) -> list[dict]:
              "max_phase": r.get(field)}
             for r in rows if r.get("disease")
         ]
-    print(f"[opentargets] показання препарату {chembl_id} пропущено: {last}")
+    print(f"[opentargets] indications for drug {chembl_id} skipped: {last}")
     return []
 
 
@@ -336,7 +336,7 @@ class OpenTargetsGetter(DataGetter):
 
     def fetch(self, query: Query) -> list[dict]:
         if not query.mechanism:
-            print("[opentargets] не вказано препарат/механізм — пропускаємо")
+            print("[opentargets] no drug/mechanism given — skipping")
             return []
 
         records: list[dict] = []
@@ -374,7 +374,7 @@ class OpenTargetsGetter(DataGetter):
                 target_ids.append(h["id"])
 
         if not records and not target_ids:
-            print(f"[opentargets] за запитом '{query.mechanism}' нічого не знайдено")
+            print(f"[opentargets] nothing found for query '{query.mechanism}'")
             return []
 
         indication_ids: set[str] = set()
