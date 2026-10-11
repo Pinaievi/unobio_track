@@ -1,0 +1,58 @@
+{
+ "evidence": [
+  {
+   "id": "E_REAL_SANOFI_20251224",
+   "source_type": "press_release",
+   "source_id": "E_REAL_SANOFI_20251224",
+   "url": "https://www.sanofi.com/en/media-room/press-releases/2025/2025-12-24-06-00-00-3210238",
+   "title": "Press Release: Sanofi provides update on tolebrutinib regulatory submission in non-relapsing secondary progressive multiple sclerosis (Paris, December 24, 2025)",
+   "text": "Verbatim extracts from the source: The US Food and Drug Administration (FDA) has issued a complete response letter (CRL)",
+   "meta": {
+    "publisher": "Sanofi",
+    "date": "2025-12-24",
+    "language": "en",
+    "real_source": true
+   }
+  },
+  {
+   "id": "E_REAL_FIERCE_20260106",
+   "source_type": "news",
+   "source_id": "E_REAL_FIERCE_20260106",
+   "url": "https://fiercepharma.com/biotech/fda-cites-severe-liver-injury-risk-unclear-benefit-behind-sanofis-ms-drug-rejection",
+   "title": "Fierce Pharma, 6 January 2026: FDA cites severe liver injury risk, unclear benefit behind Sanofi's MS drug rejection",
+   "text": "Verbatim extracts from the source: the risk of severe drug-induced liver injury (DILI) recorded in tolebrutinib trials can't be adequately managed [...] a favorable benefit-risk profile could not be established for any patient subpopulation",
+   "meta": {
+    "publisher": "Fierce Pharma",
+    "date": "2026-01-06",
+    "real_source": true,
+    "note": "second quote is the article's quotation of the FDA complete response letter"
+   }
+  }
+ ],
+ "claims": [
+  {
+   "claim": "The US FDA issued a complete response letter for Sanofi's tolebrutinib marketing application in non-relapsing secondary progressive MS (24 December 2025).",
+   "evidence_id": "E_REAL_SANOFI_20251224",
+   "quote": "The US Food and Drug Administration (FDA) has issued a complete response letter (CRL)",
+   "stage": "regulatory",
+   "direction": "contradicts",
+   "confidence": "high"
+  },
+  {
+   "claim": "According to the FDA, the risk of severe drug-induced liver injury seen in tolebrutinib trials cannot be adequately managed.",
+   "evidence_id": "E_REAL_FIERCE_20260106",
+   "quote": "the risk of severe drug-induced liver injury (DILI) recorded in tolebrutinib trials can't be adequately managed",
+   "stage": "safety_or_failure",
+   "direction": "contradicts",
+   "confidence": "high"
+  },
+  {
+   "claim": "The FDA's complete response letter states that a favorable benefit-risk profile for tolebrutinib could not be established for any patient subpopulation.",
+   "evidence_id": "E_REAL_FIERCE_20260106",
+   "quote": "a favorable benefit-risk profile could not be established for any patient subpopulation",
+   "stage": "regulatory",
+   "direction": "contradicts",
+   "confidence": "high"
+  }
+ ]
+}

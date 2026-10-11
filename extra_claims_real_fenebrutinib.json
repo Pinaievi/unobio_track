@@ -1,0 +1,94 @@
+{
+ "evidence": [
+  {
+   "id": "E_REAL_ROCHE_20260207",
+   "source_type": "press_release",
+   "source_id": "E_REAL_ROCHE_20260207",
+   "url": "https://www.roche.com/media/releases/med-cor-2026-02-07",
+   "title": "Roche press release, Basel, 7 February 2026: fenebrutinib in primary progressive MS (mentions FENhance 2 in RMS)",
+   "text": "Verbatim extracts from the source: the first of two Phase III relapsing multiple sclerosis (RMS) studies (FENhance 2) met their primary endpoints [...] Regulatory submission for fenebrutinib in both PPMS and RMS is planned following the Phase III FENhance 1 readout",
+   "meta": {
+    "publisher": "Roche",
+    "date": "2026-02-07",
+    "real_source": true
+   }
+  },
+  {
+   "id": "E_REAL_CTARENA_20260303",
+   "source_type": "news",
+   "source_id": "E_REAL_CTARENA_20260303",
+   "url": "https://www.clinicaltrialsarena.com/news/roches-fenebrutinib-trial-meets-primary-endpoint/",
+   "title": "Clinical Trials Arena, 3 March 2026: Roche's fenebrutinib trial meets primary endpoint (FENhance 1)",
+   "text": "Verbatim extracts from the source: a reduction of 51% in annualised relapse rate (ARR) when compared to teriflunomide [...] Fatal cases were reported: one in the teriflunomide arm and eight in the fenebrutinib arm",
+   "meta": {
+    "publisher": "Clinical Trials Arena",
+    "date": "2026-03-03",
+    "real_source": true,
+    "note": "fatal cases appear in the FENhance 1 section; the article does not tie them to a specific study"
+   }
+  },
+  {
+   "id": "E_REAL_GENENTECH_20251109",
+   "source_type": "press_release",
+   "source_id": "E_REAL_GENENTECH_20251109",
+   "url": "https://www.businesswire.com/news/home/20251109262712/en",
+   "title": "Genentech press release (Business Wire, Nov 2025): fenebrutinib shows positive Phase III results (FENhance 2, FENtrepid)",
+   "text": "Verbatim extracts from the source: significantly reduced the annualized relapse rate (ARR) compared to teriflunomide [...] Liver safety was consistent with previous fenebrutinib studies.",
+   "meta": {
+    "publisher": "Genentech",
+    "date": "2025-11 (from URL)",
+    "real_source": true
+   }
+  }
+ ],
+ "claims": [
+  {
+   "claim": "The first of two Phase III relapsing-MS studies of fenebrutinib (FENhance 2) met its primary endpoint.",
+   "evidence_id": "E_REAL_ROCHE_20260207",
+   "quote": "the first of two Phase III relapsing multiple sclerosis (RMS) studies (FENhance 2) met their primary endpoints",
+   "stage": "clinical",
+   "direction": "supports",
+   "confidence": "high"
+  },
+  {
+   "claim": "In the Phase III FENhance 1 trial fenebrutinib reduced the annualised relapse rate by 51% versus teriflunomide.",
+   "evidence_id": "E_REAL_CTARENA_20260303",
+   "quote": "a reduction of 51% in annualised relapse rate (ARR) when compared to teriflunomide",
+   "stage": "clinical",
+   "direction": "supports",
+   "confidence": "high"
+  },
+  {
+   "claim": "Fenebrutinib significantly reduced the annualized relapse rate versus teriflunomide in Phase III (FENhance 2).",
+   "evidence_id": "E_REAL_GENENTECH_20251109",
+   "quote": "significantly reduced the annualized relapse rate (ARR) compared to teriflunomide",
+   "stage": "clinical",
+   "direction": "supports",
+   "confidence": "high"
+  },
+  {
+   "claim": "Roche plans regulatory submission of fenebrutinib in PPMS and RMS after the FENhance 1 readout.",
+   "evidence_id": "E_REAL_ROCHE_20260207",
+   "quote": "Regulatory submission for fenebrutinib in both PPMS and RMS is planned following the Phase III FENhance 1 readout",
+   "stage": "regulatory",
+   "direction": "supports",
+   "confidence": "medium"
+  },
+  {
+   "claim": "Liver safety in the Phase III fenebrutinib programme was reported as consistent with previous fenebrutinib studies.",
+   "evidence_id": "E_REAL_GENENTECH_20251109",
+   "quote": "Liver safety was consistent with previous fenebrutinib studies.",
+   "stage": "safety_or_failure",
+   "direction": "supports",
+   "confidence": "medium"
+  },
+  {
+   "claim": "Fatal cases were reported in the Phase III RMS programme: one in the teriflunomide arm and eight in the fenebrutinib arm; investigations are ongoing.",
+   "evidence_id": "E_REAL_CTARENA_20260303",
+   "quote": "Fatal cases were reported: one in the teriflunomide arm and eight in the fenebrutinib arm",
+   "stage": "safety_or_failure",
+   "direction": "contradicts",
+   "confidence": "medium"
+  }
+ ]
+}
